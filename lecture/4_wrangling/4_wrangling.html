@@ -1,0 +1,1802 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Data Analysis using R</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Sven Werenbeck-Ueding" />
+    <script src="4_wrangling_files/header-attrs-2.23.3/header-attrs.js"></script>
+    <link href="4_wrangling_files/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="4_wrangling_files/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+    <link href="4_wrangling_files/panelset-0.2.6/panelset.css" rel="stylesheet" />
+    <script src="4_wrangling_files/panelset-0.2.6/panelset.js"></script>
+    <link href="4_wrangling_files/tile-view-0.2.6/tile-view.css" rel="stylesheet" />
+    <script src="4_wrangling_files/tile-view-0.2.6/tile-view.js"></script>
+    <script src="4_wrangling_files/htmlwidgets-1.5.4/htmlwidgets.js"></script>
+    <script src="4_wrangling_files/viz-1.8.2/viz.js"></script>
+    <link href="4_wrangling_files/DiagrammeR-styles-0.2/styles.css" rel="stylesheet" />
+    <script src="4_wrangling_files/grViz-binding-1.0.9/grViz.js"></script>
+    <link rel="stylesheet" href="style.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Data Analysis using R
+]
+.subtitle[
+## Data Wrangling
+]
+.author[
+### Sven Werenbeck-Ueding
+]
+.date[
+### 21.09.2023
+]
+
+---
+
+
+&lt;!-- Setup --&gt;
+
+
+
+
+
+<div id="htmlwidget-84a38546dfd25d528ba5" style="width:100%;height:504px;" class="grViz html-widget"></div>
+<script type="application/json" data-for="htmlwidget-84a38546dfd25d528ba5">{"x":{"diagram":"\n  digraph {\n    fontname=\"Helvetica,Arial,sans-serif\"\n\tnode [fontname=\"Helvetica,Arial,sans-serif\"]\n\tedge [fontname=\"Helvetica,Arial,sans-serif\"]\n    \n    rankdir=LR\n    \n    subgraph cluster_0 {\n        style = rounded\n        color = black\n    \n        {\n            node [style = rounded, shape = box]\n            Import -> Tidy\n        }\n    \n        subgraph cluster_1 {\n            style = rounded\n            color = black\n            \n            node [style = rounded, shape = box]\n            Transform Visualize Model\n            \n            edge []\n            Transform -> Visualize\n            Visualize -> Model\n            Model -> Transform\n            \n            label = \"Exploration\"\n            labeljust = \"l\"\n            labelloc = \"b\"\n        }\n    \n        {\n            node [style = rounded, shape = box]\n            Communicate\n        }\n    \n        Tidy -> Transform\n        Model -> Communicate [ltail = cluster_1]\n        \n        label = \"Programming\"\n        labeljust = \"l\"\n        labelloc = \"b\"\n    }\n  }\n  ","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+
+.right[*Source:* &lt;a name=cite-r4ds&gt;&lt;/a&gt;[Wickham and Grolemund (2016)](https://r4ds.had.co.nz/)]
+
+---
+
+## Prerequisites
+
+.panelset[
+.panel[.panel-name[Code]
+
+```r
+# Load the ENE/ENOE data set
+tbl_enoe &lt;- read_csv("data/raw/enoe/enoe.csv", skip = 3, na = c("", "N/A"))
+
+tbl_enoe
+```
+]
+.panel[.panel-name[Output]
+
+```
+## # A tibble: 165,457 × 12
+##        id migrate age   munici…¹ fence year  quarter sex   marit…² empl_…³ educ 
+##     &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;    &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;
+##  1 189889 No      50    2004     0     2004  Q3      Fema… Single  Unempl… 12   
+##  2 189889 No      50    2004     0     2004  Q4      Fema… Single  Unempl… 12   
+##  3 189889 No      50    2004     0     2005  Q1      Fema… Single  Unempl… 12   
+##  4 189890 No      26    2004     0     2005  Q4      Male  Married Full-t… 10   
+##  5 189890 No      26    2004     0     2006  Q1      Male  Married Full-t… 10   
+##  6 189890 No      26    2004     0     2006  Q2      Male  &lt;NA&gt;    Full-t… 10   
+##  7 189891 No      36    2004     0     2006  Q4      Male  Married Full-t… 6    
+##  8 189891 No      36    2004     0     2007  Q1      Male  Married Full-t… 6    
+##  9 189891 No      36    2004     0     2007  Q2      Male  Married Full-t… 6    
+## 10 189894 No      33    2004     1     2010  Q3      NA    Married Full-t… 9    
+## # … with 165,447 more rows, 1 more variable: income &lt;chr&gt;, and abbreviated
+## #   variable names ¹​municipality, ²​marital_status, ³​empl_status
+```
+]
+]
+
+---
+
+class: middle
+background-image: url("https://dplyr.tidyverse.org/logo.png")
+background-size: 100px
+background-position: 90% 10%
+
+# `dplyr`
+
+&gt; `dplyr` is a grammar of data manipulation, providing a consistent set of verbs that help you solve the most common data manipulation challenges:
+&gt; - `mutate()` adds new variables that are functions of existing variables
+&gt; - `select()` picks variables based on their names.
+&gt; - `filter()` picks cases based on their values.
+&gt; - `summarise()` reduces multiple values down to a single summary.
+&gt; - `arrange()` changes the ordering of the rows.
+&gt;
+&gt; These all combine naturally with `group_by()` which allows you to perform any operation “by group”.
+&gt;
+&gt; .right[&lt;a name=cite-dplyr&gt;&lt;/a&gt;[Wickham, François, Henry, and Müller (2022)](#bib-dplyr)]
+
+---
+
+class: middle
+
+# Transforming Variables
+
+---
+
+layout: true
+
+## `mutate()`
+
+
+```r
+?dplyr::mutate
+```
+
+---
+
+`mutate()` adds new variables and preserves or deletes existing ones, depending on the function arguments. New variables overwrite existing variables if they have the same name.
+
+---
+
+Function call and arguments:
+
+.pull-left[
+
+```r
+*mutate(.data,
+       ...,
+       .keep = c("all", "used", 
+                 "unused", "none"),
+       .before = NULL,
+       .after = NULL)
+```
+]
+.pull-right[
+`.data`
+
+A `data.frame` or `tibble` that should be transformed
+]
+
+---
+
+Function call and arguments:
+
+.pull-left[
+
+```r
+mutate(.data, 
+*      ...,
+       .keep = c("all", "used",
+                 "unused", "none"),
+       .before = NULL,
+       .after = NULL)
+```
+]
+.pull-right[
+`...`
+
+- Data masking of name-value pairs
+- The name specifies the variable name of the newly created column
+- Multiple new variables can be created by separating each name-value pair by commas
+]
+
+---
+
+Function call and arguments:
+
+.pull-left[
+
+```r
+mutate(.data, 
+       ..., 
+*      .keep = c("all", "used",
+*                "unused", "none"),
+       .before = NULL,
+       .after = NULL)
+```
+]
+.pull-right[
+`.keep`
+
+- "all": All columns are kept in the resulting data frame (the default)
+- "used": Only columns used to create new variables are kept
+- "unused": Only columns that are not used to create new variables are kept
+- "none": Only the newly created variables are kept
+]
+
+---
+
+Function call and arguments:
+
+.pull-left[
+
+```r
+mutate(.data, 
+       ..., 
+       .keep = c("all", "used",
+                 "unused", "none"), 
+*      .before = NULL,
+*      .after = NULL)
+```
+]
+.pull-right[
+`.before`/`.after`
+
+- Control, at which position in the data frame the new columns should be placed
+- default option `NULL` will add the columns to the RHS
+]
+
+---
+
+layout: true
+
+## Data Masking
+
+---
+
+- `dplyr` functions oftentimes use **tidy evaluation**
+
+- tidy evaluation takes on two forms:
+
+  - **data masking**
+  - **tidy selection** (we will come to this later in this lecture)
+
+- data masking allows for referring to variables by the name with which they are residing in an environment variable (see `vignette("programming")`)
+
+  - Also referred to as data-variables
+  - Data frame variables can be accessed simply by their name instead of the `$` operator
+  
+---
+  
+Makes creating new variables (and other operations) more easy and intuitive:
+
+.pull-left[
+`base` R
+
+
+```r
+tbl_enoe$female &lt;- ifelse(
+  tbl_enoe$sex == "Female",
+  "Yes",
+  "No"
+)
+```
+]
+
+.pull-right[
+`dplyr`
+
+
+```r
+mutate(
+  tbl_enoe,
+  female = ifelse(
+    sex == "Female",
+    "Yes",
+    "No"
+  )
+)
+```
+]
+
+---
+
+layout: false
+
+## Mutating a Single Variable
+
+.panelset[
+.panel[.panel-name[Code]
+
+```r
+# Recode sex to a "Yes"/"No" dummy
+tbl_enoe %&gt;% 
+  mutate(female = ifelse(sex == "Female", "Yes", "No"),
+         .before = 2)
+```
+]
+.panel[.panel-name[Output]
+
+```
+## # A tibble: 165,457 × 13
+##        id female migrate age   munic…¹ fence year  quarter sex   marit…² empl_…³
+##     &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;  
+##  1 189889 Yes    No      50    2004    0     2004  Q3      Fema… Single  Unempl…
+##  2 189889 Yes    No      50    2004    0     2004  Q4      Fema… Single  Unempl…
+##  3 189889 Yes    No      50    2004    0     2005  Q1      Fema… Single  Unempl…
+##  4 189890 No     No      26    2004    0     2005  Q4      Male  Married Full-t…
+##  5 189890 No     No      26    2004    0     2006  Q1      Male  Married Full-t…
+##  6 189890 No     No      26    2004    0     2006  Q2      Male  &lt;NA&gt;    Full-t…
+##  7 189891 No     No      36    2004    0     2006  Q4      Male  Married Full-t…
+##  8 189891 No     No      36    2004    0     2007  Q1      Male  Married Full-t…
+##  9 189891 No     No      36    2004    0     2007  Q2      Male  Married Full-t…
+## 10 189894 No     No      33    2004    1     2010  Q3      NA    Married Full-t…
+## # … with 165,447 more rows, 2 more variables: educ &lt;chr&gt;, income &lt;chr&gt;, and
+## #   abbreviated variable names ¹​municipality, ²​marital_status, ³​empl_status
+```
+]
+]
+
+---
+
+## Mutating Multiple Variables
+
+.panelset[
+.panel[.panel-name[Code]
+
+```r
+# Recode marital status to a two-category variable
+tbl_enoe %&gt;% 
+  mutate(female = ifelse(sex == "Female", "Yes", "No"),
+         married = ifelse(marital_status == "Married", "Yes", "No"),
+         employed = ifelse(marital_status == "Unemployed", "No", "Yes"),
+         .before = 2)
+```
+]
+.panel[.panel-name[Output]
+
+```
+## # A tibble: 165,457 × 15
+##        id female married emplo…¹ migrate age   munic…² fence year  quarter sex  
+##     &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;
+##  1 189889 Yes    No      Yes     No      50    2004    0     2004  Q3      Fema…
+##  2 189889 Yes    No      Yes     No      50    2004    0     2004  Q4      Fema…
+##  3 189889 Yes    No      Yes     No      50    2004    0     2005  Q1      Fema…
+##  4 189890 No     Yes     Yes     No      26    2004    0     2005  Q4      Male 
+##  5 189890 No     Yes     Yes     No      26    2004    0     2006  Q1      Male 
+##  6 189890 No     &lt;NA&gt;    &lt;NA&gt;    No      26    2004    0     2006  Q2      Male 
+##  7 189891 No     Yes     Yes     No      36    2004    0     2006  Q4      Male 
+##  8 189891 No     Yes     Yes     No      36    2004    0     2007  Q1      Male 
+##  9 189891 No     Yes     Yes     No      36    2004    0     2007  Q2      Male 
+## 10 189894 No     Yes     Yes     No      33    2004    1     2010  Q3      NA   
+## # … with 165,447 more rows, 4 more variables: marital_status &lt;chr&gt;,
+## #   empl_status &lt;chr&gt;, educ &lt;chr&gt;, income &lt;chr&gt;, and abbreviated variable names
+## #   ¹​employed, ²​municipality
+```
+]
+]
+
+---
+
+layout: false
+name: tidy-selection
+
+## Tidy Selection
+
+Variable selection via a concise set of helper functions:
+
+| Selection helper                           | Description                                              |
+| ------------------------------------------ | -------------------------------------------------------- |
+| `everything()`                             | Selects all columns in the data frame                    |
+| `starts_with()`/`ends_with()`/`contains()` | Selects all columns starting/ending/containing a string  |
+| `all_of()`/`any_of()`                      | Selects all/any columns given by a character vector      |
+| `where()`                                  | Selects columns based on a condition, e. g. `is.numeric` |
+
+--
+
+.pull-left.short-width[
+.big-emoji[➡️]
+]
+
+.pull-right.lo-wi[
+Can be used in conjunction with `dplyr`'s `across()` function to transform multiple variables at the same time!
+]
+
+---
+
+name: task-1
+
+## Task 1: Modify the ENE/ENOE Data
+
+.panelset[
+.panel[.panel-name[Task]
+Modify the ENE/ENOE data set for use in our analysis:
+
+- Recode `migrate`, `sex`, `marital_status` and `empl_status` to meaningful 0/1 dummy variables
+
+- Recode numerical variables that are currently stored as character columns to numerics
+
+- Create a column containing the logarithm of `income`
+
+- Recode the municipality column to a factor variable
+
+- Create a period variable from the year and quarter columns
+]
+.panel[.panel-name[Code]
+
+```r
+tbl_enoe &lt;- tbl_enoe %&gt;% 
+  mutate(female = ifelse(sex == "Female", "Yes", "No"), # Recode to 0/1 dummies
+         married = ifelse(marital_status == "Married", "Yes", "No"),
+         employed = ifelse(empl_status == "Unemployed", "No", "Yes"),
+         across(all_of(c("migrate", "female", "married", "employed")),
+                ~ ifelse(. == "Yes", 1, 0)), 
+         # Convert all of income, educ, age and year to numerics
+         across(all_of(c("income", "educ", "age", "year")), ~ as.numeric(.)), 
+         # Take the logarithm of income
+         ln_income = log(income),
+         # Use as_factor from the forcats package to convert municipality to a factor
+         municipality = forcats::as_factor(municipality),
+         # Remove "Q" from the quarter column and rebase it to 0
+         quarter = as.numeric(str_remove(quarter, "Q")) - 1, 
+         # Create a period variable starting with 0
+         period = year - as.numeric(min(year, na.rm = T)) + quarter/4) 
+
+tbl_enoe
+```
+]
+.panel[.panel-name[Output]
+
+```
+## # A tibble: 165,457 × 17
+##        id migrate   age munici…¹ fence  year quarter sex   marit…² empl_…³  educ
+##     &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt;    &lt;chr&gt; &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;dbl&gt;
+##  1 189889       0    50 2004     0      2004       2 Fema… Single  Unempl…    12
+##  2 189889       0    50 2004     0      2004       3 Fema… Single  Unempl…    12
+##  3 189889       0    50 2004     0      2005       0 Fema… Single  Unempl…    12
+##  4 189890       0    26 2004     0      2005       3 Male  Married Full-t…    10
+##  5 189890       0    26 2004     0      2006       0 Male  Married Full-t…    10
+##  6 189890       0    26 2004     0      2006       1 Male  &lt;NA&gt;    Full-t…    10
+##  7 189891       0    36 2004     0      2006       3 Male  Married Full-t…     6
+##  8 189891       0    36 2004     0      2007       0 Male  Married Full-t…     6
+##  9 189891       0    36 2004     0      2007       1 Male  Married Full-t…     6
+## 10 189894       0    33 2004     1      2010       2 NA    Married Full-t…     9
+## # … with 165,447 more rows, 6 more variables: income &lt;dbl&gt;, female &lt;dbl&gt;,
+## #   married &lt;dbl&gt;, employed &lt;dbl&gt;, ln_income &lt;dbl&gt;, period &lt;dbl&gt;, and
+## #   abbreviated variable names ¹​municipality, ²​marital_status, ³​empl_status
+```
+
+]
+]
+
+---
+
+class: middle
+
+# Selecting Variables
+
+---
+
+layout: true
+
+## `select()`
+
+
+```r
+?dplyr::select
+```
+
+---
+
+Selects (and renames) variables in a data frame, making use of [tidy selection](#tidy-selection).
+
+---
+
+Function call and arguments:
+
+.pull-left[
+
+```r
+*select(.data,
+       ...)
+```
+]
+
+.pull-right[
+`.data`
+
+A `data.frame` or `tibble` from which columns should be selected
+]
+
+---
+
+layout: false
+
+## Selecting Variables by Names
+
+
+```r
+tbl_enoe %&gt;% 
+  select(id, migrate, marital_status, empl_status, educ, income, female)
+```
+
+```
+## # A tibble: 165,457 × 7
+##        id migrate marital_status empl_status  educ income female
+##     &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;          &lt;chr&gt;       &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+##  1 189889       0 Single         Unemployed     12      0      1
+##  2 189889       0 Single         Unemployed     12      0      1
+##  3 189889       0 Single         Unemployed     12      0      1
+##  4 189890       0 Married        Full-time      10     NA      0
+##  5 189890       0 Married        Full-time      10     NA      0
+##  6 189890       0 &lt;NA&gt;           Full-time      10     NA      0
+##  7 189891       0 Married        Full-time       6   3440      0
+##  8 189891       0 Married        Full-time       6   3440      0
+##  9 189891       0 Married        Full-time       6   3440      0
+## 10 189894       0 Married        Full-time       9    559      0
+## # … with 165,447 more rows
+```
+
+---
+
+## Selecting Variables by Index
+
+
+```r
+tbl_enoe %&gt;% 
+  select(1, 2, 8:12)
+```
+
+```
+## # A tibble: 165,457 × 7
+##        id migrate sex    marital_status empl_status  educ income
+##     &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;          &lt;chr&gt;       &lt;dbl&gt;  &lt;dbl&gt;
+##  1 189889       0 Female Single         Unemployed     12      0
+##  2 189889       0 Female Single         Unemployed     12      0
+##  3 189889       0 Female Single         Unemployed     12      0
+##  4 189890       0 Male   Married        Full-time      10     NA
+##  5 189890       0 Male   Married        Full-time      10     NA
+##  6 189890       0 Male   &lt;NA&gt;           Full-time      10     NA
+##  7 189891       0 Male   Married        Full-time       6   3440
+##  8 189891       0 Male   Married        Full-time       6   3440
+##  9 189891       0 Male   Married        Full-time       6   3440
+## 10 189894       0 NA     Married        Full-time       9    559
+## # … with 165,447 more rows
+```
+
+---
+
+## Selecting Variables using Tidy Selection
+
+
+```r
+tbl_enoe %&gt;% 
+  select(all_of(c("female", "employed")), ends_with("income"), where(is.factor))
+```
+
+```
+## # A tibble: 165,457 × 5
+##    female employed income ln_income municipality
+##     &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt; &lt;fct&gt;       
+##  1      1        0      0   -Inf    2004        
+##  2      1        0      0   -Inf    2004        
+##  3      1        0      0   -Inf    2004        
+##  4      0        1     NA     NA    2004        
+##  5      0        1     NA     NA    2004        
+##  6      0        1     NA     NA    2004        
+##  7      0        1   3440      8.14 2004        
+##  8      0        1   3440      8.14 2004        
+##  9      0        1   3440      8.14 2004        
+## 10      0        1    559      6.33 2004        
+## # … with 165,447 more rows
+```
+
+---
+
+## Selecting and Renaming Variables
+
+
+```r
+tbl_enoe %&gt;% 
+  select(ID = id, empl = employed)
+```
+
+```
+## # A tibble: 165,457 × 2
+##        ID  empl
+##     &lt;dbl&gt; &lt;dbl&gt;
+##  1 189889     0
+##  2 189889     0
+##  3 189889     0
+##  4 189890     1
+##  5 189890     1
+##  6 189890     1
+##  7 189891     1
+##  8 189891     1
+##  9 189891     1
+## 10 189894     1
+## # … with 165,447 more rows
+```
+
+---
+
+layout: false
+class: middle
+
+# Filtering
+
+---
+
+layout: true
+
+## `filter()`
+
+
+```r
+?dplyr::filter
+```
+
+---
+
+`filter()` subsets data frames and keeps all rows that satisfy one or more specified conditions. Applied on the rows, the condition(s) must produce the logical `TRUE` for the row to be kept in the data frame. If a condition evaluates to `NA`, the corresponding row is dropped.
+
+---
+
+Function call and arguments:
+
+.pull-left[
+
+```r
+*filter(.data,
+       ...)
+```
+]
+.pull-right[
+`.data`
+
+A `data.frame` or `tibble` that should be filtered
+]
+
+---
+
+Function call and arguments:
+
+.pull-left[
+
+```r
+filter(.data,
+*      ...,)
+```
+]
+.pull-right[
+`...`
+
+- A data masking expression that returns a logical value and that is defined in terms of the variables in the `.data` argument
+- Multiple expressions can be combined by the "and" (`&amp;`) and/or "or" (`|`) operator
+]
+
+---
+
+layout: false
+
+## Filter by a Single Variable
+
+
+```r
+tbl_enoe %&gt;% 
+  filter(married == 1)
+```
+
+```
+## # A tibble: 94,973 × 17
+##        id migrate   age munici…¹ fence  year quarter sex   marit…² empl_…³  educ
+##     &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt;    &lt;chr&gt; &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;dbl&gt;
+##  1 189890       0    26 2004     0      2005       3 Male  Married Full-t…    10
+##  2 189890       0    26 2004     0      2006       0 Male  Married Full-t…    10
+##  3 189891       0    36 2004     0      2006       3 Male  Married Full-t…     6
+##  4 189891       0    36 2004     0      2007       0 Male  Married Full-t…     6
+##  5 189891       0    36 2004     0      2007       1 Male  Married Full-t…     6
+##  6 189894       0    33 2004     1      2010       2 NA    Married Full-t…     9
+##  7 189894       0    33 2004     1      2011       0 Fema… Married Full-t…     9
+##  8 189894       0    33 2004     1      2011       1 NA    Married Full-t…     9
+##  9 189895       0    32 2004     1      2012       0 Male  Married Full-t…     9
+## 10 189895       0    32 2004     1      2012       1 Male  Married Full-t…     9
+## # … with 94,963 more rows, 6 more variables: income &lt;dbl&gt;, female &lt;dbl&gt;,
+## #   married &lt;dbl&gt;, employed &lt;dbl&gt;, ln_income &lt;dbl&gt;, period &lt;dbl&gt;, and
+## #   abbreviated variable names ¹​municipality, ²​marital_status, ³​empl_status
+```
+
+---
+
+## Filter by Multiple Variables
+
+
+```r
+tbl_enoe %&gt;% 
+  filter(married == 1, income &gt; 0 &amp; income &lt;= 50000)
+```
+
+```
+## # A tibble: 51,546 × 17
+##        id migrate   age munici…¹ fence  year quarter sex   marit…² empl_…³  educ
+##     &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt;    &lt;chr&gt; &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;dbl&gt;
+##  1 189891       0    36 2004     0      2006       3 Male  Married Full-t…     6
+##  2 189891       0    36 2004     0      2007       0 Male  Married Full-t…     6
+##  3 189891       0    36 2004     0      2007       1 Male  Married Full-t…     6
+##  4 189894       0    33 2004     1      2010       2 NA    Married Full-t…     9
+##  5 189894       0    33 2004     1      2011       0 Fema… Married Full-t…     9
+##  6 189894       0    33 2004     1      2011       1 NA    Married Full-t…     9
+##  7 189895       0    32 2004     1      2012       0 Male  Married Full-t…     9
+##  8 189895       0    32 2004     1      2012       1 Male  Married Full-t…     9
+##  9 189895       0    32 2004     1      2012       2 Male  Married Full-t…     9
+## 10 189902       0    30 2004     1      2010       2 Male  Married Full-t…     8
+## # … with 51,536 more rows, 6 more variables: income &lt;dbl&gt;, female &lt;dbl&gt;,
+## #   married &lt;dbl&gt;, employed &lt;dbl&gt;, ln_income &lt;dbl&gt;, period &lt;dbl&gt;, and
+## #   abbreviated variable names ¹​municipality, ²​marital_status, ³​empl_status
+```
+
+---
+
+## Filter using Tidy Selection
+
+.panelset[
+.panel[.panel-name[`if_any()`]
+Filter if **any** variable satisfies the condition:
+
+
+```r
+tbl_enoe %&gt;% 
+  filter(if_any(all_of(c("income", "employed")), ~ !is.na(.)))
+```
+
+.scroll-box-14[
+
+```
+## # A tibble: 165,416 × 17
+##        id migrate   age munici…¹ fence  year quarter sex   marit…² empl_…³  educ
+##     &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt;    &lt;chr&gt; &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;dbl&gt;
+##  1 189889       0    50 2004     0      2004       2 Fema… Single  Unempl…    12
+##  2 189889       0    50 2004     0      2004       3 Fema… Single  Unempl…    12
+##  3 189889       0    50 2004     0      2005       0 Fema… Single  Unempl…    12
+##  4 189890       0    26 2004     0      2005       3 Male  Married Full-t…    10
+##  5 189890       0    26 2004     0      2006       0 Male  Married Full-t…    10
+##  6 189890       0    26 2004     0      2006       1 Male  &lt;NA&gt;    Full-t…    10
+##  7 189891       0    36 2004     0      2006       3 Male  Married Full-t…     6
+##  8 189891       0    36 2004     0      2007       0 Male  Married Full-t…     6
+##  9 189891       0    36 2004     0      2007       1 Male  Married Full-t…     6
+## 10 189894       0    33 2004     1      2010       2 NA    Married Full-t…     9
+## # … with 165,406 more rows, 6 more variables: income &lt;dbl&gt;, female &lt;dbl&gt;,
+## #   married &lt;dbl&gt;, employed &lt;dbl&gt;, ln_income &lt;dbl&gt;, period &lt;dbl&gt;, and
+## #   abbreviated variable names ¹​municipality, ²​marital_status, ³​empl_status
+```
+]
+]
+
+.panel[.panel-name[`if_all()`]
+Filter if **all** variables satisfy the condition:
+
+
+```r
+tbl_enoe %&gt;% 
+  filter(if_all(all_of(c("income", "employed")), ~ !is.na(.)))
+```
+
+.scroll-box-14[
+
+```
+## # A tibble: 147,692 × 17
+##        id migrate   age munici…¹ fence  year quarter sex   marit…² empl_…³  educ
+##     &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt;    &lt;chr&gt; &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;dbl&gt;
+##  1 189889       0    50 2004     0      2004       2 Fema… Single  Unempl…    12
+##  2 189889       0    50 2004     0      2004       3 Fema… Single  Unempl…    12
+##  3 189889       0    50 2004     0      2005       0 Fema… Single  Unempl…    12
+##  4 189891       0    36 2004     0      2006       3 Male  Married Full-t…     6
+##  5 189891       0    36 2004     0      2007       0 Male  Married Full-t…     6
+##  6 189891       0    36 2004     0      2007       1 Male  Married Full-t…     6
+##  7 189894       0    33 2004     1      2010       2 NA    Married Full-t…     9
+##  8 189894       0    33 2004     1      2011       0 Fema… Married Full-t…     9
+##  9 189894       0    33 2004     1      2011       1 NA    Married Full-t…     9
+## 10 189895       0    32 2004     1      2012       0 Male  Married Full-t…     9
+## # … with 147,682 more rows, 6 more variables: income &lt;dbl&gt;, female &lt;dbl&gt;,
+## #   married &lt;dbl&gt;, employed &lt;dbl&gt;, ln_income &lt;dbl&gt;, period &lt;dbl&gt;, and
+## #   abbreviated variable names ¹​municipality, ²​marital_status, ³​empl_status
+```
+]
+]
+]
+
+---
+
+## Task 2: Filter the ENE/ENOE Data and Keep a Subset of Columns
+
+.panelset[
+.panel[.panel-name[Task]
+1. Select all columns that are not of type "character" except `year` and `quarter`.
+
+2. Remove all rows from the resulting data frame that contain any missing values in all columns except of `income` and `ln_income`.
+]
+.panel[.panel-name[Code]
+
+```r
+tbl_enoe &lt;- tbl_enoe %&gt;% 
+  select(!where(is.character), -year, -quarter) %&gt;% 
+  filter(if_all(!ends_with("income"), ~ !is.na(.)))
+
+tbl_enoe
+```
+]
+.panel[.panel-name[Output]
+
+```
+## # A tibble: 157,248 × 11
+##        id migrate   age municipality  educ income female married emplo…¹ ln_in…²
+##     &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt;        &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
+##  1 189889       0    50 2004            12      0      1       0       0 -Inf   
+##  2 189889       0    50 2004            12      0      1       0       0 -Inf   
+##  3 189889       0    50 2004            12      0      1       0       0 -Inf   
+##  4 189890       0    26 2004            10     NA      0       1       1   NA   
+##  5 189890       0    26 2004            10     NA      0       1       1   NA   
+##  6 189891       0    36 2004             6   3440      0       1       1    8.14
+##  7 189891       0    36 2004             6   3440      0       1       1    8.14
+##  8 189891       0    36 2004             6   3440      0       1       1    8.14
+##  9 189894       0    33 2004             9    559      0       1       1    6.33
+## 10 189894       0    33 2004             9    559      1       1       1    6.33
+## # … with 157,238 more rows, 1 more variable: period &lt;dbl&gt;, and abbreviated
+## #   variable names ¹​employed, ²​ln_income
+```
+
+]
+]
+
+---
+
+class: middle
+
+# Arrange Observations
+
+---
+
+## `arrange()`
+
+
+```r
+?dplyr::arrange
+```
+
+Orders the rows in a data frame by the values of the columns provided in the function arguments.
+
+--
+
+.pull-left.short-width[
+.big-emoji[➡️]
+]
+
+.pull-right.lo-wi[
+Useful if observations should be sorted, e. g. in a descriptive summary table!
+]
+
+---
+
+## Arranging Observations by Income
+
+
+```r
+tbl_enoe %&gt;% 
+  arrange(income)
+```
+
+```
+## # A tibble: 157,248 × 11
+##        id migrate   age municipality  educ income female married emplo…¹ ln_in…²
+##     &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt;        &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
+##  1 189889       0    50 2004            12      0      1       0       0    -Inf
+##  2 189889       0    50 2004            12      0      1       0       0    -Inf
+##  3 189889       0    50 2004            12      0      1       0       0    -Inf
+##  4 189898       0    28 2004             9      0      1       1       0    -Inf
+##  5 189898       0    28 2004             9      0      1       1       0    -Inf
+##  6 189898       0    28 2004             9      0      1       1       0    -Inf
+##  7 189899       0    27 2004             6      0      1       1       0    -Inf
+##  8 189908       0    15 2004             9      0      0       0       0    -Inf
+##  9 189909       0    16 2004             9      0      1       0       0    -Inf
+## 10 189909       0    16 2004             9      0      1       0       0    -Inf
+## # … with 157,238 more rows, 1 more variable: period &lt;dbl&gt;, and abbreviated
+## #   variable names ¹​employed, ²​ln_income
+```
+
+---
+
+## Arranging Observations by Sex and Income in Descending Order
+
+
+```r
+tbl_enoe %&gt;% 
+  arrange(female, desc(income))
+```
+
+```
+## # A tibble: 157,248 × 11
+##         id migrate   age municipal…¹  educ income female married emplo…² ln_in…³
+##      &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt;       &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
+##  1 5890042       0    60 28022           3 7.50e5      0       1       1    13.5
+##  2 5892262       0    41 28027          12 1.72e5      0       1       1    12.1
+##  3 5912451       0    55 28033          19 1.67e5      0       1       1    12.0
+##  4 5886803       0    33 28022          12 1.29e5      0       1       1    11.8
+##  5 5886803       0    33 28022          12 1.29e5      0       1       1    11.8
+##  6 5924420       0    42 28040          17 1.29e5      0       1       1    11.8
+##  7  376898       0    53 2002           17 1.12e5      0       1       1    11.6
+##  8  218665       0    36 2004           12 1.03e5      0       1       1    11.5
+##  9  390155       0    53 2002           16 1.00e5      0       1       1    11.5
+## 10  390155       0    53 2002           16 1.00e5      0       1       1    11.5
+## # … with 157,238 more rows, 1 more variable: period &lt;dbl&gt;, and abbreviated
+## #   variable names ¹​municipality, ²​employed, ³​ln_income
+```
+
+---
+
+class: middle
+
+# Grouping and Summarizing Observations
+
+---
+
+## `group_by()`
+
+
+```r
+?dplyr::group_by
+```
+
+- Groups data based on the specified columns and returns a grouped `tibble`
+
+- Very useful in combination with `summary()` to create grouped summary statistics
+
+---
+
+## `summarize()`
+
+
+```r
+?dplyr::summarize
+```
+
+- Creates a data frame with one (or more) rows for each combination of grouping variables
+
+- Without grouping variables, the output has one row summarizing all observations
+
+- Output contains one column for each specified summary statistic
+
+- Tidy selection can be used to select columns to summarize
+
+---
+
+## Useful Summary Statistics
+
+| Function        | Description                                                                      |
+| --------------- | -------------------------------------------------------------------------------- |
+| `mean()`        | Returns the mean of a numerical vector.                                          |
+| `median()`      | Returns the median of a numerical vector. See above for handling missing values. |
+| `sd()`          | Returns the standard deviation of a numerical vector.                            |
+| `min()`/`max()` | Returns the minimum/maximum value of a numerical vector.                         |
+| `n()`           | Counts the numbers of observations.                                              |
+
+--
+
+.pull-left.short-width[
+.big-emoji[⚠️]
+]
+
+.pull-right.lo-wi[
+Be sure to specify `na.rm = TRUE` if the vector has missing values, otherwise `NA` will be returned!
+]
+
+---
+
+## Count Observations in Each Municipality
+
+
+```r
+tbl_enoe %&gt;% 
+  group_by(municipality) %&gt;% 
+  summarise(n = n())
+```
+
+```
+## # A tibble: 24 × 2
+##    municipality     n
+##    &lt;fct&gt;        &lt;int&gt;
+##  1 2004         63908
+##  2 NA            1135
+##  3 2002         35176
+##  4 2003          4731
+##  5 5025          2623
+##  6 5002          2893
+##  7 5014           649
+##  8 8037         10485
+##  9 8005            25
+## 10 26055         3021
+## # … with 14 more rows
+```
+
+---
+
+## Check for Missings in Income for Each Pair of Municipality and Period
+
+
+```r
+tbl_enoe %&gt;%
+  group_by(municipality, period) %&gt;% 
+  summarise(na_income = sum(is.na(income)))
+```
+
+.scroll-box-18[
+
+```
+## `summarise()` has grouped output by 'municipality'. You can override using the
+## `.groups` argument.
+```
+
+```
+## # A tibble: 782 × 3
+## # Groups:   municipality [24]
+##    municipality period na_income
+##    &lt;fct&gt;         &lt;dbl&gt;     &lt;int&gt;
+##  1 2004           0.5         51
+##  2 2004           0.75        41
+##  3 2004           1           44
+##  4 2004           1.25        38
+##  5 2004           1.5         38
+##  6 2004           1.75        33
+##  7 2004           2           33
+##  8 2004           2.25       103
+##  9 2004           2.5        147
+## 10 2004           2.75       181
+## # … with 772 more rows
+```
+]
+
+---
+
+## Create Summary Statistics for Dummy Variables
+
+
+```r
+tbl_enoe %&gt;% 
+  summarise(across(c("female", "married", "employed"), ~ mean(.)))
+```
+
+```
+## # A tibble: 1 × 3
+##   female married employed
+##    &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;
+## 1  0.502   0.576    0.623
+```
+
+---
+
+## Create Summary Statistics for Continous Variables
+
+
+```r
+tbl_enoe %&gt;% 
+  summarise(
+    across(
+      c("income", "age", "educ"),
+      .fns = list(mean = ~ mean(., na.rm = T), sd = ~ sd(., na.rm = T))
+    )
+  )
+```
+
+```
+## # A tibble: 1 × 6
+##   income_mean income_sd age_mean age_sd educ_mean educ_sd
+##         &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
+## 1       3449.     5430.     35.1   13.6      9.19    4.10
+```
+
+---
+
+class: middle
+
+# Tidy Data
+
+---
+
+## What makes data tidy?
+
+- Data can be represented in many ways:
+
+  - Variables values may be spread over several columns, e. g. one colum for each year
+  
+  - Many variables may be stored in one column, e. g. `income` and `age` are stored in the same column `value` and another column specifies which variable the value in `value` corresponds to
+  
+  - Observations may be spreach across columns
+  
+--
+  
+- Tidy data is an organizational framework that ensure that data is stored in the correct format, i. e. it follows these rules:
+
+  1. Variables stored in separate columns.
+  
+  2. Rows uniquely identify observations.
+  
+  3. All values are stored in their own cell.
+  
+---
+
+## Example for Messy Data
+
+
+```r
+tbl_enoe %&gt;% 
+  summarise(
+    across(
+      c("income", "age", "educ"),
+      .fns = list(
+        mean = ~ mean(., na.rm = T),
+        sd = ~ sd(., na.rm = T)
+      )
+    )
+  )
+```
+
+```
+## # A tibble: 1 × 6
+##   income_mean income_sd age_mean age_sd educ_mean educ_sd
+##         &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
+## 1       3449.     5430.     35.1   13.6      9.19    4.10
+```
+
+---
+
+## Example for Messy Data
+
+
+```
+## # A tibble: 1 × 6
+##   income_mean income_sd age_mean age_sd educ_mean educ_sd
+##         &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
+## 1       3449.     5430.     35.1   13.6      9.19    4.10
+```
+
+- The observation here corresponds to the column in our data set that is summarized
+
+- The variables are the summary statistics ("mean" and "sd")
+
+--
+
+.pull-left.short-width[
+.big-emoji[⚠️]
+]
+
+.pull-right.lo-wi[
+Data is stored in a too wide format!
+]
+
+--
+
+.pull-left.short-width[
+.big-emoji[➡️]
+]
+
+.pull-right.lo-wi[
+We have to bring the data into a longer format with one row for each summarized column of the ENE/ENOE data set and two columns (`mean` and `sd`)
+]
+
+---
+
+class: middle
+background-image: url("https://tidyr.tidyverse.org/logo.png")
+background-size: 100px
+background-position: 90% 10%
+
+# `tidyr`
+
+&gt; The goal of `tidyr` is to help you create tidy data. Tidy data is data where:
+&gt;
+&gt; 1. Every column is variable.
+&gt; 2. Every row is an observation.
+&gt; 3. Every cell is a single value.
+&gt;
+&gt; Tidy data describes a standard way of storing data that is used wherever possible throughout the tidyverse. If you ensure that your data is tidy, you’ll spend less time fighting with the tools and more time working on your analysis.
+&gt;
+&gt; .right[&lt;a name=cite-tidyr&gt;&lt;/a&gt;[Wickham and Girlich (2022)](#bib-tidyr)]
+
+---
+
+layout: true
+
+## `pivot_longer`
+
+
+```r
+?tidyr::pivot_longer
+```
+
+`pivot_longer()` "lengthens" data, increasing the number of rows and decreasing the number of columns. The inverse transformation is `pivot_wider()`.
+
+---
+
+Function call and arguments:
+
+.pull-left[
+
+```r
+pivot_longer(data,
+*            cols,
+             names_to = "name",
+             names_sep = NULL,
+             values_to = "value")
+```
+]
+
+.pull-right[
+`cols`
+
+Tidy selection of columns to restructure into long format
+]
+
+---
+
+Function call and arguments:
+
+.pull-left[
+
+```r
+pivot_longer(data,
+             cols, 
+*            names_to = "name",
+             names_sep = NULL,
+             values_to = "value")
+```
+]
+
+.pull-right[
+`names_to`
+
+- Character vector specifying the new column(s) that are created when pivoting from wide to long format
+- If more than one column are created, `names_sep` (or `names_pattern`) has to be specified as well
+]
+
+---
+
+Function call and arguments:
+
+.pull-left[
+
+```r
+pivot_longer(data,
+             cols, 
+             names_to = "name",
+*            names_sep = NULL,
+             values_to = "value")
+```
+]
+
+.pull-right[
+`names_sep`
+
+Either a numeric vector that specifies the position to separate the name on or a single string that specifies a regular expression to separate the name
+]
+
+---
+
+Function call and arguments:
+
+.pull-left[
+
+```r
+pivot_longer(data,
+             cols, 
+             names_to = "name",
+             names_sep = NULL, 
+*            values_to = "value")
+```
+]
+
+.pull-right[
+`values_to`
+
+A character vector of length 1 that specifies the column name in which to store the value
+]
+
+---
+
+layout: false
+
+## Pivoting Summary Statistics from Wide to Long Format
+
+.panelset[
+.panel[.panel-name[Code]
+
+```r
+tbl_enoe %&gt;% 
+  summarise(across(c("income", "age", "educ"),
+                   .fns = list(mean = ~ mean(., na.rm = T), sd = ~ sd(., na.rm = T)))) %&gt;% 
+* pivot_longer(everything(),
+*              names_to = c("variable", "statistic"),
+*              names_sep = "_",
+*              values_to = "value")
+```
+]
+.panel[.panel-name[Output]
+
+```
+## # A tibble: 6 × 3
+##   variable statistic   value
+##   &lt;chr&gt;    &lt;chr&gt;       &lt;dbl&gt;
+## 1 income   mean      3449.  
+## 2 income   sd        5430.  
+## 3 age      mean        35.1 
+## 4 age      sd          13.6 
+## 5 educ     mean         9.19
+## 6 educ     sd           4.10
+```
+
+.pull-left.short-width[
+.big-emoji[⚠️]
+]
+
+.pull-right.lo-wi[
+Now the data is too long because for each observation, there are two rows!
+]
+
+]
+]
+
+---
+
+
+layout: true
+
+## `pivot_wider`
+
+
+```r
+?tidyr::pivot_wider
+```
+
+`pivot_wider()`  "widens" data, increasing the number of columns and decreasing the number of rows. The inverse transformation is `pivot_longer()`.
+
+---
+
+Function call and arguments:
+
+.pull-left[
+
+```r
+pivot_wider(data,
+*            names_from = name,
+             values_from = value)
+```
+]
+
+.pull-right[
+`names_from`
+
+Tidy selection of columns to get the name of the output column
+]
+
+---
+
+
+Function call and arguments:
+
+.pull-left[
+
+```r
+pivot_wider(data,
+             names_from = name, 
+*            values_from = value)
+```
+]
+
+.pull-right[
+`values_from`
+
+Tidy selection of columns to get the cell value from
+]
+
+---
+
+layout: false
+
+## Pivoting from Long to Wide Format
+
+.panelset[
+.panel[.panel-name[Code]
+
+```r
+tbl_enoe %&gt;% 
+  summarise(across(c("income", "age", "educ"),
+                   .fns = list(mean = ~ mean(., na.rm = T), sd = ~ sd(., na.rm = T)))) %&gt;% 
+  pivot_longer(everything(),
+               names_to = c("variable", "statistic"),
+               names_sep = "_",
+               values_to = "value") %&gt;% 
+* pivot_wider(names_from = statistic, values_from = value)
+```
+]
+.panel[.panel-name[Output]
+
+```
+## # A tibble: 3 × 3
+##   variable    mean      sd
+##   &lt;chr&gt;      &lt;dbl&gt;   &lt;dbl&gt;
+## 1 income   3449.   5430.  
+## 2 age        35.1    13.6 
+## 3 educ        9.19    4.10
+```
+]
+]
+
+---
+
+layout: false
+class: middle
+
+# Merging Data
+
+---
+
+## Appending Data Sets
+
+.pull-left[
+#### Row-wise
+
+
+```r
+?dplyr::bind_rows
+```
+
+- Efficient implementation of `base` R's `cbind()` function that takes several data frames or a list of data frames as argument and returns a single row-binded data frame.
+
+- Column names are used for matching the columns of the data frames and if there are columns missing in a data frame, these are filled with `NA`.
+
+- Using the `.id` argument, the names of data frames lists are added in a new column in the resulting data frame.
+
+]
+
+.pull-right[
+#### Column-wise
+
+
+```r
+?dplyr::bind_cols
+```
+
+- Efficient implementation of `base` R's `r`bind()` function that takes several data frames or a list of data frames as argument and returns a single column-binded data frame
+
+- Rows are matched by position &amp;rarr; data frames have to be of the same length
+
+]
+
+---
+
+## Binding Columns of Summary Statistics
+
+.panelset[
+.panel[.panel-name[Code]
+
+```r
+# Variables to summarize
+sum_stat_vars &lt;- c("income", "age", "educ")
+
+# Create data frame with means for each variable in sum_stat_vars
+sum_stat_mean &lt;- tbl_enoe %&gt;% 
+  summarize(across(all_of(sum_stat_vars), ~ mean(., na.rm = T))) %&gt;% 
+  pivot_longer(everything(),
+               names_to = "variable",
+               values_to = "mean")
+
+# Create data frame with standard deviations for each variable in sum_stat_vars
+sum_stat_sd &lt;- tbl_enoe %&gt;% 
+  summarize(across(all_of(sum_stat_vars), ~ sd(., na.rm = T))) %&gt;% 
+  pivot_longer(everything(),
+               names_to = "variable",
+               values_to = "sd")
+
+# Bind all columns of sum_stat_mean and the "sd" column of sum_stat_sd
+bind_cols(sum_stat_mean, sum_stat_sd[, "sd"])
+```
+
+]
+.panel[.panel-name[Output]
+
+```
+## # A tibble: 3 × 3
+##   variable    mean      sd
+##   &lt;chr&gt;      &lt;dbl&gt;   &lt;dbl&gt;
+## 1 income   3449.   5430.  
+## 2 age        35.1    13.6 
+## 3 educ        9.19    4.10
+```
+
+]
+]
+
+---
+
+## Task 3: Import and Prepare the Fence Construction Data Sets
+
+.panelset[
+.panel[.panel-name[Task]
+Take a look at the fence construction data sets residing in the directory `data/raw/fence_construction/csv/`. For each year, we have quarterly information on whether border fence construction started in a municipality or not.
+
+Import all data sets at once, making use of the `purrr` packages. Then, bring the data into the correct format (incl. mutating columns as in [Task 1](#task-1)) and append individual data sets to one data frame.
+
+*Hint:* To get a list of all files residing in a directory, you can use the `list.files()` function.
+]
+.panel[.panel-name[Code]
+
+```r
+library(purrr)
+
+# List all files in the directory
+dir &lt;- "data/raw/fence_construction/csv/"
+dir_files &lt;- list.files(dir)
+
+tbl_fence &lt;- paste0(dir, dir_files) %&gt;% # Paste directory path and file names
+  set_names(str_remove(dir_files, "\\.csv")) %&gt;% # Set names to file names; remove suffix
+  map(read_csv) %&gt;% # Apply read_csv() over all file paths (returning a list of data frames)
+  bind_rows(.id = "year") %&gt;% # Row-bind data frames and add column year as identifier
+  # Pivot Q1 to Q4 to long format
+  pivot_longer(starts_with("Q"), names_to = "quarter", values_to = "fence") %&gt;% 
+  mutate(quarter = as.numeric(str_remove(quarter, "Q")) - 1, year = as.numeric(year),
+         period = year - min(year) + quarter/4) %&gt;% 
+  select(-year, -quarter) %&gt;% 
+  filter(!is.na(fence)) # Filter observations with missings in the fence dummy
+
+tbl_fence
+```
+
+]
+.panel[.panel-name[Output]
+
+```
+## # A tibble: 741 × 3
+##    municipality fence period
+##           &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
+##  1         2004     0   0.5 
+##  2         2004     0   0.75
+##  3         2002     0   0.5 
+##  4         2002     0   0.75
+##  5         2003     0   0.5 
+##  6         2003     0   0.75
+##  7         5025     0   0.5 
+##  8         5025     0   0.75
+##  9         5002     0   0.5 
+## 10         5002     0   0.75
+## # … with 731 more rows
+```
+
+]
+]
+
+---
+
+## Joining Data Frames
+
+.pull-left[
+- Combining a pair of data frames is achieved by joining them
+
+- Observations in both data frames are matched by keys
+
+- The data frames on the right have a unique identifier to match observations on (`id`)
+
+- `dplyr` offers several ways to join both data frames by `id` to create a single data frame with both, `x` and `y`, columns
+]
+
+.pull-right[
+&lt;img src="../../resources/assets/initial_df.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+.right[&lt;a name=cite-tidyexplain&gt;&lt;/a&gt;[Aden-Buie (2018)](https://www.garrickadenbuie.com/project/tidyexplain/)]
+]
+
+---
+
+## Full Join
+
+&lt;img src="../../resources/assets/full_join.gif" width="50%" style="display: block; margin: auto;" /&gt;
+
+.right[[Aden-Buie (2018)](https://www.garrickadenbuie.com/project/tidyexplain/)]
+
+---
+
+## Left Join
+
+&lt;img src="../../resources/assets/left_join.gif" width="50%" style="display: block; margin: auto;" /&gt;
+
+.right[[Aden-Buie (2018)](https://www.garrickadenbuie.com/project/tidyexplain/)]
+
+---
+
+## Right Join
+
+&lt;img src="../../resources/assets/right_join.gif" width="50%" style="display: block; margin: auto;" /&gt;
+
+.right[[Aden-Buie (2018)](https://www.garrickadenbuie.com/project/tidyexplain/)]
+
+---
+
+## Inner Join
+
+&lt;img src="../../resources/assets/inner_join.gif" width="50%" style="display: block; margin: auto;" /&gt;
+
+.right[[Aden-Buie (2018)](https://www.garrickadenbuie.com/project/tidyexplain/)]
+
+---
+
+## Task 4: Join ENE/ENOE Data and Fence Construction Data
+
+.panelset[
+.panel[.panel-name[Task]
+In order for us to be able to analyze the effect of border fence construction on the migration of Mexicans to the US, we need to combine information on individuals and information on when a fence was constructed. Fortunately, we have data for both.
+
+Join the ENE/ENOE data frame with the fence construction data frame using appropriate keys to join observations on. Export the resulting data frame to the directory `data/processed/` as csv.
+]
+.panel[.panel-name[Code]
+
+```r
+# Ensure consistent data type of key variables
+tbl_fence &lt;- tbl_fence %&gt;% 
+  mutate(municipality = forcats::as_factor(municipality))
+
+# Inner join omits observations for which no information on fence construction is given.
+# For the analysis, these observations are not needed.
+tbl_out &lt;- inner_join(tbl_enoe, tbl_fence, by = c("municipality", "period"))
+
+write_csv(tbl_out, "data/processed/fence_migration.csv")
+
+tbl_out
+```
+]
+.panel[.panel-name[Output]
+
+```
+## # A tibble: 156,113 × 12
+##        id migrate   age municipality  educ income female married emplo…¹ ln_in…²
+##     &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt;        &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
+##  1 189889       0    50 2004            12      0      1       0       0 -Inf   
+##  2 189889       0    50 2004            12      0      1       0       0 -Inf   
+##  3 189889       0    50 2004            12      0      1       0       0 -Inf   
+##  4 189890       0    26 2004            10     NA      0       1       1   NA   
+##  5 189890       0    26 2004            10     NA      0       1       1   NA   
+##  6 189891       0    36 2004             6   3440      0       1       1    8.14
+##  7 189891       0    36 2004             6   3440      0       1       1    8.14
+##  8 189891       0    36 2004             6   3440      0       1       1    8.14
+##  9 189894       0    33 2004             9    559      0       1       1    6.33
+## 10 189894       0    33 2004             9    559      1       1       1    6.33
+## # … with 156,103 more rows, 2 more variables: period &lt;dbl&gt;, fence &lt;dbl&gt;, and
+## #   abbreviated variable names ¹​employed, ²​ln_income
+```
+]
+]
+
+---
+
+layout: false
+
+# References
+
+&lt;a name=bib-tidyexplain&gt;&lt;/a&gt;[Aden-Buie, G.](#cite-tidyexplain) (2018).
+_tidyexplain. Tidy Animated Verbs_. URL:
+[https://www.garrickadenbuie.com/project/tidyexplain/](https://www.garrickadenbuie.com/project/tidyexplain/)
+(visited on Jan. 01, 2023).
+
+&lt;a name=bib-dplyr&gt;&lt;/a&gt;[Wickham, H., R. François, L. Henry, et
+al.](#cite-dplyr) (2022). _dplyr: A Grammar of Data Manipulation_.
+https://dplyr.tidyverse.org, https://github.com/tidyverse/dplyr.
+
+&lt;a name=bib-tidyr&gt;&lt;/a&gt;[Wickham, H. and M. Girlich](#cite-tidyr) (2022).
+_tidyr: Tidy Messy Data_. https://tidyr.tidyverse.org,
+https://github.com/tidyverse/tidyr.
+
+&lt;a name=bib-r4ds&gt;&lt;/a&gt;[Wickham, H. and G. Grolemund](#cite-r4ds) (2016).
+_R for data science. import, tidy, transform, visualize, and model
+data_. O'Reilly. URL:
+[https://r4ds.had.co.nz/](https://r4ds.had.co.nz/).
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

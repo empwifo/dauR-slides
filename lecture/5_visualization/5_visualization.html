@@ -1,0 +1,1421 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Data Analysis using R</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Sven Werenbeck-Ueding" />
+    <script src="5_visualization_files/header-attrs-2.23.3/header-attrs.js"></script>
+    <link href="5_visualization_files/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="5_visualization_files/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+    <link href="5_visualization_files/panelset-0.2.6/panelset.css" rel="stylesheet" />
+    <script src="5_visualization_files/panelset-0.2.6/panelset.js"></script>
+    <link href="5_visualization_files/tile-view-0.2.6/tile-view.css" rel="stylesheet" />
+    <script src="5_visualization_files/tile-view-0.2.6/tile-view.js"></script>
+    <script src="5_visualization_files/htmlwidgets-1.5.4/htmlwidgets.js"></script>
+    <script src="5_visualization_files/viz-1.8.2/viz.js"></script>
+    <link href="5_visualization_files/DiagrammeR-styles-0.2/styles.css" rel="stylesheet" />
+    <script src="5_visualization_files/grViz-binding-1.0.9/grViz.js"></script>
+    <link rel="stylesheet" href="style.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Data Analysis using R
+]
+.subtitle[
+## Visualization
+]
+.author[
+### Sven Werenbeck-Ueding
+]
+.date[
+### 21.09.2023
+]
+
+---
+
+
+&lt;!-- Setup --&gt;
+
+
+
+
+
+
+
+<div id="htmlwidget-2aa1c5193382d21cc394" style="width:100%;height:504px;" class="grViz html-widget"></div>
+<script type="application/json" data-for="htmlwidget-2aa1c5193382d21cc394">{"x":{"diagram":"\n  digraph {\n  graph [fontname=\"Helvetica,Arial,sans-serif\", compound = true]\n\tnode [fontname=\"Helvetica,Arial,sans-serif\"]\n\tedge [fontname=\"Helvetica,Arial,sans-serif\"]\n    \n    rankdir=LR\n    \n    subgraph cluster_0 {\n        style = rounded\n        color = black\n    \n        {\n            node [style = rounded, shape = box]\n            Import -> Tidy\n        }\n    \n        subgraph cluster_1 {\n            style = rounded\n            color = black\n            \n            node [style = rounded, shape = box]\n            Transform Visualize Model\n            \n            edge []\n            Transform -> Visualize\n            Visualize -> Model\n            Model -> Transform\n            \n            label = \"Exploration\"\n            labeljust = \"l\"\n            labelloc = \"b\"\n        }\n    \n        {\n            node [style = rounded, shape = box]\n            Communicate\n        }\n    \n        Tidy -> Transform [lhead = cluster_1]\n        Model -> Communicate [ltail = cluster_1]\n        \n        label = \"Programming\"\n        labeljust = \"l\"\n        labelloc = \"b\"\n    }\n  }\n  ","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+
+.right[*Source:* &lt;a name=cite-r4ds&gt;&lt;/a&gt;[Wickham and Grolemund (2016)](https://r4ds.had.co.nz/)]
+
+---
+
+## Prerequisites
+
+
+```r
+# Load required packages
+# install.packages("wooldridge")
+library(tidyverse)
+library(RColorBrewer)
+
+# Load the CPR data set from the wooldridge package
+df_cpr &lt;- wooldridge::wage1 %&gt;% 
+  mutate(
+    sex = ifelse(female == 1, "Female", "Male"),
+    region = case_when(
+      west == 1 ~ "West",
+      south == 1 ~ "South",
+      northcen == 1 ~ "North Central",
+      T ~ "East"
+    )
+  )
+```
+
+---
+
+layout: true
+
+## Graphics in base R
+
+---
+
+.pull-left[
+- Functions for graphics in base R are fast, but limited
+
+- Useful for simple tasks such as quickly plotting histograms
+
+- Graphics content can only be written on top of each other
+
+- Elements of a plot cannot be modified or deleted
+]
+
+.pull-right[
+
+```r
+hist(df_cpr$wage)
+```
+
+&lt;img src="5_visualization_files/figure-html/unnamed-chunk-4-1.png" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+
+.pull-left.short-width[
+.big-emoji[⚠️]
+]
+
+.pull-right.long-width[
+- `base` R is rather limited when it comes to creating beautiful, customized plots
+
+- Layered approach: Adds plot components on top of each other
+
+  - Opens up for more flexibility
+  - Layers can overwrite each other to allow for post-hoc editing of components
+]
+
+---
+
+layout: false
+class: middle
+background-image: url("https://ggplot2.tidyverse.org/logo.png")
+background-size: 100px
+background-position: 90% 10%
+
+# `ggplot2`
+
+&gt; `ggplot2` is a system for declaratively creating graphics, based on "The Grammar of Graphics" by &lt;a name=cite-grammar-of-graphics&gt;&lt;/a&gt;[Wilkinson (2005)](https://doi.org/https://doi.org/10.1007/0-387-28695-0). You provide the data, tell `ggplot2` how to map variables to aesthetics, what graphical primitives to use, and it takes care of the details.
+&gt;
+&gt; .right[&lt;a name=cite-ggplot2&gt;&lt;/a&gt;[Wickham (2016)](https://ggplot2.tidyverse.org)]
+
+???
+
+- Building on the work of [Wilkinson (2005)](https://doi.org/https://doi.org/10.1007/0-387-28695-0) that describes features fundamental to *all* statistical graphs
+- Plots are the product of **mapping** your **data** on aesthetic attributes
+
+---
+
+layout: true
+
+## The Layered Grammar of Graphics
+
+---
+
+| Component | Description |
+| --------- | ----------- |
+| **Layer** | Geometric elements (**geoms**, e. g. points and lines) and statistical transformations (**stats** that summarize the data) |
+| **Scale** | Mapping of data to aesthetics (e. g. color, shape or size) of geoms and draws legends and axes |
+| **Coord** | Mapping of data to the plane of the graphic and provides axes/gridlines (usually the Cartesian coordinate system) |
+| **Facet** | Plots subsets of the data |
+| **Theme** | Styling of the plot such as fonts and background |
+
+---
+
+
+
+.pull-left[
+&lt;img src="5_visualization_files/figure-html/unnamed-chunk-6-1.png" style="display: block; margin: auto;" /&gt;
+]
+
+.pull-right[
+&lt;img src="5_visualization_files/figure-html/unnamed-chunk-7-1.png" style="display: block; margin: auto;" /&gt;
+]
+
+&lt;img src="5_visualization_files/figure-html/unnamed-chunk-8-1.png" style="display: block; margin: auto;" /&gt;
+
+.center[From top left to bottom: Geometric objects, scales and coordinate system &lt;a name=cite-layered-grammar-of-graphics&gt;&lt;/a&gt;([Wickham, 2010](https://doi.org/10.1198/jcgs.2009.07098)).]
+
+---
+
+&lt;img src="5_visualization_files/figure-html/unnamed-chunk-9-1.png" style="display: block; margin: auto;" /&gt;
+
+.right[*Source:* [Wickham (2010)](https://doi.org/10.1198/jcgs.2009.07098)]
+
+---
+
+.pull-left[
+- Graphics template consists of seven parameters (in brackets)
+
+- *Any* plot can be generated from this template
+
+- `ggplot2` provides defaults for everything except for data, mappings and geoms 
+- Syntax is similar to using the pipe operator
+]
+
+.pull-right[
+
+```r
+ggplot(data = &lt;DATA&gt;) + 
+  &lt;GEOM_FUNCTION&gt;(
+     mapping = aes(&lt;MAPPINGS&gt;),
+     stat = &lt;STAT&gt;, 
+     position = &lt;POSITION&gt;
+  ) +
+  &lt;COORDINATE_FUNCTION&gt; +
+  &lt;FACET_FUNCTION&gt;
+```
+
+.right[*Source:* [Wickham and Grolemund (2016)](https://r4ds.had.co.nz/)]
+]
+
+---
+
+layout: false
+
+## Initialize a Plot
+
+
+```r
+?ggplot
+```
+
+&gt; `ggplot()` initializes a ggplot object. It can be used to declare the input data frame for a graphic and to specify the set of plot aesthetics intended to be common throughout all subsequent layers unless specifically overridden.
+
+---
+
+layout: true
+
+## Initialize a Plot &amp;ndash; Function Call and Arguments
+
+---
+
+.pull-left[
+
+```r
+ggplot(
+  data = NULL, 
+  mapping = aes(),
+  ...
+)
+```
+]
+
+---
+
+.pull-left[
+
+```r
+ggplot(
+* data = NULL,
+  mapping = aes(),
+  ...
+)
+```
+]
+
+.pull-right[
+`data`
+
+- Default data set to use for the plot
+
+- If necessary will be converted to a `data.frame`
+
+- If not specified, must be supplied in each layer added to the plot
+]
+
+---
+
+.pull-left[
+
+```r
+ggplot(
+  data = NULL,
+* mapping = aes(),
+  ...
+)
+```
+]
+
+.pull-right[
+`mapping`
+
+- Default list of aesthetic mappings to use for plotting
+
+- If not specified must be supplied in each layer added to the plot
+]
+
+---
+
+layout: false
+
+## Initialize a Plot
+
+.panelset[
+.panel[.panel-name[Code]
+&gt; Initialize a `ggplot` object using the CPR data set and map `educ` to the x-axis and `wage` to the y-axis.
+
+
+
+```r
+ggplot(data = df_cpr,
+       mapping = aes(x = exper, 
+                     y = wage)) 
+```
+
+]
+.panel[.panel-name[Plot]
+&lt;img src="5_visualization_files/figure-html/unnamed-chunk-15-1.png" style="display: block; margin: auto;" /&gt;
+]
+]
+
+---
+
+## Add Geometric Objects
+
+.panelset[
+.panel[.panel-name[Code]
+&gt; Create a scatterplot of `wage` vs. `educ` by adding points as geoms.
+
+
+```r
+ggplot(df_cpr, 
+       aes(x = exper, 
+           y = wage)) +
+* geom_point()
+```
+
+]
+.panel[.panel-name[Plot]
+&lt;img src="5_visualization_files/figure-html/unnamed-chunk-16-1.png" style="display: block; margin: auto;" /&gt;
+]
+]
+
+---
+
+## Map Data to Geom Aesthetics
+
+.panelset[
+.panel[.panel-name[Code]
+&gt; Map `sector` to the `color` aesthetics and change the transparency of points to handle overlapping of points.
+
+
+```r
+ggplot(data = df_cpr,
+       mapping = aes(x = exper,
+                     y = wage,
+*                    color = sex)) +
+* geom_point(alpha = .5)
+```
+
+]
+.panel[.panel-name[Plot]
+&lt;img src="5_visualization_files/figure-html/unnamed-chunk-17-1.png" style="display: block; margin: auto;" /&gt;
+]
+]
+
+---
+
+## Add Titles and Labels
+
+.panelset[
+.panel[.panel-name[Code]
+&gt; Add a title to the plot and modify axis labels and legend title.
+
+
+```r
+ggplot(df_cpr, 
+       aes(x = exper, 
+           y = wage,
+           color = sex)) +
+  geom_point(alpha = .5) +
+* labs(title = "Hourly Wage ~ Years of Experience",
+*      x = "Years of Experience",
+*      y = "Wage [USD/hour]",
+*      color = "Sex")
+```
+
+]
+.panel[.panel-name[Plot]
+&lt;img src="5_visualization_files/figure-html/unnamed-chunk-18-1.png" style="display: block; margin: auto;" /&gt;
+]
+]
+
+---
+
+## Change the Styling
+
+.panelset[
+.panel[.panel-name[Code]
+&gt; Change the theme to `theme_bw()` and adjust the position of the legend.
+
+
+```r
+ggplot(df_cpr,
+       aes(x = exper, 
+           y = wage,
+           color = sex)) +
+  geom_point(alpha = .5) +
+  labs(title = "Hourly Wage ~ Years of Experience", 
+       x = "Years of Experience", 
+       y = "Wage [USD/hour]", 
+       color = "Sex") +
+* theme_bw() +
+* theme(legend.position = "top")
+```
+
+]
+.panel[.panel-name[Plot]
+&lt;img src="5_visualization_files/figure-html/unnamed-chunk-19-1.png" style="display: block; margin: auto;" /&gt;
+]
+]
+
+---
+
+## Create Facets of Plots
+
+.panelset[
+.panel[.panel-name[Code]
+&gt; Create facets to display subplots for `region`.
+
+
+```r
+ggplot(df_cpr,
+       aes(x = exper, 
+           y = wage,
+           color = sex)) +
+  geom_point(alpha = .5) +
+  labs(title = "Hourly Wage ~ Years of Experience", 
+       x = "Years of Experience", 
+       y = "Wage [USD/hour]", 
+       color = "Sex") +
+* facet_wrap(~ region) +
+  theme_bw() + 
+  theme(legend.position = "top")
+```
+
+]
+.panel[.panel-name[Plot]
+&lt;img src="5_visualization_files/figure-html/unnamed-chunk-20-1.png" style="display: block; margin: auto;" /&gt;
+]
+]
+
+---
+
+layout: false
+class: middle
+
+.pull-left.short-width[
+.big-emoji[ℹ️]
+]
+
+.pull-right.long-width[
+For brevity, we will use the same `ggplot` object (short-hand `gg`) over the next slides. This way, we need not specify every time which data to use for plotting and only have to add geoms.
+
+
+```r
+gg &lt;- df_cpr %&gt;% 
+  ggplot()
+```
+]
+
+---
+
+layout: false
+
+class: middle
+
+# Univariate Graphs
+
+
+
+
+
+
+
+
+
+---
+
+## Categorical Data
+
+.panelset[
+.panel[.panel-name[Count Bars]
+.pull-left[
+&lt;img src="5_visualization_files/figure-html/unnamed-chunk-22-1.png" style="display: block; margin: auto;" /&gt;
+]
+
+.pull-right[
+#### Bar Plot
+
+
+```r
+bar_plot &lt;- gg +
+  geom_bar(aes(x = region)) +
+  labs(x = "US Region of Residence",
+       y = "Count")
+```
+]
+]
+.panel[.panel-name[Frequency Bars]
+.pull-left[
+&lt;img src="5_visualization_files/figure-html/unnamed-chunk-24-1.png" style="display: block; margin: auto;" /&gt;
+]
+
+.pull-right[
+#### Bar Plot with Frequencies
+
+By mapping `..count../sum(..count..)` to the y-axis, the scale of the y-axis is changed to display frequencies:
+
+
+```r
+freq_bar_plot &lt;- gg +
+  geom_bar(
+    aes(x = region,
+        y = ..count../sum(..count..))
+  ) +
+  labs(x = "US Region of Residence",
+       y = "Frequency")
+```
+]
+]
+]
+
+
+---
+
+## Numerical Data
+
+.panelset[
+.panel[.panel-name[Histogram]
+.pull-left[
+&lt;img src="5_visualization_files/figure-html/unnamed-chunk-26-1.png" style="display: block; margin: auto;" /&gt;
+]
+.pull-right[
+#### Histogram
+
+
+```r
+hist &lt;- gg +
+  geom_histogram(aes(x = wage)) +
+  labs(x = "Wage [USD/hour]",
+       y = "Count")
+```
+]
+]
+.panel[.panel-name[Density]
+.pull-left[
+&lt;img src="5_visualization_files/figure-html/unnamed-chunk-28-1.png" style="display: block; margin: auto;" /&gt;
+]
+.pull-right[
+#### Kernel Density Plot
+
+
+```r
+density_plot &lt;- gg +
+  geom_density(aes(x = wage)) +
+  labs(x = "Wage [USD/hour]",
+       y = "Density")
+```
+]
+]
+]
+
+---
+
+class: middle
+
+# Bivariate Graphs
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+---
+
+## Categorical vs. Categorical
+
+.panelset[
+.panel[.panel-name[Stacked Bars]
+.pull-left[
+&lt;img src="5_visualization_files/figure-html/unnamed-chunk-30-1.png" style="display: block; margin: auto;" /&gt;
+]
+.pull-right[
+#### Stacked Bar Plot
+
+
+```r
+stack_bar_plot &lt;- gg +
+  geom_bar(aes(x = sex, fill = region)) +
+  labs(x = "Sex",
+       y = "Count",
+       fill = "US Region of Residence")
+```
+]
+]
+
+.panel[.panel-name[Grouped Bars]
+.pull-left[
+&lt;img src="5_visualization_files/figure-html/unnamed-chunk-32-1.png" style="display: block; margin: auto;" /&gt;
+]
+.pull-right[
+#### Grouped Bar Plot
+
+
+```r
+group_bar_plot &lt;- gg +
+  geom_bar(aes(x = sex, fill = region),
+           position = "dodge") +
+  labs(x = "Sex",
+       y = "Count",
+       fill = "US Region of Residence")
+```
+]
+]
+
+.panel[.panel-name[Segmented Bars]
+.pull-left[
+&lt;img src="5_visualization_files/figure-html/unnamed-chunk-34-1.png" style="display: block; margin: auto;" /&gt;
+]
+.pull-right[
+#### Segmented Bar Plot
+
+
+```r
+seg_bar_plot &lt;- gg +
+  geom_bar(aes(x = sex, fill = region),
+           position = "fill") +
+  labs(x = "Sex",
+       y = "Proportion",
+       fill = "US Region of Residence")
+```
+]
+]
+
+]
+
+---
+
+## Numerical vs. Numerical
+
+.panelset[
+.panel[.panel-name[Scatter]
+.pull-left[
+&lt;img src="5_visualization_files/figure-html/unnamed-chunk-36-1.png" style="display: block; margin: auto;" /&gt;
+]
+.pull-right[
+#### Scatterplot
+
+
+```r
+scatter_plot &lt;- gg +
+  geom_point(aes(x = exper, y = wage)) +
+  labs(x = "Years of Work Experience",
+       y = "Wage [USD/hour]")
+```
+]
+]
+
+.panel[.panel-name[Line]
+.pull-left[
+&lt;img src="5_visualization_files/figure-html/unnamed-chunk-38-1.png" style="display: block; margin: auto;" /&gt;
+]
+.pull-right[
+#### Line Plot
+
+
+```r
+line_plot &lt;- wooldridge::approval %&gt;% 
+  mutate(period = year + 1/12*month) %&gt;% 
+  ggplot() +
+  geom_line(aes(x = period, y = gasprice)) +
+  labs(x = "Year",
+       y = "Monthly Average Gas Price [ct]")
+```
+]
+]
+
+]
+
+---
+
+## Categorical vs. Numerical
+
+.panelset[
+.panel[.panel-name[Grouped Density]
+.pull-left[
+&lt;img src="5_visualization_files/figure-html/unnamed-chunk-40-1.png" style="display: block; margin: auto;" /&gt;
+]
+.pull-right[
+#### Grouped Kernel Density Plot
+
+
+```r
+grouped_density_plot &lt;- gg +
+  geom_density(aes(x = wage, fill = sex),
+               alpha = .4) +
+  labs(x = "Wage [USD/hour]", y = "Density")
+```
+]
+]
+
+.panel[.panel-name[Error Bars]
+.pull-left[
+&lt;img src="5_visualization_files/figure-html/unnamed-chunk-42-1.png" style="display: block; margin: auto;" /&gt;
+]
+.pull-right[
+#### Mean with Standard Error Bars
+
+
+```r
+error_bars &lt;- group_by(df_cpr, sex) %&gt;% 
+  summarize(mean_wage = mean(wage),
+            sd_wage = sd(wage)) %&gt;% 
+  ggplot() +
+  geom_errorbar(
+    aes(x = sex,
+        ymin = mean_wage - sd_wage,
+        ymax = mean_wage + sd_wage),
+    width = .1
+  ) +
+  geom_point(
+    aes(x = sex, y = mean_wage)
+  ) +
+  labs(x = "Sex", y = "Wage [USD/hour]")
+```
+]
+]
+
+.panel[.panel-name[Boxplot]
+.pull-left[
+&lt;img src="5_visualization_files/figure-html/unnamed-chunk-44-1.png" style="display: block; margin: auto;" /&gt;
+]
+.pull-right[
+#### Boxplot
+
+
+```r
+boxplot &lt;- gg +
+  geom_boxplot(aes(x = sex, y = wage)) +
+  labs(x = "Sex", y = "Wage [USD/hour]")
+```
+]
+]
+
+]
+
+---
+
+layout: false
+
+class: middle
+
+# Multivariate Graphs
+
+---
+
+layout: true
+
+## Creating Multivariate Graphs
+
+Including multiple variables into one graph can be achieved by combining the geometric objects seen on the previous slides, through mapping of different aesthetics and facetting.
+
+---
+
+#### Mapping
+
+Variables can be mapped to various aesthetics of geometric objects, such as
+- `shape` (only categorical)
+- `size` (only numerical)
+- `color` (both)
+- ...
+
+---
+
+#### Facets
+
+Creating subplots for groups of variables, using `facet_wrap()` for one-dimensional and `facet_grid()` for two-dimensional sequences of panels.
+
+Variables to create facets for can be passed to `facet_*()` using R formulas, e. g. `~ sector` (one-dimensional) or `female ~ sector` (two-dimensional). Formulas of type `~ sector + region` can be used to create groups for combinations of variables.
+
+---
+
+layout: false
+
+## Correlation Matrix
+
+
+
+.panelset[
+.panel[.panel-name[Plot]
+&lt;img src="5_visualization_files/figure-html/unnamed-chunk-46-1.png" style="display: block; margin: auto;" /&gt;
+]
+.panel[.panel-name[Code]
+
+```r
+library(ggcorrplot)
+
+corr_plot &lt;- df_cpr %&gt;%
+  select(wage, educ, exper, tenure, numdep) %&gt;% # Select numerical variables
+  cor(use = "complete.obs") %&gt;%                 # Corr. matrix for observations w/o NAs
+  # Display correlation in a ggplot object
+  ggcorrplot(hc.order = T,                      # Sort variables
+             type = "lower",                    # Show only lower half of the matrix
+             lab = T)                           # Show correlations in tile labels
+
+corr_plot
+```
+]
+]
+
+---
+
+layout: false
+
+class: middle
+
+# Customizing Plots
+
+---
+
+layout: false
+
+## Color Schemes
+
+.pull-left.short-width[
+.big-emoji[⚠️]
+]
+
+.pull-right.lo-wi[
+Choosing an appropriate color scheme for your graph is an important step in conveying the information!
+]
+
+.pull-left.short-width[
+.big-emoji[✅]
+]
+
+.pull-right.lo-wi[
+Make sure that your plot is readable. Avoid light on light and dark on dark colors!
+]
+
+.pull-left.short-width[
+.big-emoji[✅]
+]
+
+.pull-right.lo-wi[
+Avoid red and green in the same color palette. Colorblind people will thank you!
+]
+
+.pull-left.short-width[
+.big-emoji[✅]
+]
+
+.pull-right.lo-wi[
+Be consistent: Choose a color palette and stick to it!
+]
+
+---
+
+class: middle
+
+# `RColorBrewer`
+
+
+```r
+?RColorBrewer
+```
+
+&gt; The `RColorBrewer` package provides color palettes from [ColorBrewer 2.0](https://colorbrewer2.org/) for creating thematic graphs. Run the `display.brewer.all()` function for a display of available color palettes.
+
+---
+
+## Color Palettes for Numerical Data
+
+.pull-left[
+#### Sequential
+
+Sequential color palettes assign light colors to low values of the data and dark colors to high values, e. g.
+
+&lt;img src="5_visualization_files/figure-html/unnamed-chunk-49-1.png" style="display: block; margin: auto;" /&gt;
+]
+
+.pull-right[
+#### Diverging
+
+Diverging color palettes emphasize differences between extreme values by assigning contrasting dark colors to low and high values while assigning light colors to mid-range values, e. g.
+
+&lt;img src="5_visualization_files/figure-html/unnamed-chunk-50-1.png" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+## Color Palettes for Categorical Data
+
+#### Qualitative
+
+Qualitative color palettes are used, when there is no difference in magnitude between values, i. e. for categorical data. The primary concern is to visualize differences between classes, e. g.
+
+&lt;img src="5_visualization_files/figure-html/unnamed-chunk-51-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Change Discrete Color Palettes
+
+.panelset[
+.panel[.panel-name[Code]
+.pull-left[
+- Discrete color palettes for `ggplot` aesthetics, such as `color` or `fill`, can be changed to `RColorBrewer` palettes using the `scale_*_brewer()` functions, where the name of the palette can be passed as a string to the argument `palette`
+
+- `RColorBrewer` supports only discrete color palettes
+]
+
+.pull-right[
+
+```r
+ggplot(
+  data = df_cpr,
+  mapping = aes(
+    x = exper,
+    y = wage,
+    color = region
+  )
+) +
+  geom_point() +
+* scale_color_brewer(palette = "Set1")
+```
+]
+]
+.panel[.panel-name[Plot]
+&lt;img src="5_visualization_files/figure-html/unnamed-chunk-52-1.png" style="display: block; margin: auto;" /&gt;
+]
+]
+
+---
+
+## Change Continuous Color Palettes
+
+.panelset[
+.panel[.panel-name[Code]
+.pull-left[
+For continuous color palettes, it is best to use `ggplot2`'s built-in functions:
+
+- `scale_*_gradient()`: Creates a two color gradient based on strings passed to arguments `low` and `high`
+
+- `scale_*_gradient2()`: Creates a diverging color gradient based on strings passed to arguments `low`, `mid` and `high`. The `midpoint` defaults to 0 and, in most cases, has to be set manually to ensure a meaningful color gradient.
+]
+
+.pull-right[
+
+```r
+ggplot(
+  data = df_cpr,
+  mapping = aes(
+    x = exper,
+    y = wage,
+    color = tenure
+  )
+) +
+  geom_point() +
+* scale_color_gradient(low = "yellow",
+*                      high = "red")
+```
+]
+]
+.panel[.panel-name[Plot]
+&lt;img src="5_visualization_files/figure-html/unnamed-chunk-53-1.png" style="display: block; margin: auto;" /&gt;
+]
+]
+
+---
+
+## Themes
+
+
+```r
+?theme
+```
+
+Themes are used to modify non-data components of plots, such as titles, labels, ticks, fonts for text elements, background etc. `ggplot2` provides out-of-the-box themes for quick and easy adjustments of the overall look:
+
+.panelset[
+.panel[.panel-name[`theme_gray()`]
+&lt;img src="5_visualization_files/figure-html/unnamed-chunk-55-1.png" style="display: block; margin: auto;" /&gt;
+]
+.panel[.panel-name[`theme_bw()`]
+&lt;img src="5_visualization_files/figure-html/unnamed-chunk-56-1.png" style="display: block; margin: auto;" /&gt;
+]
+.panel[.panel-name[`theme_light()`]
+&lt;img src="5_visualization_files/figure-html/unnamed-chunk-57-1.png" style="display: block; margin: auto;" /&gt;
+]
+.panel[.panel-name[`theme_dark()`]
+&lt;img src="5_visualization_files/figure-html/unnamed-chunk-58-1.png" style="display: block; margin: auto;" /&gt;
+]
+.panel[.panel-name[`theme_minimal()`]
+&lt;img src="5_visualization_files/figure-html/unnamed-chunk-59-1.png" style="display: block; margin: auto;" /&gt;
+]
+.panel[.panel-name[...]
+.center[... and more!]
+]
+]
+
+---
+
+## More Themes
+
+The `ggthemes` package offers more out-of-the-box themes. Have a look at e. g. the Stata theme:
+
+&lt;img src="5_visualization_files/figure-html/unnamed-chunk-60-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+layout: true
+
+## Custom Themes
+
+---
+
+.panelset[
+.panel[.panel-name[Plot]
+.pull-left[
+- The appearance of presentations and seminar papers greatly improves by using a consistent design throughout your work
+
+- When outputting several plots, managing the design of each plot individually becomes very cumbersome
+
+- Instead, you may want to think about writing your own custom theme function that is applied to each plot
+
+- Changing your theme function then automatically changes the appearance of all your plots
+]
+.pull-right[
+&lt;img src="5_visualization_files/figure-html/unnamed-chunk-61-1.png" style="display: block; margin: auto;" /&gt;
+
+]
+]
+.panel[.panel-name[Code]
+
+```r
+grouped_density_plot &lt;- df_cpr %&gt;% 
+  ggplot() +
+  geom_density(aes(x = wage, fill = sex),
+               alpha = .4) +
+  labs(title = "Wage Distribution Across Sex and Region",
+       x = "Wage [USD/hour]",
+       y = "Density",
+       fill = "Sex") +
+  facet_wrap(~ region)
+
+grouped_density_plot
+```
+]
+]
+
+---
+
+.panelset[
+.panel[.panel-name[Plot]
+.pull-left[
+- A good starting point for a custom theme is `ggplot`'s `theme_classic()`: A black-and-white theme with minimal styling
+
+- Take some time to think about how the components of your plot should look like
+
+  - Font family and size
+  - Legend position and orientation
+  - Background and border colors
+  - ...
+  
+- Play around with the options until you decide on your design
+
+- Run `?ggplot2::theme` for a full list of theme arguments
+]
+.pull-right[
+&lt;img src="5_visualization_files/figure-html/custom_theme_1-1.png" style="display: block; margin: auto;" /&gt;
+
+]
+]
+.panel[.panel-name[Code]
+
+```r
+theme_custom &lt;- function() {
+  theme_bw()
+}
+
+grouped_density_plot +
+  theme_custom()
+```
+]
+]
+
+---
+
+.panelset[
+.panel[.panel-name[Plot]
+.pull-left[
+- Once you decided on what your design should look like, start implementing the options in your function
+
+- The theme arguments of `theme_classic()` can be overwritten using `%+replace%`
+
+- We may want to consider making the following changes to our design:
+  
+  - Change the default text font to "Helvetica"
+  - Increase the base font size to 14.
+  - Left-align the title, set its font to bold and its size to 150% of the base font size
+  - Increase the top and bottom margin around the title
+]
+.pull-right[
+&lt;img src="5_visualization_files/figure-html/unnamed-chunk-64-1.png" style="display: block; margin: auto;" /&gt;
+
+]
+]
+.panel[.panel-name[Code]
+
+```r
+theme_custom &lt;- function(base_family = "Helvetica",
+                         base_size = 14,
+                         padding = base_size*.75,
+                         title_size = base_size*1.25) {
+  theme_bw() %+replace%
+    theme(
+*     text = element_text(family = base_family, size = base_size),
+*     plot.title = element_text(face = "bold",
+*                               size = title_size,
+*                               hjust = 0,
+*                               margin = margin(t = padding, b = padding))
+    )
+}
+```
+]
+]
+
+---
+
+.panelset[
+.panel[.panel-name[Plot]
+.pull-left[
+- Adjust the grid: Darker and thicker dashed lines to increase the grid's visibility
+
+- Change the legend position and orientation
+
+- Set the facet background to dark blue, its text color to white and increase the padding around the text
+]
+.pull-right[
+&lt;img src="5_visualization_files/figure-html/unnamed-chunk-66-1.png" style="display: block; margin: auto;" /&gt;
+
+]
+]
+.panel[.panel-name[Code]
+
+```r
+theme_custom &lt;- function(base_family = "Helvetica",
+                         base_size = 12,
+                         padding = base_size*.75,
+                         title_size = base_size*1.25) {
+  theme_bw() %+replace%
+    theme(
+      # Add the code below to theme() in the theme_custom() function
+*     panel.grid = element_line(color = "#C8C8C8",
+*                               size = .5,
+*                               linetype = "dashed"),
+*     legend.position = "bottom",
+*     legend.direction = "horizontal",
+*     strip.text = element_text(color = "#ffffff",
+*                               margin = margin(t = 0.5*padding, b = 0.5*padding)),
+*     strip.background = element_rect(fill = "#003560")
+    )
+}
+```
+]
+]
+
+---
+
+.panelset[
+.panel[.panel-name[Plot]
+.pull-left[
+- Including control flows into your custom theme function is useful for easily toggling on or off specific components of your theme
+
+- Perhaps you want to have a short-hand argument for removing the legend title
+
+- In the theme shown on the right side, you can set `show_legend_title` to `FALSE` to remove the legend title
+]
+.pull-right[
+&lt;img src="5_visualization_files/figure-html/unnamed-chunk-68-1.png" style="display: block; margin: auto;" /&gt;
+
+]
+]
+.panel[.panel-name[Code]
+
+```r
+theme_custom &lt;- function(base_family = "Helvetica",
+                         base_size = 12,
+                         padding = base_size*.75,
+                         title_size = base_size*1.25,
+                         show_legend_title = TRUE) {
+  out &lt;- theme_bw() %+replace%
+    theme() # Include the previous theme arguments here
+  
+* if(!show_legend_title) {
+*   out &lt;- out %+replace%
+*     theme(
+*       legend.title = element_blank()
+*     )
+* }
+  
+  out
+}
+```
+]
+]
+
+---
+
+layout: false
+class: middle
+
+# Exporting Plots
+
+---
+
+## `ggsave()`
+
+
+```r
+?ggplot2::ggsave
+```
+
+.pull-left[
+- By default, `ggsave()` saves your last plot to the path given by `filename` and `path`
+
+  - Specify which plot in the environment to save by setting `plot` accordingly
+  - Instead of giving both, `filename` and `path`, the directory and file name can be specified via `filename` alone
+
+- The `device` to use, can be set implicitly by `filename` or explicitly by setting `device` to e. g. "png" or "jpeg".
+
+- Set `units` to "px" and change `width` and `height` according to the desired resolution
+]
+.pull-right[
+
+```r
+save_plot &lt;- grouped_density_plot +
+  theme_custom(base_size = 6)
+
+save_path &lt;- "output/plots/density_plot.png"
+
+ggsave(filename = save_path,
+       plot = save_plot,
+       units = "px",
+       # Full HD: 1920 x 1080 pixels
+       width = 1920,
+       height = 1080)
+```
+
+
+
+]
+
+---
+
+layout: false
+
+# References
+
+&lt;a name=bib-layered-grammar-of-graphics&gt;&lt;/a&gt;[Wickham,
+H.](#cite-layered-grammar-of-graphics) (2010). "A Layered Grammar of
+Graphics". In: _Journal of Computational and Graphical Statistics_
+19.1, pp. 3-28. DOI:
+[10.1198/jcgs.2009.07098](https://doi.org/10.1198%2Fjcgs.2009.07098).
+eprint: https://doi.org/10.1198/jcgs.2009.07098. URL:
+[https://doi.org/10.1198/jcgs.2009.07098](https://doi.org/10.1198/jcgs.2009.07098).
+
+&lt;a name=bib-ggplot2&gt;&lt;/a&gt;[Wickham, H.](#cite-ggplot2) (2016). _ggplot2:
+Elegant Graphics for Data Analysis_. Springer-Verlag New York. ISBN:
+978-3-319-24277-4. URL:
+[https://ggplot2.tidyverse.org](https://ggplot2.tidyverse.org).
+
+&lt;a name=bib-r4ds&gt;&lt;/a&gt;[Wickham, H. and G. Grolemund](#cite-r4ds) (2016).
+_R for data science. import, tidy, transform, visualize, and model
+data_. O'Reilly. URL:
+[https://r4ds.had.co.nz/](https://r4ds.had.co.nz/).
+
+&lt;a name=bib-grammar-of-graphics&gt;&lt;/a&gt;[Wilkinson,
+L.](#cite-grammar-of-graphics) (2005). _The Grammar of Graphics_. 2nd
+ed. Springer New York, NY. ISBN: 978-0-387-28695-2. DOI:
+[https://doi.org/10.1007/0-387-28695-0](https://doi.org/https%3A%2F%2Fdoi.org%2F10.1007%2F0-387-28695-0).
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

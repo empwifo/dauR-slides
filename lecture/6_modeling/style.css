@@ -1,0 +1,221 @@
+/* -------------------------------------------------------
+ *
+ *     !! This file is creating a consistent design for the course
+ *        'Intermediate Data Analysis using R' !!
+ *
+ *  Changes made to this file directly will be overwritten
+ *  if "css: ["default", "default-fonts", style.css]" used in the 
+ *  corresponding .Rmd.
+ *
+ *  It can be seen as an extension to the basic xaringantheme.css.
+ *
+ *  This css-file currently includes options for:
+ *    - Emojis
+ *    - Content Boxes
+ *    - Colors
+ *    - Title-Slide
+ *    - Footer
+ *    - Blockquotes
+ *    - Highlights
+ *    - Bold Text
+ *    - Links
+ *    - Horizontal Emoji Alignment
+ *    - Special Horizontal Alignment for some slide-sets
+ *    - Preventing overlapping footer
+ *    - Scrolling Boxes
+ *  It can be easily extended or changed using css-commands.
+ *
+ *  Need help? Useful websites and tools:
+ *    - ?xaringanthemer::style_xaringan
+ *    - https://github.com/yihui/xaringan/issues/34 (Footer-issue)
+ *    - https://pkg.garrickadenbuie.com/xaringanthemer/ (xaringanthemer)
+ *    - https://coolors.co/dd7373-3b3561-ead94c-d1d1d1 (Color-reator)
+ *    - https://unsplash.com/ (Free Images)
+ *    - https://fonts.google.com/ (Google Fonts?)
+ *
+ *  Version: 0.4.2
+ *
+ * ------------------------------------------------------- */
+
+
+/* Content-Boxes */
+
+.filled{
+  border-radius: 10px;
+  background-color: #E7E7E7;
+  padding: 10px;
+  margin-bottom: 20px;
+}
+
+/* Colors */
+:root{
+--text-color: #000;
+--header-color: #000;
+--background-color: #FFF;
+--link-color: var(--rubblue);
+--text-bold-color: var(--rubgreen);
+--code-highlight-color: rgba(141,174,16,0.5);
+--inverse-text-color: #d6d6d6;
+--inverse-background-color: #272822;
+--inverse-header-color: var(--rubgreen);
+--inverse-link-color: var(--rubgreen);
+--title-slide-background-color: var(--rubblue);
+--title-slide-text-color: #d6d6d6;
+--header-background-color: #000;
+--header-background-text-color: #FFF;
+--rubgreen: #8DAE10;
+--rubblue: #003560;
+--rubgrey: #E7E7E7;
+--rubyellow: #FFCC00;
+--ruborange: #ED7102;
+--rubred: #E6332A;
+--rubdarkred: #B61E3E;
+--rubbeige: #C1BAA3;
+--rubdarkgreen: #8C8751;
+--rubbrown: #9C5516;
+--rubdarkbrown: #59201B;
+--lgreen: #C4EC32;
+--lblue: #0065B8;
+--lgrey: #FFFFFF;
+--dblue: #000B14;
+--dgrey: #C2C2C2;
+--alpha5: 0.5;
+}
+
+/* Title Slide */
+
+.title-slide {
+  background-color: var(--rubblue);
+}
+
+/* Footer */
+
+.remark-slide-content:after {
+    z-index: 1;
+    content: "Sven Werenbeck-Ueding | Chair of Empirical Economics | Winter Term 23 / 24";
+    position: absolute;
+    bottom: 1px;
+    left: 0;
+    right: 0;
+    font-size: 90%;
+    text-align: center;
+    line-height: 1.9;
+    display: block;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-image: url("https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Ruhr-Universit%C3%A4t_Bochum_logo.svg/800px-Ruhr-Universit%C3%A4t_Bochum_logo.svg.png");
+    padding: 5px
+}
+
+/* Blockquotes */
+
+blockquote {
+  background-color: rgba(141,174,16,0.1);
+  border-left: solid 5px;
+  border-left-color: var(--rubgreen);
+  padding-left: 1em;
+}
+
+/* Highlights */
+
+.remark-code-line-highlighted {
+  background-color: rgba(141, 174, 16, 0.5);
+}
+
+/* Bold Text */
+
+strong {
+  font-weight: bold;
+  color: var(--text-bold-color);
+}
+
+/* Links */
+
+a, a > code {
+  color: #1B4F8F ;
+  text-decoration: solid;
+}
+
+/* Two-Column Layout */
+
+.short-width{
+  width: 5%
+}
+
+.long-width{
+  width: 89%
+}
+
+/* Emoji Size */
+
+.big-emoji{
+  font-size: 300%
+}
+
+/* Horizontal Emoji Alignment */
+
+.lo-wi{
+  width: 89%;
+  display: flex;
+  align-items: center;
+  height: 120px;
+}
+
+/* Special Horizontal Emoji Alignment for programming.Rmd */
+
+.lo-wi2{
+  width: 75%;
+  display: flex;
+  align-items: center;
+  height: 120px;
+}
+
+/* Special Horizontal Alignment for reporting.Rmd */
+
+.overlap-lr-width{
+  width: 70%
+}
+
+/* Preventing Overlapping Footer */
+
+.remark-slide-content {
+  padding-top: 2px;
+  padding-left: 50px;
+  padding-right: 50px;
+  padding-bottom: 5px;
+}
+
+/* Scrolling Boxes */
+
+.scroll-box-8 {
+  height:8em;
+  overflow-y: scroll;
+}
+.scroll-box-10 {
+  height:10em;
+  overflow-y: scroll;
+}
+.scroll-box-12 {
+  height:12em;
+  overflow-y: scroll;
+}
+.scroll-box-14 {
+  height:14em;
+  overflow-y: scroll;
+}
+.scroll-box-16 {
+  height:16em;
+  overflow-y: scroll;
+}
+.scroll-box-18 {
+  height:18em;
+  overflow-y: scroll;
+}
+.scroll-box-20 {
+  height:20em;
+  overflow-y: scroll;
+}
+.scroll-output {
+  height: 90%;
+  overflow-y: scroll;
+}

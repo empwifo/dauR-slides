@@ -1,0 +1,1522 @@
+---
+title: "`r params$title`"
+subtitle: "`r params$subtitle`"
+author: "`r params$author`"
+date: "`r format(Sys.Date(), '%d.%m.%Y')`"
+output:
+  xaringan::moon_reader:
+    css: ["default", "default-fonts", "style.css"]
+    nature:
+      ratio: "16:9"
+      highlightLines: true
+      countIncrementalSlides: false
+params:
+  title: "Data Analysis using R"
+  subtitle: "Visualization"
+  author: "Sven Werenbeck-Ueding"
+  path_bib: "references.bib"
+  path_assets: "../../resources/assets/"
+  path_data: "../../data/"
+---
+
+<!-- Setup -->
+
+```{r setup, include=FALSE}
+#knitr::opts_chunk$set(echo = FALSE)
+
+library(tidyverse)
+library(fontawesome)
+library(DiagrammeR)
+library(RefManageR)
+
+# Theming
+xaringanExtra::use_panelset()
+xaringanExtra::use_tile_view() # Press o for overview in browser
+
+# Bibliography
+BibOptions(
+  check.entries = FALSE,
+  bib.style = "authoryear",
+  style = "markdown"
+)
+
+bib <- ReadBib(params$path_bib, check = FALSE)
+```
+
+```{r eval=TRUE, child = params$path_slides}
+```
+
+```{r pdf, include = FALSE}
+source("https://git.io/xaringan2pdf")
+xaringan_to_pdf(
+  input = "5_visualization.html",
+  output_file = "5_visualization.pdf")
+```
+
+```{r echo=FALSE, out.width="100%", fig.align='center'}
+
+grViz(
+  '
+  digraph {
+  graph [fontname="Helvetica,Arial,sans-serif", compound = true]
+	node [fontname="Helvetica,Arial,sans-serif"]
+	edge [fontname="Helvetica,Arial,sans-serif"]
+    
+    rankdir=LR
+    
+    subgraph cluster_0 {
+        style = rounded
+        color = black
+    
+        {
+            node [style = rounded, shape = box]
+            Import -> Tidy
+        }
+    
+        subgraph cluster_1 {
+            style = rounded
+            color = black
+            
+            node [style = rounded, shape = box]
+            Transform Visualize Model
+            
+            edge []
+            Transform -> Visualize
+            Visualize -> Model
+            Model -> Transform
+            
+            label = "Exploration"
+            labeljust = "l"
+            labelloc = "b"
+        }
+    
+        {
+            node [style = rounded, shape = box]
+            Communicate
+        }
+    
+        Tidy -> Transform [lhead = cluster_1]
+        Model -> Communicate [ltail = cluster_1]
+        
+        label = "Programming"
+        labeljust = "l"
+        labelloc = "b"
+    }
+  }
+  '
+)
+
+```
+
+.right[*Source:* `r Citet(bib, "r4ds")`]
+
+---
+
+## Prerequisites
+
+```{r message=FALSE}
+# Load required packages
+# install.packages("wooldridge")
+library(tidyverse)
+library(RColorBrewer)
+
+# Load the CPR data set from the wooldridge package
+df_cpr <- wooldridge::wage1 %>% 
+  mutate(
+    sex = ifelse(female == 1, "Female", "Male"),
+    region = case_when(
+      west == 1 ~ "West",
+      south == 1 ~ "South",
+      northcen == 1 ~ "North Central",
+      T ~ "East"
+    )
+  )
+```
+
+---
+
+layout: true
+
+## Graphics in base R
+
+---
+
+.pull-left[
+- Functions for graphics in base R are fast, but limited
+
+- Useful for simple tasks such as quickly plotting histograms
+
+- Graphics content can only be written on top of each other
+
+- Elements of a plot cannot be modified or deleted
+]
+
+.pull-right[
+```{r fig.align='center', fig.height=6, fig.width=8}
+hist(df_cpr$wage)
+```
+
+]
+
+---
+
+.pull-left.short-width[
+.big-emoji[`r emo::ji("warning")`]
+]
+
+.pull-right.long-width[
+- `base` R is rather limited when it comes to creating beautiful, customized plots
+
+- Layered approach: Adds plot components on top of each other
+
+  - Opens up for more flexibility
+  - Layers can overwrite each other to allow for post-hoc editing of components
+]
+
+---
+
+layout: false
+class: middle
+background-image: url("https://ggplot2.tidyverse.org/logo.png")
+background-size: 100px
+background-position: 90% 10%
+
+# `ggplot2`
+
+> `ggplot2` is a system for declaratively creating graphics, based on "The Grammar of Graphics" by `r Citet(bib, "grammar-of-graphics")`. You provide the data, tell `ggplot2` how to map variables to aesthetics, what graphical primitives to use, and it takes care of the details.
+>
+> .right[`r Citet(bib, "ggplot2")`]
+
+???
+
+- Building on the work of `r Citet(bib, "grammar-of-graphics")` that describes features fundamental to *all* statistical graphs
+- Plots are the product of **mapping** your **data** on aesthetic attributes
+
+---
+
+layout: true
+
+## The Layered Grammar of Graphics
+
+---
+
+| Component | Description |
+| --------- | ----------- |
+| **Layer** | Geometric elements (**geoms**, e. g. points and lines) and statistical transformations (**stats** that summarize the data) |
+| **Scale** | Mapping of data to aesthetics (e. g. color, shape or size) of geoms and draws legends and axes |
+| **Coord** | Mapping of data to the plane of the graphic and provides axes/gridlines (usually the Cartesian coordinate system) |
+| **Facet** | Plots subsets of the data |
+| **Theme** | Styling of the plot such as fonts and background |
+
+---
+
+```{r include=FALSE}
+set.seed(420)
+
+X = abs(rnorm(75)); Y = 2*X +rnorm(75)
+
+layers <- data.frame(X = X, Y = Y) %>% 
+  ggplot(aes(y = Y, x = X))
+
+# Only geoms
+layers_geom <- layers +
+  geom_point() +
+  theme(text = element_blank(),
+        line = element_blank(),
+        rect = element_blank())
+
+# Only axes
+layers_scale <- layers +
+  theme(rect = element_blank())
+
+# Only coord
+layers_coord <- layers +
+  theme(axis.title = element_blank(),
+        axis.text = element_blank(),
+        axis.ticks = element_blank(),
+        axis.line = element_blank()) +
+  labs(title = "Title")
+
+# Full plot
+layers_plot <- layers + geom_point() + labs(title = "Title")
+```
+
+.pull-left[
+```{r echo=FALSE, message=FALSE, warning=FALSE, fig.align='center', fig.height=3, fig.width=4}
+layers_geom
+```
+]
+
+.pull-right[
+```{r echo=FALSE, message=FALSE, warning=FALSE, fig.align='center', fig.height=3, fig.width=4}
+layers_scale
+```
+]
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, fig.align='center', fig.height=3, fig.width=4}
+layers_coord
+```
+
+.center[From top left to bottom: Geometric objects, scales and coordinate system `r Citep(bib, "layered-grammar-of-graphics")`.]
+
+---
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, fig.align='center', fig.height=6, fig.width=8}
+layers_plot
+```
+
+.right[*Source:* `r Citet(bib, "layered-grammar-of-graphics")`]
+
+---
+
+.pull-left[
+- Graphics template consists of seven parameters (in brackets)
+
+- *Any* plot can be generated from this template
+
+- `ggplot2` provides defaults for everything except for data, mappings and geoms 
+- Syntax is similar to using the pipe operator
+]
+
+.pull-right[
+```{r eval=FALSE}
+ggplot(data = <DATA>) + 
+  <GEOM_FUNCTION>(
+     mapping = aes(<MAPPINGS>),
+     stat = <STAT>, 
+     position = <POSITION>
+  ) +
+  <COORDINATE_FUNCTION> +
+  <FACET_FUNCTION>
+```
+
+.right[*Source:* `r Citet(bib, "r4ds")`]
+]
+
+---
+
+layout: false
+
+## Initialize a Plot
+
+```{r eval=FALSE}
+?ggplot
+```
+
+> `ggplot()` initializes a ggplot object. It can be used to declare the input data frame for a graphic and to specify the set of plot aesthetics intended to be common throughout all subsequent layers unless specifically overridden.
+
+---
+
+layout: true
+
+## Initialize a Plot &ndash; Function Call and Arguments
+
+---
+
+.pull-left[
+```{r eval=FALSE}
+ggplot(
+  data = NULL, 
+  mapping = aes(),
+  ...
+)
+```
+]
+
+---
+
+.pull-left[
+```{r eval=FALSE}
+ggplot(
+  data = NULL, #<<
+  mapping = aes(),
+  ...
+)
+```
+]
+
+.pull-right[
+`data`
+
+- Default data set to use for the plot
+
+- If necessary will be converted to a `data.frame`
+
+- If not specified, must be supplied in each layer added to the plot
+]
+
+---
+
+.pull-left[
+```{r eval=FALSE}
+ggplot(
+  data = NULL,
+  mapping = aes(), #<<
+  ...
+)
+```
+]
+
+.pull-right[
+`mapping`
+
+- Default list of aesthetic mappings to use for plotting
+
+- If not specified must be supplied in each layer added to the plot
+]
+
+---
+
+layout: false
+
+## Initialize a Plot
+
+.panelset[
+.panel[.panel-name[Code]
+> Initialize a `ggplot` object using the CPR data set and map `educ` to the x-axis and `wage` to the y-axis.
+
+
+```{r example_plot, eval=FALSE}
+ggplot(data = df_cpr,
+       mapping = aes(x = exper, 
+                     y = wage)) 
+```
+
+]
+.panel[.panel-name[Plot]
+```{r ref.label="example_plot", echo=FALSE, message=FALSE, warning=FALSE, fig.align='center', fig.height=6, fig.width=8}
+
+```
+]
+]
+
+---
+
+## Add Geometric Objects
+
+.panelset[
+.panel[.panel-name[Code]
+> Create a scatterplot of `wage` vs. `educ` by adding points as geoms.
+
+```{r example_plot_2, eval=FALSE}
+ggplot(df_cpr, 
+       aes(x = exper, 
+           y = wage)) +
+  geom_point() #<<
+```
+
+]
+.panel[.panel-name[Plot]
+```{r ref.label="example_plot_2", echo=FALSE, message=FALSE, warning=FALSE, fig.align='center', fig.height=6, fig.width=8}
+
+```
+]
+]
+
+---
+
+## Map Data to Geom Aesthetics
+
+.panelset[
+.panel[.panel-name[Code]
+> Map `sector` to the `color` aesthetics and change the transparency of points to handle overlapping of points.
+
+```{r example_plot_3, eval=FALSE}
+ggplot(data = df_cpr,
+       mapping = aes(x = exper,
+                     y = wage,
+                     color = sex)) + #<<
+  geom_point(alpha = .5) #<<
+```
+
+]
+.panel[.panel-name[Plot]
+```{r ref.label="example_plot_3", echo=FALSE, message=FALSE, warning=FALSE, fig.align='center', fig.height=6, fig.width=8}
+
+```
+]
+]
+
+---
+
+## Add Titles and Labels
+
+.panelset[
+.panel[.panel-name[Code]
+> Add a title to the plot and modify axis labels and legend title.
+
+```{r example_plot_4, eval=FALSE}
+ggplot(df_cpr, 
+       aes(x = exper, 
+           y = wage,
+           color = sex)) +
+  geom_point(alpha = .5) +
+  labs(title = "Hourly Wage ~ Years of Experience", #<<
+       x = "Years of Experience", #<<
+       y = "Wage [USD/hour]", #<<
+       color = "Sex") #<<
+```
+
+]
+.panel[.panel-name[Plot]
+```{r ref.label="example_plot_4", echo=FALSE, message=FALSE, warning=FALSE, fig.align='center', fig.height=6, fig.width=8}
+
+```
+]
+]
+
+---
+
+## Change the Styling
+
+.panelset[
+.panel[.panel-name[Code]
+> Change the theme to `theme_bw()` and adjust the position of the legend.
+
+```{r example_plot_5, eval=FALSE}
+ggplot(df_cpr,
+       aes(x = exper, 
+           y = wage,
+           color = sex)) +
+  geom_point(alpha = .5) +
+  labs(title = "Hourly Wage ~ Years of Experience", 
+       x = "Years of Experience", 
+       y = "Wage [USD/hour]", 
+       color = "Sex") +
+  theme_bw() + #<<
+  theme(legend.position = "top") #<<
+```
+
+]
+.panel[.panel-name[Plot]
+```{r ref.label="example_plot_5", echo=FALSE, message=FALSE, warning=FALSE, fig.align='center', fig.height=6, fig.width=8}
+
+```
+]
+]
+
+---
+
+## Create Facets of Plots
+
+.panelset[
+.panel[.panel-name[Code]
+> Create facets to display subplots for `region`.
+
+```{r example_plot_6, eval=FALSE}
+ggplot(df_cpr,
+       aes(x = exper, 
+           y = wage,
+           color = sex)) +
+  geom_point(alpha = .5) +
+  labs(title = "Hourly Wage ~ Years of Experience", 
+       x = "Years of Experience", 
+       y = "Wage [USD/hour]", 
+       color = "Sex") +
+  facet_wrap(~ region) + #<<
+  theme_bw() + 
+  theme(legend.position = "top")
+```
+
+]
+.panel[.panel-name[Plot]
+```{r ref.label="example_plot_6", echo=FALSE, message=FALSE, warning=FALSE, fig.align='center', fig.height=6, fig.width=8}
+
+```
+]
+]
+
+---
+
+layout: false
+class: middle
+
+.pull-left.short-width[
+.big-emoji[`r emo::ji("information")`]
+]
+
+.pull-right.long-width[
+For brevity, we will use the same `ggplot` object (short-hand `gg`) over the next slides. This way, we need not specify every time which data to use for plotting and only have to add geoms.
+
+```{r}
+gg <- df_cpr %>% 
+  ggplot()
+```
+]
+
+---
+
+layout: false
+
+class: middle
+
+# Univariate Graphs
+
+```{r bar_plot, include=FALSE}
+bar_plot <- gg +
+  geom_bar(aes(x = region)) +
+  labs(x = "US Region of Residence",
+       y = "Count")
+```
+
+```{r freq_bar_plot, include=FALSE}
+freq_bar_plot <- gg +
+  geom_bar(
+    aes(x = region,
+        y = ..count../sum(..count..))
+  ) +
+  labs(x = "US Region of Residence",
+       y = "Frequency")
+```
+
+```{r density_plot, include=FALSE}
+density_plot <- gg +
+  geom_density(aes(x = wage)) +
+  labs(x = "Wage [USD/hour]",
+       y = "Density")
+```
+
+```{r histogram, include=FALSE}
+hist <- gg +
+  geom_histogram(aes(x = wage)) +
+  labs(x = "Wage [USD/hour]",
+       y = "Count")
+```
+
+---
+
+## Categorical Data
+
+.panelset[
+.panel[.panel-name[Count Bars]
+.pull-left[
+```{r echo=FALSE, message=FALSE, warning=FALSE, fig.align='center', fig.height=6, fig.width=8}
+bar_plot
+```
+]
+
+.pull-right[
+#### Bar Plot
+
+```{r ref.label="bar_plot", eval=FALSE}
+```
+]
+]
+.panel[.panel-name[Frequency Bars]
+.pull-left[
+```{r echo=FALSE, message=FALSE, warning=FALSE, fig.align='center', fig.height=6, fig.width=8}
+freq_bar_plot
+```
+]
+
+.pull-right[
+#### Bar Plot with Frequencies
+
+By mapping `..count../sum(..count..)` to the y-axis, the scale of the y-axis is changed to display frequencies:
+
+```{r ref.label="freq_bar_plot", eval=FALSE}
+```
+]
+]
+]
+
+
+---
+
+## Numerical Data
+
+.panelset[
+.panel[.panel-name[Histogram]
+.pull-left[
+```{r echo=FALSE, message=FALSE, warning=FALSE, fig.align='center', fig.height=6, fig.width=8}
+hist
+```
+]
+.pull-right[
+#### Histogram
+
+```{r ref.label="histogram", eval=FALSE}
+```
+]
+]
+.panel[.panel-name[Density]
+.pull-left[
+```{r echo=FALSE, message=FALSE, warning=FALSE, fig.align='center', fig.height=6, fig.width=8}
+density_plot
+```
+]
+.pull-right[
+#### Kernel Density Plot
+
+```{r ref.label="density_plot", eval=FALSE}
+```
+]
+]
+]
+
+---
+
+class: middle
+
+# Bivariate Graphs
+
+```{r stack_bar_plot, include=FALSE}
+stack_bar_plot <- gg +
+  geom_bar(aes(x = sex, fill = region)) +
+  labs(x = "Sex",
+       y = "Count",
+       fill = "US Region of Residence")
+```
+
+```{r group_bar_plot, include=FALSE}
+group_bar_plot <- gg +
+  geom_bar(aes(x = sex, fill = region),
+           position = "dodge") +
+  labs(x = "Sex",
+       y = "Count",
+       fill = "US Region of Residence")
+```
+
+```{r seg_bar_plot, include=FALSE}
+seg_bar_plot <- gg +
+  geom_bar(aes(x = sex, fill = region),
+           position = "fill") +
+  labs(x = "Sex",
+       y = "Proportion",
+       fill = "US Region of Residence")
+```
+
+```{r scatter_plot, include=FALSE}
+scatter_plot <- gg +
+  geom_point(aes(x = exper, y = wage)) +
+  labs(x = "Years of Work Experience",
+       y = "Wage [USD/hour]")
+```
+
+```{r line_plot, include=FALSE}
+line_plot <- wooldridge::approval %>% 
+  mutate(period = year + 1/12*month) %>% 
+  ggplot() +
+  geom_line(aes(x = period, y = gasprice)) +
+  labs(x = "Year",
+       y = "Monthly Average Gas Price [ct]")
+```
+
+```{r grouped_density_plot, include=FALSE}
+grouped_density_plot <- gg +
+  geom_density(aes(x = wage, fill = sex),
+               alpha = .4) +
+  labs(x = "Wage [USD/hour]", y = "Density")
+```
+
+```{r error_bars, include=FALSE}
+error_bars <- group_by(df_cpr, sex) %>% 
+  summarize(mean_wage = mean(wage),
+            sd_wage = sd(wage)) %>% 
+  ggplot() +
+  geom_errorbar(
+    aes(x = sex,
+        ymin = mean_wage - sd_wage,
+        ymax = mean_wage + sd_wage),
+    width = .1
+  ) +
+  geom_point(
+    aes(x = sex, y = mean_wage)
+  ) +
+  labs(x = "Sex", y = "Wage [USD/hour]")
+```
+
+```{r boxplot, include=FALSE}
+boxplot <- gg +
+  geom_boxplot(aes(x = sex, y = wage)) +
+  labs(x = "Sex", y = "Wage [USD/hour]")
+```
+
+---
+
+## Categorical vs. Categorical
+
+.panelset[
+.panel[.panel-name[Stacked Bars]
+.pull-left[
+```{r echo=FALSE, message=FALSE, warning=FALSE, fig.align='center', fig.height=6, fig.width=8}
+stack_bar_plot +
+  theme(axis.text.x = element_text(angle = 45, hjust=1),
+        legend.position = "top")
+```
+]
+.pull-right[
+#### Stacked Bar Plot
+
+```{r ref.label="stack_bar_plot", eval=FALSE}
+```
+]
+]
+
+.panel[.panel-name[Grouped Bars]
+.pull-left[
+```{r echo=FALSE, message=FALSE, warning=FALSE, fig.align='center', fig.height=6, fig.width=8}
+group_bar_plot +
+  theme(axis.text.x = element_text(angle = 45, hjust=1),
+        legend.position = "top")
+```
+]
+.pull-right[
+#### Grouped Bar Plot
+
+```{r ref.label="group_bar_plot", eval=FALSE}
+```
+]
+]
+
+.panel[.panel-name[Segmented Bars]
+.pull-left[
+```{r echo=FALSE, message=FALSE, warning=FALSE, fig.align='center', fig.height=6, fig.width=8}
+seg_bar_plot +
+  theme(axis.text.x = element_text(angle = 45, hjust=1),
+        legend.position = "top")
+```
+]
+.pull-right[
+#### Segmented Bar Plot
+
+```{r ref.label="seg_bar_plot", eval=FALSE}
+```
+]
+]
+
+]
+
+---
+
+## Numerical vs. Numerical
+
+.panelset[
+.panel[.panel-name[Scatter]
+.pull-left[
+```{r echo=FALSE, message=FALSE, warning=FALSE, fig.align='center', fig.height=6, fig.width=8}
+scatter_plot
+```
+]
+.pull-right[
+#### Scatterplot
+
+```{r ref.label="scatter_plot", eval=FALSE}
+```
+]
+]
+
+.panel[.panel-name[Line]
+.pull-left[
+```{r echo=FALSE, message=FALSE, warning=FALSE, fig.align='center', fig.height=6, fig.width=8}
+line_plot
+```
+]
+.pull-right[
+#### Line Plot
+
+```{r ref.label="line_plot", eval=FALSE}
+```
+]
+]
+
+]
+
+---
+
+## Categorical vs. Numerical
+
+.panelset[
+.panel[.panel-name[Grouped Density]
+.pull-left[
+```{r echo=FALSE, message=FALSE, warning=FALSE, fig.align='center', fig.height=6, fig.width=8}
+grouped_density_plot
+```
+]
+.pull-right[
+#### Grouped Kernel Density Plot
+
+```{r ref.label="grouped_density_plot", eval=FALSE}
+```
+]
+]
+
+.panel[.panel-name[Error Bars]
+.pull-left[
+```{r echo=FALSE, message=FALSE, warning=FALSE, fig.align='center', fig.height=6, fig.width=8}
+error_bars
+```
+]
+.pull-right[
+#### Mean with Standard Error Bars
+
+```{r ref.label="error_bars", eval=FALSE}
+```
+]
+]
+
+.panel[.panel-name[Boxplot]
+.pull-left[
+```{r echo=FALSE, message=FALSE, warning=FALSE, fig.align='center', fig.height=6, fig.width=8}
+outlier <- data.frame(
+  sex = "Male",
+  wage = filter(df_cpr, sex == "Male", wage > quantile(wage, na.rm = T, .975))$wage
+)
+
+labels <- c(
+  "3rd Quartile" = quantile(filter(df_cpr, sex == "Male")$wage, na.rm = T, .75)[[1]] + .5,
+  "Median" = median(filter(df_cpr, sex == "Male")$wage, na.rm = T) + .5,
+  "2nd Quartile" = quantile(filter(df_cpr, sex == "Male")$wage, na.rm = T, .25)[[1]] - .5,
+  "Outliers, i. e. obs.\nthat are 1.5 times\nthe inter-quartile range" = mean(outlier$wage)
+) %>% 
+  enframe("label", "wage") %>% 
+  bind_cols(sex = "Male")
+
+boxplot +
+  geom_point(data = outlier, aes(x = sex, y = wage), color = "red") +
+  geom_text(data = labels,
+            aes(x = sex, y = wage, label = label),
+            hjust = 0,
+            nudge_x = .075)
+```
+]
+.pull-right[
+#### Boxplot
+
+```{r ref.label="boxplot", eval=FALSE}
+```
+]
+]
+
+]
+
+---
+
+layout: false
+
+class: middle
+
+# Multivariate Graphs
+
+---
+
+layout: true
+
+## Creating Multivariate Graphs
+
+Including multiple variables into one graph can be achieved by combining the geometric objects seen on the previous slides, through mapping of different aesthetics and facetting.
+
+---
+
+#### Mapping
+
+Variables can be mapped to various aesthetics of geometric objects, such as
+- `shape` (only categorical)
+- `size` (only numerical)
+- `color` (both)
+- ...
+
+---
+
+#### Facets
+
+Creating subplots for groups of variables, using `facet_wrap()` for one-dimensional and `facet_grid()` for two-dimensional sequences of panels.
+
+Variables to create facets for can be passed to `facet_*()` using R formulas, e. g. `~ sector` (one-dimensional) or `female ~ sector` (two-dimensional). Formulas of type `~ sector + region` can be used to create groups for combinations of variables.
+
+---
+
+layout: false
+
+## Correlation Matrix
+
+```{r corr_plot, include=FALSE}
+library(ggcorrplot)
+
+corr_plot <- df_cpr %>%
+  select(wage, educ, exper, tenure, numdep) %>% # Select numerical variables
+  cor(use = "complete.obs") %>%                 # Corr. matrix for observations w/o NAs
+  # Display correlation in a ggplot object
+  ggcorrplot(hc.order = T,                      # Sort variables
+             type = "lower",                    # Show only lower half of the matrix
+             lab = T)                           # Show correlations in tile labels
+
+corr_plot
+```
+
+.panelset[
+.panel[.panel-name[Plot]
+```{r ref.label="corr_plot", echo=FALSE, message=FALSE, warning=FALSE, fig.align='center', fig.height=6, fig.width=8}
+corr_plot
+```
+]
+.panel[.panel-name[Code]
+```{r ref.label="corr_plot", eval=FALSE}
+
+```
+]
+]
+
+---
+
+layout: false
+
+class: middle
+
+# Customizing Plots
+
+---
+
+layout: false
+
+## Color Schemes
+
+.pull-left.short-width[
+.big-emoji[`r emo::ji("warning")`]
+]
+
+.pull-right.lo-wi[
+Choosing an appropriate color scheme for your graph is an important step in conveying the information!
+]
+
+.pull-left.short-width[
+.big-emoji[`r emo::ji("white heavy check mark")`]
+]
+
+.pull-right.lo-wi[
+Make sure that your plot is readable. Avoid light on light and dark on dark colors!
+]
+
+.pull-left.short-width[
+.big-emoji[`r emo::ji("white heavy check mark")`]
+]
+
+.pull-right.lo-wi[
+Avoid red and green in the same color palette. Colorblind people will thank you!
+]
+
+.pull-left.short-width[
+.big-emoji[`r emo::ji("white heavy check mark")`]
+]
+
+.pull-right.lo-wi[
+Be consistent: Choose a color palette and stick to it!
+]
+
+---
+
+class: middle
+
+# `RColorBrewer`
+
+```{r eval=FALSE}
+?RColorBrewer
+```
+
+> The `RColorBrewer` package provides color palettes from [ColorBrewer 2.0](https://colorbrewer2.org/) for creating thematic graphs. Run the `display.brewer.all()` function for a display of available color palettes.
+
+---
+
+## Color Palettes for Numerical Data
+
+.pull-left[
+#### Sequential
+
+Sequential color palettes assign light colors to low values of the data and dark colors to high values, e. g.
+
+```{r echo=FALSE, fig.align='center', fig.height=6, fig.width=8}
+display.brewer.all(type = "seq")
+```
+]
+
+.pull-right[
+#### Diverging
+
+Diverging color palettes emphasize differences between extreme values by assigning contrasting dark colors to low and high values while assigning light colors to mid-range values, e. g.
+
+```{r echo=FALSE, fig.align='center', fig.height=6, fig.width=8}
+display.brewer.all(type = "div")
+```
+]
+
+---
+
+## Color Palettes for Categorical Data
+
+#### Qualitative
+
+Qualitative color palettes are used, when there is no difference in magnitude between values, i. e. for categorical data. The primary concern is to visualize differences between classes, e. g.
+
+```{r echo=FALSE, fig.align='center', fig.height=6, fig.width=8}
+display.brewer.all(type = "qual")
+```
+
+---
+
+## Change Discrete Color Palettes
+
+.panelset[
+.panel[.panel-name[Code]
+.pull-left[
+- Discrete color palettes for `ggplot` aesthetics, such as `color` or `fill`, can be changed to `RColorBrewer` palettes using the `scale_*_brewer()` functions, where the name of the palette can be passed as a string to the argument `palette`
+
+- `RColorBrewer` supports only discrete color palettes
+]
+
+.pull-right[
+```{r discr_color_plot, eval=FALSE}
+ggplot(
+  data = df_cpr,
+  mapping = aes(
+    x = exper,
+    y = wage,
+    color = region
+  )
+) +
+  geom_point() +
+  scale_color_brewer(palette = "Set1") #<<
+```
+]
+]
+.panel[.panel-name[Plot]
+```{r ref.label="discr_color_plot", echo=FALSE, fig.align='center', fig.height=6, fig.width=8}
+```
+]
+]
+
+---
+
+## Change Continuous Color Palettes
+
+.panelset[
+.panel[.panel-name[Code]
+.pull-left[
+For continuous color palettes, it is best to use `ggplot2`'s built-in functions:
+
+- `scale_*_gradient()`: Creates a two color gradient based on strings passed to arguments `low` and `high`
+
+- `scale_*_gradient2()`: Creates a diverging color gradient based on strings passed to arguments `low`, `mid` and `high`. The `midpoint` defaults to 0 and, in most cases, has to be set manually to ensure a meaningful color gradient.
+]
+
+.pull-right[
+```{r cont_color_plot, eval=FALSE}
+ggplot(
+  data = df_cpr,
+  mapping = aes(
+    x = exper,
+    y = wage,
+    color = tenure
+  )
+) +
+  geom_point() +
+  scale_color_gradient(low = "yellow", #<<
+                       high = "red") #<<
+```
+]
+]
+.panel[.panel-name[Plot]
+```{r ref.label="cont_color_plot", echo=FALSE, fig.align='center', fig.height=6, fig.width=8}
+```
+]
+]
+
+---
+
+## Themes
+
+```{r eval=FALSE}
+?theme
+```
+
+Themes are used to modify non-data components of plots, such as titles, labels, ticks, fonts for text elements, background etc. `ggplot2` provides out-of-the-box themes for quick and easy adjustments of the overall look:
+
+.panelset[
+.panel[.panel-name[`theme_gray()`]
+```{r echo=FALSE, fig.align='center', fig.height=3, fig.width=4}
+layers_plot +
+  theme_gray()
+```
+]
+.panel[.panel-name[`theme_bw()`]
+```{r echo=FALSE, fig.align='center', fig.height=3, fig.width=4}
+layers_plot +
+  theme_bw()
+```
+]
+.panel[.panel-name[`theme_light()`]
+```{r echo=FALSE, fig.align='center', fig.height=3, fig.width=4}
+layers_plot +
+  theme_light()
+```
+]
+.panel[.panel-name[`theme_dark()`]
+```{r echo=FALSE, fig.align='center', fig.height=3, fig.width=4}
+layers_plot +
+  theme_dark()
+```
+]
+.panel[.panel-name[`theme_minimal()`]
+```{r echo=FALSE, fig.align='center', fig.height=3, fig.width=4}
+layers_plot +
+  theme_minimal()
+```
+]
+.panel[.panel-name[...]
+.center[... and more!]
+]
+]
+
+---
+
+## More Themes
+
+The `ggthemes` package offers more out-of-the-box themes. Have a look at e. g. the Stata theme:
+
+```{r echo=FALSE, fig.align='center', fig.height=6, fig.width=8}
+layers_plot +
+  ggthemes::theme_stata()
+```
+
+---
+
+layout: true
+
+## Custom Themes
+
+---
+
+.panelset[
+.panel[.panel-name[Plot]
+.pull-left[
+- The appearance of presentations and seminar papers greatly improves by using a consistent design throughout your work
+
+- When outputting several plots, managing the design of each plot individually becomes very cumbersome
+
+- Instead, you may want to think about writing your own custom theme function that is applied to each plot
+
+- Changing your theme function then automatically changes the appearance of all your plots
+]
+.pull-right[
+```{r echo=FALSE, message=FALSE, warning=FALSE, fig.align='center', fig.height=6, fig.width=8}
+grouped_density_plot <- df_cpr %>% 
+  ggplot() +
+  geom_density(aes(x = wage, fill = sex),
+               alpha = .4) +
+  labs(title = "Wage Distribution Across Sex and Region",
+       x = "Wage [USD/hour]",
+       y = "Density",
+       fill = "Sex") +
+  facet_wrap(~ region)
+
+grouped_density_plot
+```
+
+]
+]
+.panel[.panel-name[Code]
+```{r eval=FALSE}
+grouped_density_plot <- df_cpr %>% 
+  ggplot() +
+  geom_density(aes(x = wage, fill = sex),
+               alpha = .4) +
+  labs(title = "Wage Distribution Across Sex and Region",
+       x = "Wage [USD/hour]",
+       y = "Density",
+       fill = "Sex") +
+  facet_wrap(~ region)
+
+grouped_density_plot
+```
+]
+]
+
+---
+
+.panelset[
+.panel[.panel-name[Plot]
+.pull-left[
+- A good starting point for a custom theme is `ggplot`'s `theme_classic()`: A black-and-white theme with minimal styling
+
+- Take some time to think about how the components of your plot should look like
+
+  - Font family and size
+  - Legend position and orientation
+  - Background and border colors
+  - ...
+  
+- Play around with the options until you decide on your design
+
+- Run `?ggplot2::theme` for a full list of theme arguments
+]
+.pull-right[
+```{r custom_theme_1, echo=FALSE, message=FALSE, warning=FALSE, fig.align='center', fig.height=6, fig.width=8}
+theme_custom <- function() {
+  theme_bw()
+}
+
+grouped_density_plot +
+  theme_custom()
+```
+
+]
+]
+.panel[.panel-name[Code]
+```{r ref.label="custom_theme_1", eval=FALSE}
+```
+]
+]
+
+---
+
+.panelset[
+.panel[.panel-name[Plot]
+.pull-left[
+- Once you decided on what your design should look like, start implementing the options in your function
+
+- The theme arguments of `theme_classic()` can be overwritten using `%+replace%`
+
+- We may want to consider making the following changes to our design:
+  
+  - Change the default text font to "Helvetica"
+  - Increase the base font size to 14.
+  - Left-align the title, set its font to bold and its size to 150% of the base font size
+  - Increase the top and bottom margin around the title
+]
+.pull-right[
+```{r echo=FALSE, message=FALSE, warning=FALSE, fig.align='center', fig.height=6, fig.width=8}
+theme_custom <- function(base_family = "Helvetica",
+                         base_size = 14,
+                         padding = base_size*.75,
+                         title_size = base_size*1.25) {
+  theme_bw() %+replace%
+    theme(text = element_text(family = base_family, size = base_size),
+          plot.title = element_text(face = "bold",
+                                    size = title_size,
+                                    hjust = 0,
+                                    margin = margin(t = padding, b = padding)))
+}
+
+grouped_density_plot +
+  theme_custom()
+```
+
+]
+]
+.panel[.panel-name[Code]
+```{r eval=FALSE}
+theme_custom <- function(base_family = "Helvetica",
+                         base_size = 14,
+                         padding = base_size*.75,
+                         title_size = base_size*1.25) {
+  theme_bw() %+replace%
+    theme(
+      text = element_text(family = base_family, size = base_size), #<<
+      plot.title = element_text(face = "bold", #<<
+                                size = title_size, #<<
+                                hjust = 0, #<<
+                                margin = margin(t = padding, b = padding)) #<<
+    )
+}
+```
+]
+]
+
+---
+
+.panelset[
+.panel[.panel-name[Plot]
+.pull-left[
+- Adjust the grid: Darker and thicker dashed lines to increase the grid's visibility
+
+- Change the legend position and orientation
+
+- Set the facet background to dark blue, its text color to white and increase the padding around the text
+]
+.pull-right[
+```{r echo=FALSE, message=FALSE, warning=FALSE, fig.align='center', fig.height=6, fig.width=8}
+theme_custom <- function(base_family = "Helvetica",
+                         base_size = 12,
+                         padding = base_size*.75,
+                         title_size = base_size*1.25) {
+  theme_bw() %+replace%
+    theme(text = element_text(family = base_family, size = base_size),
+          plot.title = element_text(face = "bold",
+                                    size = title_size,
+                                    hjust = 0,
+                                    margin = margin(t = padding, b = padding)),
+          strip.text = element_text(color = "#ffffff",
+                                    margin = margin(t = 0.5*padding, b = 0.5*padding)),
+          strip.background = element_rect(fill = "#003560"),
+          panel.grid = element_line(color = "#C8C8C8",
+                                    size = .5,
+                                    linetype = "dashed"),
+          legend.position = "bottom",
+          legend.direction = "horizontal")
+}
+
+grouped_density_plot +
+  theme_custom()
+```
+
+]
+]
+.panel[.panel-name[Code]
+```{r eval=FALSE}
+theme_custom <- function(base_family = "Helvetica",
+                         base_size = 12,
+                         padding = base_size*.75,
+                         title_size = base_size*1.25) {
+  theme_bw() %+replace%
+    theme(
+      # Add the code below to theme() in the theme_custom() function
+      panel.grid = element_line(color = "#C8C8C8", #<<
+                                size = .5, #<<
+                                linetype = "dashed"), #<<
+      legend.position = "bottom", #<<
+      legend.direction = "horizontal", #<<
+      strip.text = element_text(color = "#ffffff", #<<
+                                margin = margin(t = 0.5*padding, b = 0.5*padding)), #<<
+      strip.background = element_rect(fill = "#003560") #<<
+    )
+}
+```
+]
+]
+
+---
+
+.panelset[
+.panel[.panel-name[Plot]
+.pull-left[
+- Including control flows into your custom theme function is useful for easily toggling on or off specific components of your theme
+
+- Perhaps you want to have a short-hand argument for removing the legend title
+
+- In the theme shown on the right side, you can set `show_legend_title` to `FALSE` to remove the legend title
+]
+.pull-right[
+```{r echo=FALSE, message=FALSE, warning=FALSE, fig.align='center', fig.height=6, fig.width=8}
+theme_custom <- function(base_family = "Helvetica",
+                         base_size = 12,
+                         padding = base_size*.75,
+                         title_size = base_size*1.25,
+                         show_legend_title = TRUE) {
+  out <- theme_bw() %+replace%
+    theme(text = element_text(family = base_family, size = base_size),
+          plot.title = element_text(face = "bold",
+                                    size = title_size,
+                                    hjust = 0,
+                                    margin = margin(t = padding, b = padding)),
+          strip.text = element_text(color = "#ffffff",
+                                    margin = margin(t = 0.5*padding, b = 0.5*padding)),
+          strip.background = element_rect(fill = "#003560"),
+          panel.grid = element_line(color = "#C8C8C8",
+                                    size = .5,
+                                    linetype = "dashed"),
+          legend.position = "bottom",
+          legend.direction = "horizontal")
+  
+  if(!show_legend_title) {
+    out <- out %+replace%
+      theme(
+        legend.title = element_blank()
+      )
+  }
+  
+  out
+}
+
+grouped_density_plot +
+  theme_custom(show_legend_title = F)
+```
+
+]
+]
+.panel[.panel-name[Code]
+```{r eval=FALSE}
+theme_custom <- function(base_family = "Helvetica",
+                         base_size = 12,
+                         padding = base_size*.75,
+                         title_size = base_size*1.25,
+                         show_legend_title = TRUE) {
+  out <- theme_bw() %+replace%
+    theme() # Include the previous theme arguments here
+  
+  if(!show_legend_title) { #<<
+    out <- out %+replace% #<<
+      theme( #<<
+        legend.title = element_blank() #<<
+      ) #<<
+  } #<<
+  
+  out
+}
+```
+]
+]
+
+---
+
+layout: false
+class: middle
+
+# Exporting Plots
+
+---
+
+## `ggsave()`
+
+```{r eval=FALSE}
+?ggplot2::ggsave
+```
+
+.pull-left[
+- By default, `ggsave()` saves your last plot to the path given by `filename` and `path`
+
+  - Specify which plot in the environment to save by setting `plot` accordingly
+  - Instead of giving both, `filename` and `path`, the directory and file name can be specified via `filename` alone
+
+- The `device` to use, can be set implicitly by `filename` or explicitly by setting `device` to e. g. "png" or "jpeg".
+
+- Set `units` to "px" and change `width` and `height` according to the desired resolution
+]
+.pull-right[
+```{r eval=FALSE}
+save_plot <- grouped_density_plot +
+  theme_custom(base_size = 6)
+
+save_path <- "output/plots/density_plot.png"
+
+ggsave(filename = save_path,
+       plot = save_plot,
+       units = "px",
+       # Full HD: 1920 x 1080 pixels
+       width = 1920,
+       height = 1080)
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+save_plot <- grouped_density_plot +
+  theme_custom(base_size = 6)
+
+save_path <- "../../output/plots/density_plot.png"
+
+ggsave(filename = save_path,
+       plot = save_plot,
+       units = "px",
+       # Full HD: 1920 x 1080 pixels
+       width = 1920,
+       height = 1080)
+```
+
+]
+
+---
+
+layout: false
+
+# References
+
+```{r, results='asis', echo=FALSE}
+PrintBibliography(bib)
+```

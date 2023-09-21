@@ -1,0 +1,92 @@
+%------------------------------------------------------------------------------%
+% Class Options
+%------------------------------------------------------------------------------%
+
+\setbeamersize{text margin left=1.5em,text margin right=1.5em}
+
+
+%------------------------------------------------------------------------------%
+% Color Theme
+%------------------------------------------------------------------------------%
+
+% Define colors
+\usecolortheme[RGB={141,174,16}]{structure}
+\xdefinecolor{rubgrey}{RGB}{231,231,231}
+\xdefinecolor{rubgreen}{RGB}{141,174,16}
+\xdefinecolor{rubblue}{RGB}{0,53,96}
+
+
+% Settings
+\setbeamercolor{title}{fg=white}
+\setbeamercolor{author}{fg=rubblue}
+\setbeamercolor{institute}{fg=rubblue}
+\setbeamercolor{date}{fg=rubblue}
+
+\setbeamercolor{bibliography entry title}{fg=rubblue}
+\setbeamercolor{bibliography entry author}{fg=rubblue}
+
+\setbeamercolor{palette primary}{fg=rubgrey, bg=rubblue}
+\setbeamercolor{palette secondary}{fg=rubgrey, bg=rubblue}
+\setbeamercolor{palette tertiary}{fg=rubgrey, bg=rubblue}
+
+\setbeamercolor{caption name}{fg=rubblue}
+\setbeamercolor{frametitle}{fg=rubblue, bg=white}
+\setbeamercolor{normal text}{fg=rubblue}
+\setbeamercolor{section in head/foot}{fg=white, bg=rubblue}
+\setbeamercolor{subsection in head/foot}{fg=rubblue, bg=rubgrey}
+
+\setbeamercolor{footline}{fg=rubblue}
+
+
+%------------------------------------------------------------------------------%
+% Modify Template
+%------------------------------------------------------------------------------%
+
+% Reduce spacing between frame title and content
+% First vspace moves the title, the second the content
+%\addtobeamertemplate{frametitle}{\vspace*{0cm}}{\vspace*{-1cm}}
+
+% Add frame numbers to footline
+\addtobeamertemplate{navigation symbols}{}{%
+    \usebeamerfont{footline}%
+    \usebeamercolor[fg]{footline}%
+    \hspace{1em}%
+    \insertframenumber/\inserttotalframenumber
+}
+
+% Remove section frames
+\AtBeginSection{}
+
+% Reduce spacing between table caption and content
+\AtBeginEnvironment{table}{\setlength\belowcaptionskip{-15pt}}
+
+% Reduce spacing between figure caption and content
+\AtBeginEnvironment{figure}{\setlength\abovecaptionskip{-27.5pt}}
+
+
+%------------------------------------------------------------------------------%
+% Environments
+%------------------------------------------------------------------------------%
+
+% Multi-column layout
+
+% See https://bookdown.org/yihui/rmarkdown-cookbook/multi-column.html for more
+% information.
+
+\newenvironment{cols}[1][]{}{}
+
+\newenvironment{col}[1]{\begin{minipage}{#1}\ignorespaces}{%
+\end{minipage}
+\ifhmode\unskip\fi
+\aftergroup\useignorespacesandallpars}
+
+\def\useignorespacesandallpars#1\ignorespaces\fi{%
+#1\fi\ignorespacesandallpars}
+
+\makeatletter
+\def\ignorespacesandallpars{%
+  \@ifnextchar\par
+    {\expandafter\ignorespacesandallpars\@gobble}%
+    {}%
+}
+\makeatother
