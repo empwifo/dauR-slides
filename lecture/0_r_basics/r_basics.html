@@ -1,0 +1,1792 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Data Analysis using R</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Sven Werenbeck-Ueding" />
+    <script src="r_basics_files/header-attrs-2.23.3/header-attrs.js"></script>
+    <link href="r_basics_files/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="r_basics_files/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+    <link href="r_basics_files/panelset-0.2.6/panelset.css" rel="stylesheet" />
+    <script src="r_basics_files/panelset-0.2.6/panelset.js"></script>
+    <link href="r_basics_files/tile-view-0.2.6/tile-view.css" rel="stylesheet" />
+    <script src="r_basics_files/tile-view-0.2.6/tile-view.js"></script>
+    <link rel="stylesheet" href="style.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Data Analysis using R
+]
+.subtitle[
+## R Basics
+]
+.author[
+### Sven Werenbeck-Ueding
+]
+.date[
+### 22.09.2023
+]
+
+---
+
+
+&lt;!-- Setup --&gt;
+
+
+
+
+
+
+
+## What is R?
+
+&gt; R is a free, not-commercial, open-source software language for statistical computing and graphics. It comes with a lot of advantages, especially for data analysis projects.
+
+.pull-left.short-width[
+.big-emoji[🐣]
+]
+
+.pull-right.long-width[
+#### Origin
+- `R` is based on the programming language `S` ('dialect of S'), which in turn is based on the core programming language `C`
+
+- First version published by **R**oss Ihaka and **R**obert Gentlemen in 1993 (Name is based on their first initials)
+
+- intention of `R`: creating an environment where one doesn't consciously think of programming
+
+.right[&lt;a name=cite-rpaper&gt;&lt;/a&gt;[Ihaka and Gentleman (1996)](https://doi.org/10.1080/10618600.1996.10474713)]
+]
+
+---
+
+## What is R?
+
+&gt; R is a free, not-commercial, open-source software language for statistical computing and graphics. It comes with a lot of advantages, especially for data analysis projects.
+
+.pull-left.short-width[
+.big-emoji[📖]
+]
+
+.pull-right.long-width[
+#### General Information
+- `R` is case sensitive
+
+- `R` and his basic statistical functions can easily be extended by packages
+
+- Comprehensive R Archive Network (CRAN) is the main-platform for packages (extensions)
+
+- over 20,000 packages in 2021 (roughly 4,000 packages in 2013)
+
+.right[&lt;a name=cite-rproject&gt;&lt;/a&gt;[Open-Source and R-Core-Team (2023)](https://www.r-project.org/)]
+]
+
+
+---
+
+## What is R?
+
+&gt; R is a free, not-commercial, open-source software language for statistical computing and graphics. It comes with a lot of advantages, especially for data analysis projects.
+
+
+.pull-left.short-width[
+.big-emoji[💪]
+]
+
+.pull-right.long-width[
+#### Advantages/Strengths
+- free software
+
+- open-source: contributions from a large active and vibrant community (huge functionality)
+
+- great data visualization options
+
+- interfaces with many other languages (e.g. LaTeX, C, Markdown, Python, Java, HTML, CSS)
+
+- runs on almost every platform (through `C++` even on the PlayStation)
+
+.right[&lt;a name=cite-r4ds&gt;&lt;/a&gt;[Wickham and Grolemund (2016)](https://r4ds.had.co.nz/)]
+]
+
+---
+
+## What is R?
+
+&gt; R is a free, not-commercial, open-source software language for statistical computing and graphics. It comes with a lot of advantages, especially for data analysis projects.
+
+.pull-left.short-width[
+.big-emoji[❓]
+]
+
+.pull-right.long-width[
+#### Need additional help?
+- use the built-in help system in `R` (`help("...")` and `?`)
+
+- use online-forums like [Stack Overflow](https://stackoverflow.com/) or [GitHub](https://github.com/) (developers are active here as well)
+
+- use the documentation files provided on the official [`R`-Website](https://www.r-project.org/)  (manuals, FAQs, books)
+
+]
+
+---
+
+layout: false
+class: middle
+
+&gt; To understand computations in `R`, two slogans are helpful: Everything that exists is an object. Everything that happens is a function call.
+&gt;
+&gt; .right[&lt;a name=cite-chambers&gt;&lt;/a&gt;[Chambers (2014)](https://doi.org/10.1214/13-STS452), Co-Founder of `S`]
+
+---
+
+class: middle
+
+&gt; Good coding style is like using correct punctuation. You can manage without it, but it sure makes things easier to read. [...] you really should use a consistent style. Good style is important because while your code only has one author, it’ll usually have multiple readers. This is especially true when you’re writing code with others.
+&gt;
+&gt; .right[&lt;a name=cite-advancedr&gt;&lt;/a&gt;[Wickham (2019)](http://adv-r.had.co.nz/)]
+
+---
+
+layout: false
+class: middle
+background-image: url("https://www.r-project.org/logo/Rlogo.png")
+background-size: 100px
+background-position: 90% 10%
+
+## Prerequisites 
+
+#### Download the appropiate versions of R and RStudio for your operating system
+
+- R can be downloaded via the [Comprehensive R Archive Network (CRAN)](https://cran.r-project.org/)
+
+- Best integrated development environment (IDE), i. e. where you write and compile your code, is RStudio and can be downloaded [here](https://posit.co/products/open-source/rstudio/)
+
+---
+layout: true
+
+## Basic Calculations
+
+---
+
+.pull-left.short-width[
+.big-emoji[🧮]
+]
+
+.pull-right.long-width[
+#### Math operators
+
+- `+`: addition
+- `-`: subtraction
+- `*`: multiplication (elementwise!)
+- `/`: division
+- `^`: power operator (e.g. `\(2^3\)`)
+]
+
+--
+
+.pull-left.short-width[
+.big-emoji[👩‍💻]
+]
+
+.pull-right.long-width[
+#### Commands
+
+- `abs()`: absolute value
+- `sqrt()`: square root
+- `exp()`: exponential function
+- `log()`: natural logarithm
+- `factorial()`: factorial (e.g. 8!)
+- `round( , digits = x)`: round to x digits
+]
+
+--
+
+*Note:* These operations work on different types (e.g. scalars, vectors, matrices, ...)
+
+---
+
+
+```r
+3 + 5 * 2
+```
+
+```
+## [1] 13
+```
+
+
+```r
+(3 + 5) * 2
+```
+
+```
+## [1] 16
+```
+
+
+```r
+sqrt(8.33)
+```
+
+```
+## [1] 2.886174
+```
+
+
+```r
+round(sqrt(8.33), 2)
+```
+
+```
+## [1] 2.89
+```
+
+*Caution:* Decimal numbers use a dot instead of a comma (convenient in the US and in the UK)
+
+---
+
+layout: false
+
+## R-Scripts
+
+- Within R there are several file types to create
+
+- R-Scripts are simple text files (`&lt;file_name&gt;.R`) with a collection of commands (and comments)
+
+- Useful to store and document your statistical analyses
+
+- A new R-Script can be generated by clicking on `File &gt; New File &gt; R Script`
+
+- Run code from R scripts by highlighting the code snippet and typing `Ctrl` + `Enter`
+
+---
+
+## Comments
+
+- For better documentation, you can place comments in your R-Script using the symbol `#`
+
+- Everything placed behind the `#` and belonging to the same line is treated as a comment
+
+--
+
+.pull-left[
+
+```r
+# Multiply two by five
+2 * 5
+```
+
+```
+## [1] 10
+```
+]
+
+--
+
+.pull-right[
+
+```r
+10 / 4 # Divide ten by four
+```
+
+```
+## [1] 2.5
+```
+]
+
+---
+
+layout: true
+
+## R-Packages
+
+- R has a lot of built-in commands delivered by the installation of R
+
+- Often, these built-in commands are not sufficient (or convenient) to conduct more complex statistical analyses
+
+- Further commands can be used by installing specialized packages
+
+---
+
+---
+
+.pull-left[
+#### Installing
+
+- Run `install.packages()` while your PC is connected to the internet
+
+- Each package has to be installed **only once**
+
+
+```r
+# Installing the package rio
+install.packages("rio")
+```
+]
+
+--
+
+.pull-right[
+#### Loading
+
+- If you want to use a command from a specific package you need to activate the package by running the command `library()`
+
+- Packages need only to be activated **once per session**
+
+
+```r
+library(rio)
+```
+]
+
+---
+
+layout: false
+
+## Variables
+
+.pull-left[
+- Variables can take all kinds of different content (vectors, matrices, data sets, regression, ...)
+
+- Variables are created by the assignment operator `&lt;-`
+
+- When variables are assigned, they are shown in RStudio's environment pane 
+
+- Using `=` to assign variables is considered bad practice
+]
+
+--
+
+.pull-right[
+
+```r
+# Assign value 4 to variable x
+x &lt;- 4
+
+# Print x
+x
+```
+
+```
+## [1] 4
+```
+
+
+```r
+# Do some calculations with x
+x * 2
+```
+
+```
+## [1] 8
+```
+
+
+```r
+# Overwrite x
+x &lt;- 1
+x
+```
+
+```
+## [1] 1
+```
+]
+
+---
+
+layout: false
+
+## Vectors
+
+- Vectors are the most important data type in R
+
+- What we normally refer to as vector is an "atomic vector" in R: A vector of elements with the same type
+
+  - Scalars in R are atomic vectors as well (length 1 vectors)
+
+- R allows vectors to have elements of different types, a so-called "list"
+  
+  - More complex than atomic vectors: Each element can be **any** type
+  
+  - Elements can differ in length
+  
+  - May contain several atomic vectors of different lengths with different types
+  
+---
+
+layout: true
+
+## Atomic Vectors
+
+.pull-left[
+- Four primary types:
+
+  1. **Logical**: `TRUE` or `FALSE`
+  
+  2. **Integer**: Whole numbers followed by `L`, e. g. `1234L`
+  
+  3. **Double**: Decimal number defined by the floating point standard, e. g. `0.1234`
+  
+  4. **Character**: Strings surrounded by `"` or `'`, e. g. `"this is a string"` or `'this as well'`
+
+- Integers and doubles are numeric with unique values `Inf`, `-Inf` and `NaN` (not a number)
+
+- Generate vectors with `c(1, 2, ...)`
+]
+
+---
+---
+
+.pull-right[
+#### Operations
+
+
+```r
+# Generate x and z
+x &lt;- c(5, 1, 9, 3)
+z &lt;- c(4, 9, 0, 4)
+```
+
+
+```r
+# Multiplication with scalar
+2 * x
+```
+
+```
+## [1] 10  2 18  6
+```
+
+
+```r
+# Elementwise multiplication
+x * z
+```
+
+```
+## [1] 20  9  0 12
+```
+]
+
+---
+
+.pull-right[
+#### Special Commands
+
+
+```r
+# vector with 5 ones
+rep(1, 5)
+```
+
+```
+## [1] 1 1 1 1 1
+```
+
+
+```r
+# sequence from 1 to 5
+seq(1, 5)
+```
+
+```
+## [1] 1 2 3 4 5
+```
+
+
+```r
+1:5
+```
+
+```
+## [1] 1 2 3 4 5
+```
+]
+
+---
+
+layout: true
+
+## Subsetting Vectors
+
+---
+
+.pull-left[
+- Sometimes we want to work with specific elements from a vector
+
+  1. Subset via element indices
+  
+  2. Subset via logicals
+
+- Specific elements can be extracted by enclosing the index with `[` and `]`
+]
+
+---
+
+.pull-left[
+- Sometimes we want to work with specific elements from a vector
+
+  1. **Subset via element indices**
+  
+  2. Subset via logicals
+
+- Specific elements can be extracted by enclosing the index with `[` and `]`
+]
+
+.pull-right[
+
+```r
+# Elements 2
+x[2]
+```
+
+```
+## [1] 1
+```
+
+
+```r
+# Elements 1 to 3
+x[1:3]
+```
+
+```
+## [1] 5 1 9
+```
+
+
+```r
+# All elements except the last one
+x[-4]
+```
+
+```
+## [1] 5 1 9
+```
+]
+
+---
+
+.pull-left[
+- Sometimes we want to work with specific elements from a vector
+
+  1. Subset via element indices
+  
+  2. **Subset via logicals**
+
+- Specific elements can be extracted by enclosing the index with `[` and `]`
+]
+
+.pull-right[
+
+```r
+# Subset with TRUE/FALSE
+x[c(TRUE, FALSE, FALSE, TRUE)]
+```
+
+```
+## [1] 5 3
+```
+]
+
+---
+
+layout: false
+
+## Factors
+
+.pull-left[
+- Vector that contains predefined values
+
+- Used to represent categorical data
+
+- Integer vectors with the following **attributes** (metadata of the vector):
+
+  1. `class`: "factor"
+  
+  2. `levels`: Set of allowed values, sorted into increasing order
+
+- Created by the `factor()` function
+
+- Can be ordered when setting the `ordered` argument of `factor()` to `TRUE`
+]
+
+--
+
+.pull-right[
+
+```r
+x &lt;- factor(c("b", "a", "a", "b", "a"),
+            levels = c("a", "b"))
+
+class(x)
+```
+
+```
+## [1] "factor"
+```
+
+```r
+levels(x)
+```
+
+```
+## [1] "a" "b"
+```
+]
+
+---
+
+layout: false
+
+## Missing Values
+
+- R reserves `NA` for missing values ("not applicable")
+
+.pull-left[
+- Most computations with missing values return missing values
+]
+.pull-right[
+
+```r
+NA * 10
+```
+
+```
+## [1] NA
+```
+]
+
+.pull-left[
+- Exception: When identity holds for all inputs, for example when computing `\(x^0\)`
+]
+.pull-right[
+
+```r
+NA^0
+```
+
+```
+## [1] 1
+```
+]
+
+.pull-left[
+- Use `is.na()` to test for missing values
+]
+.pull-right[
+
+```r
+x &lt;- c(1, NA, 2, 3)
+
+is.na(x)
+```
+
+```
+## [1] FALSE  TRUE FALSE FALSE
+```
+]
+
+---
+
+layout: true
+
+## Matrices
+
+.pull-left[
+- Vectors can have **attributes** (some metadata of the vector)
+
+- Adding the `dim` attribute to an atomic vector makes it a 2-dimensional matrix
+
+- Can be created by assigning `dim()` to an atomic vector or simply calling `matrix()`
+
+- Can also be created by binding atomic vectors with the same data type and length column-wise using `cbind()`or row-wise using `rbind()`
+]
+
+---
+---
+
+.pull-right[
+
+```r
+# Add dim attribute to atomic vector
+x &lt;- 1:6
+
+dim(x) &lt;- c(3, 2) # 3 rows, 2 columns
+
+x
+```
+
+```
+##      [,1] [,2]
+## [1,]    1    4
+## [2,]    2    5
+## [3,]    3    6
+```
+]
+
+---
+
+.pull-right[
+
+```r
+# Use the matrix command to create a
+# matrix from a vector
+matrix(x, nrow = 3)
+```
+
+```
+##      [,1] [,2]
+## [1,]    1    4
+## [2,]    2    5
+## [3,]    3    6
+```
+
+```r
+# Specify ncol instead of nrow
+matrix(x, ncol = 2)
+```
+
+```
+##      [,1] [,2]
+## [1,]    1    4
+## [2,]    2    5
+## [3,]    3    6
+```
+]
+
+---
+
+.pull-right[
+
+```r
+# Fill matrix column-wise instead of
+# row-wise
+matrix(x, ncol = 2, byrow = T)
+```
+
+```
+##      [,1] [,2]
+## [1,]    1    2
+## [2,]    3    4
+## [3,]    5    6
+```
+]
+
+---
+
+.pull-right[
+
+```r
+# Bind atomic vectors column-wise
+cbind(1:3, 4:6)
+```
+
+```
+##      [,1] [,2]
+## [1,]    1    4
+## [2,]    2    5
+## [3,]    3    6
+```
+]
+
+---
+
+layout: true
+
+## Matrix Operations
+
+.pull-left[
+- `t()`: transpose
+
+- `solve()`: inverse
+
+- `%*%`: matrix multiplication
+]
+
+---
+
+---
+
+.pull-right[
+
+```r
+A &lt;- matrix(c(1, 2, 0, 3), ncol = 2)
+
+A
+```
+
+```
+##      [,1] [,2]
+## [1,]    1    0
+## [2,]    2    3
+```
+
+```r
+t(A)
+```
+
+```
+##      [,1] [,2]
+## [1,]    1    2
+## [2,]    0    3
+```
+
+```r
+solve(A)
+```
+
+```
+##            [,1]      [,2]
+## [1,]  1.0000000 0.0000000
+## [2,] -0.6666667 0.3333333
+```
+]
+
+---
+
+.pull-right[
+
+```r
+B &lt;- matrix(c(4, 7, 2, 6), ncol = 2)
+
+B
+```
+
+```
+##      [,1] [,2]
+## [1,]    4    2
+## [2,]    7    6
+```
+
+```r
+A %*% B
+```
+
+```
+##      [,1] [,2]
+## [1,]    4    2
+## [2,]   29   22
+```
+]
+
+---
+
+layout: true
+
+## Subsetting Matrices
+
+.pull-left[
+- Specific elements can be extracted using `[` and `]`
+
+- To distinguish the row from the column positions, a comma is used within the brackets **`[row, column]`**
+]
+
+---
+
+.pull-right[
+
+```r
+C &lt;- matrix(-5:6, ncol = 4)
+
+C
+```
+
+```
+##      [,1] [,2] [,3] [,4]
+## [1,]   -5   -2    1    4
+## [2,]   -4   -1    2    5
+## [3,]   -3    0    3    6
+```
+]
+
+---
+
+.pull-right[
+
+```r
+C[1, ]
+```
+
+```
+## [1] -5 -2  1  4
+```
+
+
+```r
+C[, 1:3]
+```
+
+```
+##      [,1] [,2] [,3]
+## [1,]   -5   -2    1
+## [2,]   -4   -1    2
+## [3,]   -3    0    3
+```
+
+
+```r
+C[1:2, 2]
+```
+
+```
+## [1] -2 -1
+```
+]
+
+--
+
+*Note:* Depending on the matrix and choice of subset, the subset may no longer be a matrix!
+
+---
+
+layout: false 
+
+## Useful Statistical/Mathematical Commands
+
+Suppose `x` and `y` are numeric vectors with same length:
+
+| Command       | Description                                           |
+|---------------|-------------------------------------------------------|
+| `sum(x)`      | Sum of `x`                                            |
+| `table(x)`    | Frequeny table for `x`                                |
+| `mean(x)`     | Average of `x`                                        |
+| `median(x)`   | Median of `x`                                         |
+| `var(x)`      | Variance of `x`                                       |
+| `sd(x)`       | Standard deviation of `x`                             |
+| `cov(x, y)`   | Covariance matrix of `x` and `y`                      |
+| `quantile(x)` | Quantiles of `x`                                      |
+| `min(x)`      | Minimum value of `x`                                  |
+| `max(x)`      | Maximum value of `x`                                  |
+
+--
+
+*Note:* Some of these commands can also be applied to matrices
+
+---
+
+layout: true
+
+## Lists
+
+.pull-left[
+- Each element can be **any** type
+
+- Can be constructed using `list()`
+
+- Just like with atomic vectors, elements in a list can be named
+
+- Subsetting lists is done via double brackets `[[` and `]]` or `$`
+]
+
+---
+
+.pull-right[
+
+```r
+x &lt;- list(1:5, "a", c(TRUE, FALSE),
+          seq(0.2, 0.6, by = 0.2))
+
+typeof(x)
+```
+
+```
+## [1] "list"
+```
+
+```r
+x
+```
+
+```
+## [[1]]
+## [1] 1 2 3 4 5
+## 
+## [[2]]
+## [1] "a"
+## 
+## [[3]]
+## [1]  TRUE FALSE
+## 
+## [[4]]
+## [1] 0.2 0.4 0.6
+```
+]
+
+---
+
+.pull-right[
+
+```r
+x &lt;- list(
+  integer_vector = 1:5,
+  character_vector = "a"
+)
+
+x
+```
+
+```
+## $integer_vector
+## [1] 1 2 3 4 5
+## 
+## $character_vector
+## [1] "a"
+```
+]
+
+---
+
+.pull-right[
+
+```r
+x$integer_vector
+```
+
+```
+## [1] 1 2 3 4 5
+```
+
+```r
+x[[1]]
+```
+
+```
+## [1] 1 2 3 4 5
+```
+
+]
+
+---
+
+layout: false
+
+## Data Frames
+
+.pull-left[
+- Used when dealing with tabular data
+
+- Essentially a named list of vectors with
+
+  - **same length** of all elements
+  
+  - attributes for column **`names`** and **`row.names`**
+  
+  - and **"data.frame" as the `class`**
+  
+- Created using the `data.frame()` function
+]
+
+--
+
+.pull-right[
+
+```r
+df &lt;- data.frame(x = 1:10, y = letters[1:10])
+
+df
+```
+
+```
+##     x y
+## 1   1 a
+## 2   2 b
+## 3   3 c
+## 4   4 d
+## 5   5 e
+## 6   6 f
+## 7   7 g
+## 8   8 h
+## 9   9 i
+## 10 10 j
+```
+]
+
+---
+
+layout: true
+
+## Useful Commands
+
+.pull-left[
+- `View(df)`: Opens `df` in a spreadsheet-style data viewer in RStudio
+
+- `summary(df)`: Produces summary statistics for each variable
+
+- `df$x`: Access variable with name `x`
+
+- `head(df)`: Shows first six rows of `df`
+
+- `tail(df)`: Shows last six rows of `df`
+
+- `nrow(df)`: Number of rows (observations)
+
+- `ncol(df)`: Number of columns (variables)
+
+- `names(df)`: Column names
+]
+
+---
+
+---
+
+.pull-right[
+
+```r
+summary(df)
+```
+
+```
+##        x              y            
+##  Min.   : 1.00   Length:10         
+##  1st Qu.: 3.25   Class :character  
+##  Median : 5.50   Mode  :character  
+##  Mean   : 5.50                     
+##  3rd Qu.: 7.75                     
+##  Max.   :10.00
+```
+]
+
+---
+
+.pull-right[
+
+```r
+df$x
+```
+
+```
+##  [1]  1  2  3  4  5  6  7  8  9 10
+```
+]
+
+---
+
+.pull-right[
+
+```r
+nrow(df)
+```
+
+```
+## [1] 10
+```
+]
+
+---
+
+.pull-right[
+
+```r
+names(df)
+```
+
+```
+## [1] "x" "y"
+```
+]
+
+---
+
+layout: true
+
+## Working with Data Frames
+
+---
+
+.pull-left[
+Create a new column:
+]
+
+.pull-right[
+
+```r
+df$z &lt;- seq(0.1, 1, by = 0.1)
+
+df
+```
+
+```
+##     x y   z
+## 1   1 a 0.1
+## 2   2 b 0.2
+## 3   3 c 0.3
+## 4   4 d 0.4
+## 5   5 e 0.5
+## 6   6 f 0.6
+## 7   7 g 0.7
+## 8   8 h 0.8
+## 9   9 i 0.9
+## 10 10 j 1.0
+```
+]
+
+---
+
+.pull-left[
+Select multiple columns by name:
+]
+
+.pull-right[
+
+```r
+df[, c("x", "z")]
+```
+
+```
+##     x   z
+## 1   1 0.1
+## 2   2 0.2
+## 3   3 0.3
+## 4   4 0.4
+## 5   5 0.5
+## 6   6 0.6
+## 7   7 0.7
+## 8   8 0.8
+## 9   9 0.9
+## 10 10 1.0
+```
+]
+
+---
+
+.pull-left[
+Select a subset of observations based on a condition:
+
+- `df$x &lt;= 5` evaluates to a vector of logicals with same length as the atomic vector `df$x`
+
+- Logical vector selects rows to keep when subsetting
+
+- Can of course also subset using a vector of indices
+]
+
+.pull-right[
+
+```r
+df[df$x &lt;= 5,]
+```
+
+```
+##   x y   z
+## 1 1 a 0.1
+## 2 2 b 0.2
+## 3 3 c 0.3
+## 4 4 d 0.4
+## 5 5 e 0.5
+```
+]
+
+---
+
+layout: false
+
+## Importing Data Sets
+
+.pull-left[
+- Data sets are usually stored in specific file formats such as `.csv`, `.xlsx` or Stata's `.dta`
+
+- Base R offers functions for the most common data storage formats
+
+- For some formats we have to use packages such as `haven` for `.dta` files (or write functions ourselves)
+
+- Import the `.csv` file stored under `data/processed/happiness.csv`, data from &lt;a name=cite-introecon&gt;&lt;/a&gt;[Wooldridge (2013)](#bib-introecon)
+]
+
+.pull-right[
+
+```r
+df &lt;- read.csv("data/processed/happiness.csv")
+```
+
+
+]
+
+---
+
+## Note that...
+
+... you can change the working directory by using the command  `setwd("YOUR_PATH")` (recommended!)
+
+--
+
+... you can also change the working directory by clicking on `Session &gt; Set Working Directory &gt; Choose Directory`
+
+--
+
+... as a rule, `R` accepts "`/`" but does not accept "`\`" (which is often used on german PCs)
+
+--
+
+... if your working directory is specified you do not need to set the whole path for future operations (only the relative path)
+
+---
+
+layout: false
+
+## Linear Regression Models in R
+
+Let's build a linear probability model using the happiness data!
+
+--
+
+We are interested in analyzing how owning a gun has an effect on whether individuals see themselves as "very happy":
+
+`$$vhappy = \alpha + \beta_1 \times educ + \beta_2 \times income + \beta_3 \times owngun + \varepsilon,$$`
+
+where
+
+- `\(vhappy=1\)` if the individual is very happy
+
+- `\(educ\)`: Years of schooling completed
+
+- `\(income\)`: Income brackets
+
+- `\(owngun=1\)` if the individual owns a gun
+
+---
+
+## Inspect the Data
+
+
+```r
+summary(df[,c("vhappy", "educ", "income", "owngun")])
+```
+
+```
+##      vhappy            educ          income             owngun         
+##  Min.   :0.0000   Min.   : 0.00   Length:17137       Length:17137      
+##  1st Qu.:0.0000   1st Qu.:12.00   Class :character   Class :character  
+##  Median :0.0000   Median :13.00   Mode  :character   Mode  :character  
+##  Mean   :0.3069   Mean   :13.32                                        
+##  3rd Qu.:1.0000   3rd Qu.:16.00                                        
+##  Max.   :1.0000   Max.   :20.00                                        
+##                   NA's   :44
+```
+
+--
+
+- Contains `NA` ➡️ need to be removed for the estimation
+
+--
+
+- `income` and `owngun` are of type character ➡️ transform columns to correct format
+
+---
+
+layout: true
+
+## Clean the Data
+
+---
+
+Remove missing values using `na.omit()`:
+
+
+```r
+# Create a new data frame in the environment with a subset of columns used for the analysis
+df_clean &lt;- df[,c("vhappy", "educ", "income", "owngun")]
+
+# Remove all rows containing NAs
+df_clean &lt;- na.omit(df_clean)
+
+summary(df_clean)
+```
+
+```
+##      vhappy            educ          income             owngun         
+##  Min.   :0.0000   Min.   : 0.00   Length:9969        Length:9969       
+##  1st Qu.:0.0000   1st Qu.:12.00   Class :character   Class :character  
+##  Median :0.0000   Median :13.00   Mode  :character   Mode  :character  
+##  Mean   :0.3074   Mean   :13.39                                        
+##  3rd Qu.:1.0000   3rd Qu.:16.00                                        
+##  Max.   :1.0000   Max.   :20.00
+```
+
+---
+
+Recode `owngun` to a dummy variable using `ifelse()`:
+
+
+```r
+# Recode owngun to a dummy variable
+df_clean$owngun &lt;- ifelse(df_clean$owngun == "yes", 1, 0)
+
+summary(df_clean)
+```
+
+```
+##      vhappy            educ          income              owngun      
+##  Min.   :0.0000   Min.   : 0.00   Length:9969        Min.   :0.0000  
+##  1st Qu.:0.0000   1st Qu.:12.00   Class :character   1st Qu.:0.0000  
+##  Median :0.0000   Median :13.00   Mode  :character   Median :0.0000  
+##  Mean   :0.3074   Mean   :13.39                      Mean   :0.3692  
+##  3rd Qu.:1.0000   3rd Qu.:16.00                      3rd Qu.:1.0000  
+##  Max.   :1.0000   Max.   :20.00                      Max.   :1.0000
+```
+
+---
+
+The `income` is given in the form of income brackets and stored as a character vector:
+
+
+```r
+# Take a look at unique values of the income
+unique(df_clean$income)
+```
+
+```
+##  [1] "$15000 - 19999" "$10000 - 14999" "$25000 or more" "$20000 - 24999"
+##  [5] "$6000 to 6999"  "$5000 to 5999"  "$3000 to 3999"  "$1000 to 2999" 
+##  [9] "$8000 to 9999"  "$7000 to 7999"  "$4000 to 4999"  "lt $1000"
+```
+
+--
+
+➡️ Convert to factor
+
+---
+
+Convert `income` to an ordered factor:
+
+
+```r
+df_clean$income &lt;- factor(df_clean$income,
+                          levels = c(
+                            "lt $1000", "$1000 to 2999", "$3000 to 3999", "$4000 to 4999",
+                            "$5000 to 5999", "$6000 to 6999", "$7000 to 7999", "$8000 to 9999",
+                            "$10000 - 14999", "$15000 - 19999", "$20000 - 24999", "$25000 or more"
+                          ),
+                          ordered = T)
+
+summary(df_clean)
+```
+
+```
+##      vhappy            educ                  income         owngun      
+##  Min.   :0.0000   Min.   : 0.00   $25000 or more:6422   Min.   :0.0000  
+##  1st Qu.:0.0000   1st Qu.:12.00   $20000 - 24999: 873   1st Qu.:0.0000  
+##  Median :0.0000   Median :13.00   $10000 - 14999: 813   Median :0.0000  
+##  Mean   :0.3074   Mean   :13.39   $15000 - 19999: 751   Mean   :0.3692  
+##  3rd Qu.:1.0000   3rd Qu.:16.00   $8000 to 9999 : 266   3rd Qu.:1.0000  
+##  Max.   :1.0000   Max.   :20.00   $7000 to 7999 : 153   Max.   :1.0000  
+##                                   (Other)       : 691
+```
+
+---
+
+layout: true
+
+## Linear Model: `lm()`
+
+---
+
+.pull-left[
+- The function `lm()` is used to fit (multivariate) linear models
+
+- For the model defined before, we simply need:
+
+  1. `formula`: `vhappy ~ educ + income + owngun`
+  
+  2. `data`: The `df_clean` data frame we prepared
+]
+
+.pull-right[
+
+```r
+model &lt;- lm(vhappy ~ educ + income + owngun,
+            df_clean)
+```
+
+]
+
+---
+
+
+```r
+model
+```
+
+```
+## 
+## Call:
+## lm(formula = vhappy ~ educ + income + owngun, data = df_clean)
+## 
+## Coefficients:
+## (Intercept)         educ     income.L     income.Q     income.C     income^4  
+##    0.103169     0.009402     0.046546     0.091012     0.054562     0.040568  
+##    income^5     income^6     income^7     income^8     income^9    income^10  
+##   -0.037144     0.068211    -0.013639    -0.020895    -0.007898     0.017806  
+##   income^11       owngun  
+##   -0.034506     0.031326
+```
+
+---
+
+layout: false
+
+## Model Summary: `summary()`
+
+.scroll-box-18[
+
+```r
+summary(model)
+```
+
+```
+## 
+## Call:
+## lm(formula = vhappy ~ educ + income + owngun, data = df_clean)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -0.4289 -0.3506 -0.2375  0.6212  0.9223 
+## 
+## Coefficients:
+##              Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  0.103169   0.022115   4.665 3.12e-06 ***
+## educ         0.009402   0.001646   5.713 1.14e-08 ***
+## income.L     0.046546   0.032010   1.454  0.14595    
+## income.Q     0.091012   0.033552   2.713  0.00669 ** 
+## income.C     0.054562   0.032832   1.662  0.09657 .  
+## income^4     0.040568   0.033856   1.198  0.23085    
+## income^5    -0.037144   0.032627  -1.138  0.25497    
+## income^6     0.068211   0.033484   2.037  0.04167 *  
+## income^7    -0.013639   0.033970  -0.401  0.68807    
+## income^8    -0.020895   0.034801  -0.600  0.54825    
+## income^9    -0.007898   0.035254  -0.224  0.82273    
+## income^10    0.017806   0.034747   0.512  0.60835    
+## income^11   -0.034506   0.037448  -0.921  0.35684    
+## owngun       0.031326   0.009679   3.237  0.00121 ** 
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 0.4559 on 9955 degrees of freedom
+## Multiple R-squared:  0.02504,	Adjusted R-squared:  0.02377 
+## F-statistic: 19.67 on 13 and 9955 DF,  p-value: &lt; 2.2e-16
+```
+]
+
+---
+
+## Extract Coefficients: `coef()`
+
+
+```r
+coef(model)
+```
+
+```
+##  (Intercept)         educ     income.L     income.Q     income.C     income^4 
+##  0.103168955  0.009401949  0.046545580  0.091012452  0.054561656  0.040568424 
+##     income^5     income^6     income^7     income^8     income^9    income^10 
+## -0.037143658  0.068210608 -0.013638591 -0.020894643 -0.007898189  0.017805968 
+##    income^11       owngun 
+## -0.034506034  0.031326131
+```
+
+---
+
+layout: false
+
+## Formulas
+
+- Formulas have a special syntax in R and reference the column names given in the data
+
+- LHS and RHS are separated by `~`
+  
+- Variables to be included in the model are separated by `+`
+  
+- R automatically assumes an intercept: To remove the intercept, add `-1` at the start or `+0` at the end of the RHS
+  
+- May include transformations of the data, e. g. `log()`
+
+- `:` indicates interactions of variables
+
+- `*` denotes factor crossings, i. e. `a*b` is the same as `a + b + a:b`
+
+- `^` is used for polynomials, i. e. `a^2` translates to `a*a`
+
+---
+
+## Formulas: Examples
+
+| Formula                                   | Regression Model                |
+|-------------------------------------------|---------------------------------|
+| `y ~ x1 + x2 + x3`         | `\(y = \alpha + \beta_1 \times x_1 + \beta_2 \times x_2 + \beta_3 \times x_3 + \varepsilon\)` |
+| `y ~ -1 + x1 + x2 + x3`         | `\(y = \beta_1 \times x_1 + \beta_2 \times x_2 + \beta_3 \times x_3 + \varepsilon\)` |
+| `y ~ log(x1) + x2 + x3`         | `\(y = \alpha + \beta_1 \times \ln{x_1} + \beta_2 \times x_2 + \beta_3 \times x_3 + \varepsilon\)` |
+| `y ~ x1*x1 + x2 + x3`    | `\(y = \alpha + \beta_1 \times x_1 + \beta_2 \times x_1^2 + \beta_3 \times x_2 + \beta_4 \times x_3 + \varepsilon\)` |
+| `y ~ x1:x1 + x2 + x3`    | `\(y = \alpha + \beta_1 \times x_1^2 + \beta_2 \times x_2 + \beta_3 \times x_3 + \varepsilon\)` |
+| `y ~ x1 + x2*x3`           | `\(y = \alpha + \beta_1 \times x_1 + \beta_2 \times x_2 + \beta_3 \times x_3 + \beta_4 \times x_2 \times x_3 + \varepsilon\)` |
+
+---
+
+layout: false
+
+# References
+
+&lt;a name=bib-chambers&gt;&lt;/a&gt;[Chambers, J. M.](#cite-chambers) (2014).
+"Object-Oriented Programming, Functional Programming and R". In:
+_Statistical Science_ 29.3, pp. 167-180. DOI:
+[10.1214/13-STS452](https://doi.org/10.1214%2F13-STS452).
+
+&lt;a name=bib-rpaper&gt;&lt;/a&gt;[Ihaka, R. and R. Gentleman](#cite-rpaper)
+(1996). "R: A Language for Data Analysis and Graphics". In: _Journal of
+Computational and Graphical Statistics_ 5.3, pp. 299-314. DOI:
+[10.1080/10618600.1996.10474713](https://doi.org/10.1080%2F10618600.1996.10474713).
+
+&lt;a name=bib-rproject&gt;&lt;/a&gt;[Open-Source and R-Core-Team](#cite-rproject)
+(2023). _R Project. Open-source statistical software_. Result of a
+collaborative Effort with Contributions from all over the World. URL:
+[https://www.r-project.org/](https://www.r-project.org/).
+
+&lt;a name=bib-advancedr&gt;&lt;/a&gt;[Wickham, H.](#cite-advancedr) (2019).
+_Advanced R_. 2nd. Chapman &amp; Hall/CRC. URL:
+[http://adv-r.had.co.nz/](http://adv-r.had.co.nz/).
+
+&lt;a name=bib-r4ds&gt;&lt;/a&gt;[Wickham, H. and G. Grolemund](#cite-r4ds) (2016).
+_R for data science. import, tidy, transform, visualize, and model
+data_. O'Reilly. URL:
+[https://r4ds.had.co.nz/](https://r4ds.had.co.nz/).
+
+&lt;a name=bib-introecon&gt;&lt;/a&gt;[Wooldridge, J. M.](#cite-introecon) (2013).
+_Introductory Econometrics: A Modern Approach_. 5th. Cengage Learning.
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

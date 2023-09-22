@@ -1,0 +1,1290 @@
+---
+title: "`r params$title`"
+subtitle: "`r params$subtitle`"
+author: "`r params$author`"
+date: "`r format(Sys.Date(), '%d.%m.%Y')`"
+output:
+  xaringan::moon_reader:
+    css: ["default", "default-fonts", "style.css"]
+    nature:
+      ratio: "16:9"
+      highlightLines: true
+      countIncrementalSlides: false
+params:
+  title: "Data Analysis using R"
+  subtitle: "Importing"
+  author: "Sven Werenbeck-Ueding"
+  path_bib: "references.bib"
+  path_assets: "../../resources/assets/"
+  path_data: "../../data/"
+---
+
+<!-- Setup -->
+
+```{r setup, include=FALSE}
+#knitr::opts_chunk$set(echo = FALSE)
+
+library(tidyverse)
+library(fontawesome)
+library(DiagrammeR)
+library(RefManageR)
+
+# Theming
+xaringanExtra::use_panelset()
+xaringanExtra::use_tile_view() # Press o for overview in browser
+
+# Bibliography
+BibOptions(
+  check.entries = FALSE,
+  bib.style = "authoryear",
+  style = "markdown"
+)
+
+bib <- ReadBib(params$path_bib, check = FALSE)
+```
+
+```{r eval=TRUE, child = params$path_slides}
+```
+
+```{r pdf, include = FALSE}
+source("https://git.io/xaringan2pdf")
+xaringan_to_pdf(
+  input = "importing.html",
+  output_file = "importing.pdf")
+```
+
+```{r echo=FALSE, out.width="100%", fig.align='center'}
+
+grViz(
+  '
+  digraph {
+    fontname="Helvetica,Arial,sans-serif"
+	node [fontname="Helvetica,Arial,sans-serif"]
+	edge [fontname="Helvetica,Arial,sans-serif"]
+    
+    rankdir=LR
+    
+    subgraph cluster_0 {
+        style = rounded
+        color = black
+    
+        {
+            node [style = rounded, shape = box]
+            Import -> Tidy
+        }
+    
+        subgraph cluster_1 {
+            style = rounded
+            color = black
+            
+            node [style = rounded, shape = box]
+            Transform Visualize Model
+            
+            edge []
+            Transform -> Visualize
+            Visualize -> Model
+            Model -> Transform
+            
+            label = "Exploration"
+            labeljust = "l"
+            labelloc = "b"
+        }
+    
+        {
+            node [style = rounded, shape = box]
+            Communicate
+        }
+    
+        Tidy -> Transform
+        Model -> Communicate [ltail = cluster_1]
+        
+        label = "Programming"
+        labeljust = "l"
+        labelloc = "b"
+    }
+  }
+  '
+)
+
+```
+
+.right[*Source:* `r Citet(bib, "r4ds")`]
+
+---
+
+layout: true
+
+## Popular file formats
+
+---
+
+### Excel Spreadsheet (.xlsx)
+
+.pull-left[
+- Format for storing human-readable, rectangular data
+- One or more sheets containing rectangular data
+- Older spreadsheet file format: .xls
+]
+
+.pull-right[
+```{r, echo=FALSE, out.width="100%", fig.align='center'}
+knitr::include_graphics(paste0(params$path_assets, "excel_file.png"))
+```
+]
+
+---
+
+### Comma Separated Values (.csv)
+
+.pull-left[
+- Format for storing human-readable, rectangular data
+- Values are most commonly separated by `,` or `;`
+- Each line corresponds to a row
+- First line usually contains column names
+]
+
+.pull-right[
+```{r, echo=FALSE, out.width="100%", fig.align='center'}
+knitr::include_graphics(paste0(params$path_assets, "csv_file.png"))
+```
+]
+
+---
+
+layout: false
+
+## Example Data
+
+- Mexican survey data used in `r Citet(bib, "f20")` and provided by `r Citet(bib, "f20data")`
+
+  - Encuesta Nacional de Ocupación y Empleo (ENOE)
+  - Q3 2003 to Q3 2013
+  - Quarterly rotating panel: Households included for 5 quarters
+  - Records whether any household member leaves to the US
+  - Potential migrants are restricted from ages 15 to 65
+  - Explanatory variables: age, gender, marital status and education for all household members
+
+- In folder `data/raw/` of the online repository in csv and excel format
+
+- Data was altered to satisfy needs for this course
+
+---
+
+layout: false
+class: middle
+
+# Importing Data
+
+---
+
+class: middle
+background-image: url("https://readxl.tidyverse.org/logo.png")
+background-size: 100px
+background-position: 90% 10%
+
+# `readxl`
+
+> The readxl package makes it easy to get data out of Excel and into R. [...] `readxl` has no external dependencies, so it’s easy to install and use on all operating systems. It is designed to work with tabular data. `readxl` supports both the legacy .xls format and the modern xml-based .xlsx format.
+>
+> .right[`r Citet(bib, "readxl")`]
+
+---
+
+class: middle
+
+.pull-left.short-width[
+.big-emoji[`r emo::ji("warning")`]
+]
+
+.pull-right.long-width[
+#### `readxl` is part of the tidyverse but not part of its core packages!
+
+Load the package to use it:
+]
+
+```{r eval=TRUE}
+#install.packages("readxl")
+library(readxl)
+```
+
+---
+
+layout: true
+
+## `read_excel()`
+
+```{r eval=FALSE}
+?read_excel
+```
+
+---
+
+The `read_excel()` function is capable of reading data from .xls and .xlsx files. If the file format is known, it is recommended to directly use `read_xls()` or `read_xlsx()`, respectively, to prevent `R` from guessing.
+
+---
+
+Function call and arguments:
+
+.pull-left[
+```{r eval=FALSE}
+read_excel(
+  path, #<<
+  sheet = NULL,
+  range = NULL,
+  col_names = TRUE,
+  col_types = NULL,
+  na = "",
+  skip = 0,
+  n_max = Inf,
+  ...
+)
+```
+]
+
+.pull-right[
+`path`
+
+The path to the file you want to read
+]
+
+---
+
+Function call and arguments:
+
+.pull-left[
+```{r eval=FALSE}
+read_excel(
+  path,
+  sheet = NULL, #<<
+  range = NULL,
+  col_names = TRUE,
+  col_types = NULL,
+  na = "",
+  skip = 0,
+  n_max = Inf,
+  ...
+)
+```
+]
+
+.pull-right[
+`sheet`
+
+String or integer specifying the sheet name or position to read; defaults to the first sheet
+
+Ignored if the sheet is specified via `range`
+]
+
+---
+
+Function call and arguments:
+
+.pull-left[
+```{r eval=FALSE}
+read_excel(
+  path,
+  sheet = NULL, 
+  range = NULL, #<<
+  col_names = TRUE,
+  col_types = NULL,
+  na = "",
+  skip = 0,
+  n_max = Inf,
+  ...
+)
+```
+]
+
+.pull-right[
+`range`
+
+Excel expression for the cell range to read from, e. g. "B3:D87". Can also be used to specify the sheet name like "Budget!B2:G14".
+]
+
+---
+
+Function call and arguments:
+
+.pull-left[
+```{r eval=FALSE}
+read_excel(
+  path,
+  sheet = NULL, 
+  range = NULL,
+  col_names = TRUE, #<<
+  col_types = NULL,
+  na = "",
+  skip = 0,
+  n_max = Inf,
+  ...
+)
+```
+]
+
+.pull-right[
+`col_names`
+
+- Either `TRUE`/`FALSE` or a character vector of column names
+- If `TRUE`, the default, the first row is used as column names
+- If `FALSE`, column names are generated in this fashion: `X1`, `X2`, \dots
+]
+
+---
+
+Function call and arguments:
+
+.pull-left[
+```{r eval=FALSE}
+read_excel(
+  path,
+  sheet = NULL, 
+  range = NULL,
+  col_names = TRUE,
+  col_types = NULL, #<<
+  na = "",
+  skip = 0,
+  n_max = Inf,
+  ...
+)
+```
+]
+
+.pull-right[
+`col_types`
+]
+
+---
+
+Function call and arguments:
+
+.pull-left[
+```{r eval=FALSE}
+read_excel(
+  path,
+  sheet = NULL, 
+  range = NULL,
+  col_names = TRUE,
+  col_types = NULL,
+  na = "", #<<
+  skip = 0, 
+  n_max = Inf,
+  ...
+)
+```
+]
+
+.pull-right[
+`na`
+
+Character vector to interpret as missing values; defaults to empty cells, i. e. `""`
+]
+
+---
+
+Function call and arguments:
+
+.pull-left[
+```{r eval=FALSE}
+read_excel(
+  path,
+  sheet = NULL, 
+  range = NULL,
+  col_names = TRUE,
+  col_types = NULL,
+  na = "",
+  skip = 0, #<<
+  n_max = Inf,
+  ...
+)
+```
+]
+
+.pull-right[
+`skip`
+
+Number of rows to skip before reading the data; defaults to 0
+
+Ignored if `range` is given
+]
+
+---
+
+Function call and arguments:
+
+.pull-left[
+```{r eval=FALSE}
+read_excel(
+  path,
+  sheet = NULL, 
+  range = NULL,
+  col_names = TRUE,
+  col_types = NULL,
+  na = "",
+  skip = 0,
+  n_max = Inf, #<<
+  ...
+)
+```
+]
+
+.pull-right[
+`n_max`
+
+Sets the maximum number of rows to read; defaults to `Inf`
+
+Ignored if `range` is given
+]
+
+---
+
+layout: false
+
+<!-- End of read_excel() explanation -->
+
+## Let's try this out!
+
+.panelset[
+.panel[.panel-name[Code]
+.pull-left[
+- Import raw data on migration choice of Mexicans and their socioeconomic characteristics
+- Data sets can be found in the data folder of the repository
+]
+.pull-right[
+```{r eval=FALSE}
+read_excel("data/raw/enoe/enoe.xlsx")
+```
+]
+]
+.panel[.panel-name[Message]
+```{r echo=FALSE, results='hide'}
+read_excel("../../data/raw/enoe/enoe.xlsx")
+```
+]
+.panel[.panel-name[Output]
+```{r echo=FALSE, message=FALSE}
+read_excel("../../data/raw/enoe/enoe.xlsx")
+```
+]
+]
+
+---
+
+class: center, middle
+
+![](https://media.giphy.com/media/RKMm7X3HGKZMuoZlMF/giphy.gif)
+
+---
+
+layout: true
+
+## What happened?
+
+Let's take a look at the excel file:
+
+---
+
+.pull-left[
+```{r, echo=FALSE, out.width="80%", fig.align='left'}
+knitr::include_graphics(paste0(params$path_assets, "excel_file_header.png"))
+```
+]
+
+.pull-right[
+The first few rows contain some information about the spreadsheet itself. This is **very** common with excel files from government authorities!
+
+We can use the `skip` argument to start reading after the third line:
+
+```{r eval=FALSE}
+read_excel("data/raw/enoe/enoe.xlsx",
+           skip = 3)
+```
+]
+
+---
+
+.pull-left[
+```{r, echo=FALSE, out.width="80%", fig.align='left'}
+knitr::include_graphics(paste0(params$path_assets, "excel_file_na.png"))
+```
+]
+
+.pull-right[
+There seems to be some inconsistencies with the naming of missing values...
+
+Use the `na` argument to treat empty cells and `N/A` as missing values (`NA`):
+
+```{r eval=FALSE}
+read_excel("data/raw/enoe/enoe.xlsx",
+           skip = 3,
+           na = c("", "N/A"))
+```
+]
+
+---
+
+layout: false
+
+## Another try...
+
+.panelset[
+.panel[.panel-name[Code]
+```{r eval=FALSE}
+read_excel("data/raw/enoe/enoe.xlsx",
+           skip = 3, # Skip the first three lines #<<
+           na = c("", "N/A")) # Interpret empty cells and cells containing "N/A" as missing #<<
+```
+]
+.panel[.panel-name[Message]
+```{r echo=FALSE, results='hide'}
+read_excel("../../data/raw/enoe/enoe.xlsx",
+           skip = 3,
+           na = c("", "N/A"))
+```
+]
+.panel[.panel-name[Output]
+```{r echo=FALSE, message=FALSE}
+read_excel("../../data/raw/enoe/enoe.xlsx",
+           skip = 3,
+           na = c("", "N/A"))
+```
+]
+]
+
+---
+
+class: middle
+background-image: url("https://readr.tidyverse.org/logo.png")
+background-size: 100px
+background-position: 90% 10%
+
+# `readr`
+
+> The goal of `readr` is to provide a fast and friendly way to read rectangular data from delimited files, such as comma-separated values (CSV) and tab-separated values (TSV). It is designed to parse many types of data found in the wild, while providing an informative problem report when parsing leads to unexpected results.
+>
+> .right[`r Citet(bib, "readr")`]
+
+---
+
+layout: true
+
+## `read_csv()`
+
+```{r eval=FALSE}
+?read_csv
+```
+
+---
+
+**`read_csv()`** function is a special case of `read_delim()` with the **separator set to `,`** used for reading files with comma separated values. The related **`read_csv2()`**, in contrast, **assumes a `;` as separator** for values and interprets `,` as decimal point (which is common in some European countries).
+
+- Considerably faster than the base `R` solution `read.csv()`
+- Consistent parameter naming (`col_names` and `col_type` instead of `header` and `colClasses`)
+- Automatically parses common date formats, but leaves strings unaltered
+- Progression bar for big data sets
+
+---
+
+Function call and arguments:
+
+.pull-left[
+```{r eval=FALSE}
+read_csv(
+  file, #<<
+  col_names = TRUE,
+  col_types = NULL,
+  col_select = NULL,
+  na = c("", "NA"),
+  skip = 0,
+  n_max = Inf,
+  ...
+)
+```
+]
+
+.pull-right[
+`file`
+
+The path to the file you want to read
+]
+
+---
+
+Function call and arguments:
+
+.pull-left[
+```{r eval=FALSE}
+read_csv(
+  file,
+  col_names = TRUE, #<<
+  col_types = NULL,
+  col_select = NULL,
+  na = c("", "NA"),
+  skip = 0,
+  n_max = Inf,
+  ...
+)
+```
+]
+
+.pull-right[
+`col_names`
+
+- Either `TRUE`/`FALSE` or a character vector of column names
+- If `TRUE`, the default, the first row is used as column names
+- If `FALSE`, column names are generated in this fashion: `X1`, `X2`, \dots
+]
+
+---
+
+Function call and arguments:
+
+.pull-left[
+```{r eval=FALSE}
+read_csv(
+  file,
+  col_names = TRUE, 
+  col_types = NULL, #<<
+  col_select = NULL,
+  na = c("", "NA"),
+  skip = 0,
+  n_max = Inf,
+  ...
+)
+```
+]
+
+.pull-right[
+`col_types`
+
+
+]
+
+---
+
+Function call and arguments:
+
+.pull-left[
+```{r eval=FALSE}
+read_csv(
+  file,
+  col_names = TRUE, 
+  col_types = NULL,
+  col_select = NULL, #<<
+  na = c("", "NA"),
+  skip = 0,
+  n_max = Inf,
+  ...
+)
+```
+]
+
+.pull-right[
+`col_select`
+
+Character vector containing columns to include in the resulting data set; defaults to `NULL`
+]
+
+---
+
+Function call and arguments:
+
+.pull-left[
+```{r eval=FALSE}
+read_csv(
+  file,
+  col_names = TRUE, 
+  col_types = NULL,
+  col_select = NULL,
+  na = c("", "NA"), #<<
+  skip = 0,
+  n_max = Inf,
+  ...
+)
+```
+]
+
+.pull-right[
+`na`
+
+Character vector to interpret as missing values; defaults to `c("", "NA")`
+]
+
+---
+
+Function call and arguments:
+
+.pull-left[
+```{r eval=FALSE}
+read_csv(
+  file,
+  col_names = TRUE, 
+  col_types = NULL,
+  col_select = NULL,
+  na = c("", "NA"), 
+  skip = 0, #<<
+  n_max = Inf,
+  ...
+)
+```
+]
+
+.pull-right[
+`skip`
+
+Number of lines to skip before reading the data; defaults to 0
+]
+
+---
+
+Function call and arguments:
+
+.pull-left[
+```{r eval=FALSE}
+read_csv(
+  file,
+  col_names = TRUE, 
+  col_types = NULL,
+  col_select = NULL,
+  na = c("", "NA"), 
+  skip = 0, 
+  n_max = Inf, #<<
+  ...
+)
+```
+]
+
+.pull-right[
+`n_max`
+
+Sets the maximum number of lines to read; defaults to `Inf`
+]
+
+---
+
+layout: false
+
+## Import the ENE/ENOE Data Set from CSV
+
+.panelset[
+.panel[.panel-name[Code]
+```{r eval=FALSE}
+read_csv("data/raw/enoe/enoe.csv")
+```
+]
+.panel[.panel-name[Message]
+.scroll-box-20[
+```{r echo=FALSE, results='hide'}
+read_csv("../../data/raw/enoe/enoe.csv")
+```
+]
+]
+.panel[.panel-name[Output]
+.scroll-box-20[
+```{r echo=FALSE, message=FALSE}
+read_csv("../../data/raw/enoe/enoe.csv")
+```
+]
+]
+]
+
+---
+
+class: middle
+
+.pull-left.short-width[
+.big-emoji[`r emo::ji("warning")`]
+]
+
+.pull-right.long-width[
+#### Similar problems as before!
+
+- Skip first three lines
+- Set first line (after skipping three lines) as column names
+- Interpret `N/A` as missing
+]
+
+---
+
+## Import ENE/ENOE Data with Function Arguments
+
+.panelset[
+.panel[.panel-name[Code]
+```{r eval=FALSE}
+read_csv("data/raw/enoe/enoe.csv",
+         skip = 3, #<<
+         col_names = TRUE, # The default #<<
+         na = c("", "N/A")) #<<
+```
+]
+.panel[.panel-name[Message]
+```{r echo=FALSE, results='hide'}
+read_csv("../../data/raw/enoe/enoe.csv",
+         skip = 3,
+         col_names = TRUE,
+         na = c("", "N/A"))
+```
+]
+.panel[.panel-name[Output]
+```{r echo=FALSE, message=FALSE}
+read_csv("../../data/raw/enoe/enoe.csv",
+         skip = 3,
+         col_names = TRUE,
+         na = c("", "N/A"))
+```
+]
+]
+
+---
+
+layout: false
+class: middle
+
+# Data Types
+
+---
+
+## Vectors in R
+
+- Vectors can be distinguished in atomic vectors and lists
+
+  - Atomic vector: All elements must have the same type
+  - Lists: Elements can have different types
+
+--
+
+- If you are already familiar with R, you probably have encountered vectors on several occasions, e. g. the sequence `1:10` is an atomic vector containing all integers between 1 and 10
+
+--
+
+```{r}
+1:10
+
+typeof(1:10) # Check the type of the integer vector 1:10
+```
+
+
+---
+
+## Primary Types of Atomic Vectors
+
+| Type      | Description | How to check |
+| --------- | ----------- | ------------ |
+| Logical   | `TRUE`/`FALSE` or their abbreviations `T`/`F`. Simple calculations can be conducted on vectors of this type, e. g. `sum(T, T, F, T)` gives 3 because `TRUE` is interpreted as 1 and `FALSE` as 0. | `is.logical()` |
+| Character | Strings surrounded by " or ' | `is.character()` |
+| Double    | Numerical values with decimals. Special values are `Inf`, `-Inf` and `NaN`. | `is.double()` |
+| Integer   | Numerical values that cannot contain fractional values. Must be followed by `L` | `is.integer()` |
+
+--
+
+.pull-left.short-width[
+.big-emoji[`r emo::ji("warning")`]
+]
+
+.pull-right.long-width[
+#### Both, Integers and doubles, are numerical values!
+
+`is.numeric()` returns `TRUE` for values that are either integers *or* doubles.
+]
+
+---
+
+layout: true
+
+## Factors: Representation of Categorical Data
+
+---
+
+- Factors contain predefined values only
+
+- Integer vector with attributes `class` ("factor") and `levels` (set of values)
+  
+```{r}
+# Create a factor vector with two levels c("Employed", "Unemployed")
+fct <- factor(c("Employed", "Employed", "Unemployed", "Employed"))
+
+fct
+```
+
+--
+
+```{r}
+# Take a look at the vector
+str(fct)
+```
+
+---
+
+```{r}
+# Check the vector type
+typeof(fct)
+
+# Get the vector attributes
+attributes(fct)
+
+# To get the levels of a vector, use the short-hand levels() function instead
+levels(fct)
+```
+
+---
+
+layout: true
+
+## Lists
+
+---
+
+```{r}
+# Construct a list
+our_list <- list(1:10, # Integer sequence
+                 seq(0, 1, by = 0.25), # Double sequence
+                 c("This", "is", "a", "character", "vector"), # Character vector
+                 factor(c("Employed", "Employed", "Unemployed", "Employed"))) # Factor vector
+```
+
+--
+
+```{r}
+typeof(our_list)
+```
+
+--
+
+```{r}
+# Take a look at the list structure
+str(our_list)
+```
+
+---
+
+.pull-left.short-width[
+.big-emoji[`r emo::ji("warning")`]
+]
+
+.pull-right.lo-wi[
+#### Lists may contain more complex objects than atomic vectors, such as lists.
+]
+
+```{r}
+list(1:10, 
+     seq(0, 1, by = 0.25), 
+     list("a", 1:2))
+```
+
+---
+
+layout: true
+
+## Data Frames
+
+---
+
+- Data sets are usually represented as `data.frame` objects in R
+
+- A `data.frame` is essentially a named list of vectors with equal length
+
+```{r}
+# Construct a data frame
+df <- data.frame(income = c(0, 500, 3000),
+                 empl_status = factor(c("Unemployed", "Employed", "Employed")))
+```
+
+---
+
+```{r}
+# Check the type
+typeof(df)
+
+# Get the attributes
+attributes(df)
+```
+
+---
+
+layout: false
+class: middle
+background-image: url("https://tibble.tidyverse.org/logo.svg")
+background-size: 100px
+background-position: 90% 10%
+
+# `tibble`
+
+> A `tibble`, or `tbl_df`, is a modern reimagining of the `data.frame`, keeping what time has proven to be effective, and throwing out what is not. `Tibbles` are `data.frames` that are lazy and surly: they do less (i.e. they don’t change variable names or types, and don’t do partial matching) and complain more (e.g. when a variable does not exist). This forces you to confront problems earlier, typically leading to cleaner, more expressive code. `Tibbles` also have an enhanced `print()` method which makes them easier to use with large datasets containing complex objects.
+>
+> .right[`r Citet(bib, "tibble")`]
+
+---
+
+layout: true
+
+## Data Frames vs. Tibbles
+
+---
+
+Tibbles' enhanced `print()` function shows only the first 10 rows and displays information on the data structure:
+
+.pull-left[
+```{r}
+# Construct a data frame
+df <- data.frame(
+  income = c(0, 500, 3000),
+  empl_status = factor(
+    c("Unemployed", "Employed", "Employed")
+  )
+)
+
+# Print the data frame
+df
+```
+]
+.pull-right[
+```{r}
+# Construct a tibble
+tbl <- tibble(
+  income = c(0, 500, 3000),
+  empl_status = factor(
+    c("Unemployed", "Employed", "Employed")
+  )
+)
+
+# Print the tibble
+tbl
+```
+]
+
+---
+
+When subsetting, `tibble` gives a warning if the column does not exist:
+
+.pull-left[
+```{r}
+df$gender
+```
+]
+
+.pull-right[
+```{r}
+tbl$gender
+```
+]
+
+---
+
+layout: false
+
+## Importing Data as Tibble
+
+`read_excel()` and `read_csv()` automatically create a `tibble` object:
+
+```{r eval=FALSE}
+data <- read_csv("data/raw/enoe/enoe.csv", skip = 3, col_names = TRUE, na = c("", "N/A"))
+
+typeof(data)
+```
+
+```{r echo=FALSE}
+data <- read_csv("../../data/raw/enoe/enoe.csv", skip = 3, col_names = TRUE, na = c("", "N/A"))
+
+class(data)
+```
+
+--
+
+.pull-left.short-width[
+.big-emoji[`r emo::ji("warning")`]
+]
+
+.pull-right.lo-wi[
+The class of a `tibble` also contains "data.frame". Hence, functions applied to `data.frame` objects can also be applied to `tibbles`.
+]
+
+---
+
+## Further Literature
+
+- Further information on tibbles can be found in chapter 10 of `r Citet(bib, "r4ds")` and the package documentation (see `r Citet(bib, "tibble")`).
+
+- Chapter 3 of `r Citet(bib, "advancedr")` discusses the technical properties of vectors in R more deeply.
+
+---
+
+layout: false
+class: middle
+
+# Exporting Data
+
+---
+
+layout: true
+
+## `write_csv()`
+
+```{r eval=FALSE}
+?write_csv
+```
+
+---
+
+**`write_csv()`** function is a special case of `write_delim()` with the **separator set to `,`**. Again, there is a related **`write_csv2()`** which sets the separator to `;`.
+
+- Considerably faster than the base `R` solution `write.csv()`
+- Does not include row names as a column in the written file
+- Progression bar for big data sets
+
+---
+
+Function call and arguments:
+
+.pull-left[
+```{r eval=FALSE}
+write_csv(
+  x, #<<
+  file,
+  na = "NA",
+  append = FALSE,
+  col_names = !append,
+  ...
+)
+```
+]
+
+.pull-right[
+`x`
+
+A `data.frame` or `tibble` to write to `.csv`
+]
+
+---
+
+Function call and arguments:
+
+.pull-left[
+```{r eval=FALSE}
+write_csv(
+  x, 
+  file, #<<
+  na = "NA",
+  append = FALSE,
+  col_names = !append,
+  ...
+)
+```
+]
+
+.pull-right[
+`file`
+
+File (path) to write to
+]
+
+---
+
+Function call and arguments:
+
+.pull-left[
+```{r eval=FALSE}
+write_csv(
+  x, 
+  file, 
+  na = "NA", #<<
+  append = FALSE,
+  col_names = !append,
+  ...
+)
+```
+]
+
+.pull-right[
+`na`
+
+String used for missing values; defaults to `"NA"`
+]
+
+---
+
+Function call and arguments:
+
+.pull-left[
+```{r eval=FALSE}
+write_csv(
+  x, 
+  file, 
+  na = "NA", 
+  append = FALSE, #<<
+  col_names = !append,
+  ...
+)
+```
+]
+
+.pull-right[
+`append`
+
+If `FALSE`, the default, the existing will be overwritten. If `TRUE`, it will be appended to the existing file.
+]
+
+---
+
+Function call and arguments:
+
+.pull-left[
+```{r eval=FALSE}
+write_csv(
+  x, 
+  file, 
+  na = "NA",
+  append = FALSE,
+  col_names = !append, #<<
+  ...
+)
+```
+]
+
+.pull-right[
+`col_names`
+
+- If `FALSE`, column names will not be included at the top of the file.
+- If `TRUE`, column names will be included.
+- The default is to take the opposite value given to argument `append`
+]
+
+---
+
+layout: false
+
+## Export the ENE/ENOE Data Set to CSV
+
+.panelset[
+.panel[.panel-name[Code]
+```{r eval=FALSE}
+data <- read_csv("data/raw/enoe/enoe.csv", skip = 3, col_names = TRUE, na = c("", "N/A"))
+
+write_csv(data, "data/raw/enoe.csv")
+```
+]
+.panel[.panel-name[Output]
+```{r echo=FALSE, message=FALSE}
+data <- read_csv("../../data/raw/enoe/enoe.csv", skip = 3, col_names = TRUE, na = c("", "N/A"))
+
+write_csv(data, "../../data/raw/enoe.csv")
+```
+The exported data is stored in csv format in the raw folder of the data folder:
+
+```{r eval=FALSE}
+list.files("data/raw/")
+```
+
+```{r echo=FALSE}
+list.files("../../data/raw")
+```
+]
+]
+
+---
+
+layout: false
+
+# References
+
+```{r, results='asis', echo=FALSE}
+PrintBibliography(bib)
+```

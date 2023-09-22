@@ -1,0 +1,1591 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Data Analysis using R</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Sven Werenbeck-Ueding" />
+    <script src="modeling_files/header-attrs-2.23.3/header-attrs.js"></script>
+    <link href="modeling_files/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="modeling_files/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+    <link href="modeling_files/panelset-0.2.6/panelset.css" rel="stylesheet" />
+    <script src="modeling_files/panelset-0.2.6/panelset.js"></script>
+    <link href="modeling_files/tile-view-0.2.6/tile-view.css" rel="stylesheet" />
+    <script src="modeling_files/tile-view-0.2.6/tile-view.js"></script>
+    <script src="modeling_files/htmlwidgets-1.5.4/htmlwidgets.js"></script>
+    <script src="modeling_files/viz-1.8.2/viz.js"></script>
+    <link href="modeling_files/DiagrammeR-styles-0.2/styles.css" rel="stylesheet" />
+    <script src="modeling_files/grViz-binding-1.0.9/grViz.js"></script>
+    <script src="modeling_files/kePrint-0.0.1/kePrint.js"></script>
+    <link href="modeling_files/lightable-0.0.1/lightable.css" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Data Analysis using R
+]
+.subtitle[
+## Modeling
+]
+.author[
+### Sven Werenbeck-Ueding
+]
+.date[
+### 22.09.2023
+]
+
+---
+
+
+&lt;!-- Setup --&gt;
+
+
+
+
+
+
+
+<div id="htmlwidget-76f3bb274dd34447c773" style="width:100%;height:504px;" class="grViz html-widget"></div>
+<script type="application/json" data-for="htmlwidget-76f3bb274dd34447c773">{"x":{"diagram":"\n  digraph {\n  graph [fontname=\"Helvetica,Arial,sans-serif\", compound = true]\n\tnode [fontname=\"Helvetica,Arial,sans-serif\"]\n\tedge [fontname=\"Helvetica,Arial,sans-serif\"]\n    \n    rankdir=LR\n    \n    subgraph cluster_0 {\n        style = rounded\n        color = black\n    \n        {\n            node [style = rounded, shape = box]\n            Import -> Tidy\n        }\n    \n        subgraph cluster_1 {\n            style = rounded\n            color = black\n            \n            node [style = rounded, shape = box]\n            Transform Visualize Model\n            \n            edge []\n            Transform -> Visualize\n            Visualize -> Model\n            Model -> Transform\n            \n            label = \"Exploration\"\n            labeljust = \"l\"\n            labelloc = \"b\"\n        }\n    \n        {\n            node [style = rounded, shape = box]\n            Communicate\n        }\n    \n        Tidy -> Transform [lhead = cluster_1]\n        Model -> Communicate [ltail = cluster_1]\n        \n        label = \"Programming\"\n        labeljust = \"l\"\n        labelloc = \"b\"\n    }\n  }\n  ","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+
+.right[*Source:* &lt;a name=cite-r4ds&gt;&lt;/a&gt;[Wickham and Grolemund (2016)](https://r4ds.had.co.nz/)]
+
+---
+
+class: middle
+
+## Fenced Out:
+
+### The Impact of Border Construction on U.S.-Mexico Migration
+
+&gt; This paper estimates the **impact of the US-Mexico border fence
+on US-Mexico migration** by **exploiting variation in the timing and
+location of US government investment in fence construction**. Using
+Mexican survey data and data I collected on fence construction,
+I find that construction in a municipality reduces migration by
+27 percent for municipality residents and 15 percent for residents of
+adjacent municipalities.
+&gt;
+&gt; .right[&lt;a name=cite-f20&gt;&lt;/a&gt;[Feigenberg (2020a)](https://www.aeaweb.org/articles?id=10.1257/app.20170231)]
+
+---
+
+layout: true
+
+## Data
+
+---
+
+.pull-left[
+#### Mexican Survey
+
+- Encuesta Nacional de Ocupación y Empleo (ENOE) from Q3 2003 to Q3 2013
+
+- Quarterly rotating panel: Households included for 5 quarters
+
+- Records whether any household member leaves to the US
+
+- Potential migrants are restricted from ages 15 to 65
+
+- Explanatory variables: age, gender, marital status and education for all household members
+]
+
+--
+
+.pull-right[
+#### Fence Construction
+
+- Data collected by identifying potential fence locations:
+
+  - Documents from US authorities: Customs and Border Protection (CPB) and Government Accountability Office (GAO)
+  - Local government reports
+  - Published contracts with construction firms
+
+- Cross-checked with an environmental organization tracking the impact of fence construction (Sierra Club)
+
+- Provides quarterly information on fence construction on Mexican municipality level
+]
+
+---
+
+layout: false
+name: logit-model
+
+## Identification Strategy
+
+- By exploiting temporal and spatial variation in fence construction, [Feigenberg (2020a)](https://www.aeaweb.org/articles?id=10.1257/app.20170231) estimates the impact of fence construction on the migration decision of potential migrants
+
+- Exogenous variation in fence construction allows for a difference-in-difference estimator of the form `$$Pr(Y_{mti}=1\mid z_{mti})=\frac{exp(\alpha+X_{mti}\beta+\delta\times fence_{mti}+\gamma_m+\tau_t)}{1+exp(\alpha+X_{mti}\beta+\delta\times fence_{mti}+\gamma_m+\tau_t)}$$`
+
+  - `\(Y_{mti}\in[0,1]\)`: 1 if individual `\(i\)` living in municipality `\(m\)` migrates to the US in year-quarter `\(t\)`
+  
+  - `\(X_{mti}\)`: Socio-economic characteristics of individual `\(i\)` living in municipality `\(m\)` and year-quarter `\(t\)`
+  
+  - `\(fence_{mti}\in[0,1]\)`: 1 if fence construction started in municipality `\(m\)` in or before year-quarter `\(t\)`
+  
+  - `\(\gamma_m\)`, `\(\tau_t\)`: Municipality and year-quarter fixed effects
+  
+---
+
+## Results
+
+.pull-left[
+- Table 2 shows log-odds coefficients of different specifications for the estimation strategy
+
+- Column (2) of panel A employs the specification on the previous slide
+
+- Fence construction reduces probability of migrating by `\(1-e^\delta=37.87\%\)`
+
+- Relative to baseline migration rate of `\(4.2\)` per `\(1,000\)` respondents
+
+- Parentheses show standard errors clustered by municipality
+
+- Effect is highly significant: `\(p\)`-value is `\(\approx0\)`
+]
+
+.pull-right[
+&lt;img src="../../resources/assets/feigenberg_2020_results.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+.right[*Source:* [Feigenberg (2020a)](https://www.aeaweb.org/articles?id=10.1257/app.20170231)]
+]
+
+---
+
+## Prerequisites
+
+
+```r
+# install.packages("tidymodels")
+library(tidyverse)
+library(tidymodels)
+
+df_mig &lt;- read_csv("data/processed/fence_migration.csv")
+```
+
+
+
+--
+
+.pull-left.short-width[
+.big-emoji[⚠️]
+]
+
+.pull-right.long-width[
+- For this course, a random 50% sample of the full sample was drawn from the data set provided by &lt;a name=cite-f20data&gt;&lt;/a&gt;[Feigenberg (2020b)](#bib-f20data)
+
+- Our results may differ
+]
+
+---
+
+layout: false
+class: middle
+
+# Regressions in R
+
+---
+
+## Fit Linear Regressions in R
+
+
+```r
+?lm
+```
+
+The `lm()` function fits linear models, including multivariate models. It can also be used to carry out single stratum analysis of variance and analysis of covariance.
+
+- `formula`: An object of class `formula` that symbollically describes the model to be fitted
+
+- `data`: An object of class `data.frame` (or coercible by `as.data.frame`) containing the model variables
+
+- `subset`: An optional vector for subsetting observations in `data`
+
+- `weights`: An optional numeric vector of weights, e. g. for weighted least squares
+
+---
+
+## Formulas in R
+
+Expressions such as `y ~ x1 + x2 + x3` use the `~` operator to specify that response `y` is modeled by a set of predictors (`x1`, `x2` and `x3`)
+
+| Operator | Meaning | Example |
+| --- | --- | --- |
+| `:` | Interaction effect between two predictors | .center[`x1:x2`] |
+| `*` | Main and interaction effects of predictors | .center[`x1*x2` &amp;rarr; `x1 + x2 + x1:x2`] |
+| `^` | Expands to a formula containing main effects and interactions up to the `\(n^{th}\)` order | .center[`(x1 + x2 + x3)^2` &amp;rarr; &lt;br&gt; `x1 + x2 + x3 + x1:x2 + x1:x3 + x2:x3`] |
+| `/` | Terms on the LHS are nested within those on the right | .center[`x1/x2` &amp;rarr; `x1 + x1:x2`] |
+| `-` | Removes terms from the formula (e. g. the intercept) | .center[`y ~ -1 + x1`] |
+| `.` | Usually interpreted as all `data` columns not otherwise in the formula | .center[`y ~ .`] |
+
+---
+
+## Binary Choice Models
+
+| Model | Functional Form | Command |
+| ----- | --------------- | ------- |
+| LPM | `$$Pr(Y_i=1\mid X_i)=X_i\beta$$` | .center[`lm(y ~ .)`] |
+| Logit | `$$Pr(Y_i = 1\mid X_i)=\wedge(X_i\beta)=\frac{e^{X_i\beta}}{1+e^{X_i\beta}}$$` | .center[`glm(y ~ ., family = "binomial")`] |
+| Probit | `$$Pr(Y_i=1\mid X_i)=\phi(X_i\beta)=\int_{-\infty}^{X_i\beta}\phi(z)dz$$` | .center[`glm(y ~ ., binomial(link = "probit"))`] |
+
+---
+
+name: task-1
+
+## Task 1: Replicate the Estimation of [Feigenberg (2020a)](https://www.aeaweb.org/articles?id=10.1257/app.20170231)
+
+.panelset[
+.panel[.panel-name[Task]
+Estimate the impact of border fence construction on Mexican-US migration. Implement the logit model employed by [Feigenberg (2020a)](https://www.aeaweb.org/articles?id=10.1257/app.20170231) in R and interpret the results. Use the data provided in `data/processed/fence_migration.csv`.
+
+`$$Pr(Y_{mti}=1\mid z_{mti})=\wedge\left({\alpha+X_{mti}\beta+\delta\times fence_{mti}+\gamma_m+\tau_t}\right)$$`
+
+- `\(Y_{mti}\in[0,1]\)`: 1 if individual `\(i\)` living in municipality `\(m\)` migrates to the US in year-quarter `\(t\)`
+  
+- `\(X_{mti}\)`: Socio-economic characteristics of individual `\(i\)` living in municipality `\(m\)` and year-quarter `\(t\)`
+  
+- `\(fence_{mti}\in[0,1]\)`: 1 if fence construction started in municipality `\(m\)` in or before year-quarter `\(t\)`
+  
+- `\(\gamma_m\)`, `\(\tau_t\)`: Municipality and year-quarter fixed effects
+]
+.panel[.panel-name[Code]
+
+
+```r
+# Define the regression formula
+full_formula &lt;- formula(
+  migrate ~ fence + female + age + educ + married + 
+    as.factor(municipality) + as.factor(period)
+)
+
+# Fit a logit model as given by formula on the df_mig data set
+logit_model &lt;- glm(full_formula, df_mig, family = "binomial")
+
+# Print a tidy model summary to the console
+broom::tidy(logit_model) %&gt;% 
+  filter(term %in% c("fence", "female", "age", "educ", "married"))
+```
+
+]
+.panel[.panel-name[Output]
+.scroll-box-20[
+
+```
+## # A tibble: 5 × 5
+##   term    estimate std.error statistic  p.value
+##   &lt;chr&gt;      &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+## 1 fence    -0.471    0.207       -2.28 2.28e- 2
+## 2 female   -0.473    0.0910      -5.19 2.07e- 7
+## 3 age      -0.0166   0.00390     -4.25 2.13e- 5
+## 4 educ      0.0119   0.0115       1.04 2.98e- 1
+## 5 married  -0.626    0.101       -6.18 6.28e-10
+```
+]
+]
+]
+
+---
+
+## Econometricians seldomly estimate just one model!
+
+.pull-left.short-width[
+.big-emoji[⚠️]
+]
+
+.pull-right.long-width[
+#### Different model specifications serve different purposes
+
+- Including additional controls for robustness checks
+- Investigating heterogeneity by interacting variables
+- Transforming variables, e. g. `log(y)`
+]
+
+--
+
+.pull-left.short-width[
+.big-emoji[⚠️]
+]
+
+.pull-right.long-width[
+#### In some cases, specifications are estimated using different models
+
+- Estimating logit and LPM for robustness check
+- Finding the best predictor among a set of models (common in machine learning applications)
+]
+
+--
+
+.pull-left.short-width[
+.big-emoji[➡️]
+]
+
+.pull-right.long-width[
+#### Writing clean and easily understandable code becomes difficult
+
+- R implementations of models have different interfaces
+- Preprocessing steps are not easily interchangable using base R
+]
+
+---
+
+class: middle
+background-image: url("https://raw.githubusercontent.com/rstudio/hex-stickers/master/SVG/tidymodels.svg")
+background-size: 100px
+background-position: 90% 10%
+
+# `tidymodels`
+
+&gt; The `tidymodels` framework is a collection of packages for modeling and machine learning using `tidyverse` principles.
+&gt;
+&gt; .right[&lt;a name=cite-tidymodels&gt;&lt;/a&gt;[Kuhn and Wickham (2020)](https://www.tidymodels.org)]
+
+&gt; These two aspects of model development &amp;ndash; **ease of proper use** and **good methodological practice** &amp;ndash; are crucial. [...] Tools should be powerful enough to create high-performance models, but, on the other hand, should be easy to use appropriately.
+&gt;
+&gt; .right[&lt;a name=cite-ks22&gt;&lt;/a&gt;[Kuhn and Silge (2022)](https://www.tmwr.org/)]
+
+---
+
+## Taxonomy of Model Types
+
+.pull-left.filled[
+### <svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:currentColor;overflow:visible;position:relative;"><path d="M32 32c17.7 0 32 14.3 32 32V400c0 8.8 7.2 16 16 16H480c17.7 0 32 14.3 32 32s-14.3 32-32 32H80c-44.2 0-80-35.8-80-80V64C0 46.3 14.3 32 32 32zM160 224c17.7 0 32 14.3 32 32v64c0 17.7-14.3 32-32 32s-32-14.3-32-32V256c0-17.7 14.3-32 32-32zm128-64V320c0 17.7-14.3 32-32 32s-32-14.3-32-32V160c0-17.7 14.3-32 32-32s32 14.3 32 32zm64 32c17.7 0 32 14.3 32 32v96c0 17.7-14.3 32-32 32s-32-14.3-32-32V224c0-17.7 14.3-32 32-32zM480 96V320c0 17.7-14.3 32-32 32s-32-14.3-32-32V96c0-17.7 14.3-32 32-32s32 14.3 32 32z"/></svg> Descriptive
+
+- Illustrates characteristics of the data
+- E. g. visualize data to identify relationships between variables
+- Discover ways to represent variables in a model
+- Almost always precedes other types of models
+]
+
+--
+
+.pull-right.filled[
+### <svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:currentColor;overflow:visible;position:relative;"><path d="M64 64c0-17.7-14.3-32-32-32S0 46.3 0 64V400c0 44.2 35.8 80 80 80H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H80c-8.8 0-16-7.2-16-16V64zm406.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L320 210.7l-57.4-57.4c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L240 221.3l57.4 57.4c12.5 12.5 32.8 12.5 45.3 0l128-128z"/></svg> Inferential
+
+- Explores hypotheses on the relation between variables
+- Produces probabilistic output to find some statistical conclusion, e. g. t-tests
+- Acceptance or rejection of hypothesis depends on pre-defined assumptions
+]
+
+--
+
+.filled[
+### <svg aria-hidden="true" role="img" viewBox="0 0 576 512" style="height:1em;width:1.12em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:currentColor;overflow:visible;position:relative;"><path d="M384 160c-17.7 0-32-14.3-32-32s14.3-32 32-32H544c17.7 0 32 14.3 32 32V288c0 17.7-14.3 32-32 32s-32-14.3-32-32V205.3L342.6 374.6c-12.5 12.5-32.8 12.5-45.3 0L192 269.3 54.6 406.6c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3l160-160c12.5-12.5 32.8-12.5 45.3 0L320 306.7 466.7 160H384z"/></svg> Predictive
+
+- Estimating new data on a pre-trained model to predict values as close as possible to the new values
+- Less concerned with how variables are related in the model and more *empirically* driven
+]
+
+---
+
+layout: false
+class: middle
+background-image: url("https://raw.githubusercontent.com/rstudio/hex-stickers/master/SVG/parsnip.svg")
+background-size: 100px
+background-position: 90% 10%
+
+# `parsnip`
+
+&gt; The goal of parsnip is to provide a tidy, unified interface to models that can be used to try a range of models without getting bogged down in the syntactical minutiae of the underlying packages.
+&gt;
+&gt; .right[&lt;a name=cite-parsnip&gt;&lt;/a&gt;[Kuhn and Vaughan (2022)](#bib-parsnip)]
+
+---
+
+## Why use `parsnip`?
+
+### 1. Separate the model definition from its evaluation
+- Same model is often re-run with different preprocessing steps
+- E. g. baseline specification and specification with additional controls
+
+### 2. Detach model specification from implementation
+- Different engines could be used to fit a linear model, e. g. `lm`, `glm` etc.
+- Makes comparison between engines easier
+
+### 3. Provide consistent naming of function arguments
+
+--
+
+.pull-left.short-width[
+.big-emoji[➡️]
+]
+
+.pull-right.lo-wi[
+`parsnip` offers a unified approach to model specifications
+]
+
+---
+
+## Components of Model Specifications
+
+### 1. Model Type
+
+Specify the model type to use (e. g. `linear_reg()` for linear regression, `logistic_reg` for logit, ...)
+
+### 2. Engine
+
+Set the engine for fitting the model. Run `show_engines("linear_reg")` to get a list of engines (and their modes)
+
+### 3. Mode
+
+When required, determine the model's mode. Numeric outcomes are estimated by use of regression, whereas qualitative outcomes require a classification model. For some models, e. g. linear regression, only one mode is available and therefore automatically set (regression).
+
+---
+
+layout: false
+name: task-2
+
+## Task 2: Logit Model Specification
+
+.panelset[
+.panel[.panel-name[Task]
+Revisit the replication of [Feigenberg (2020a)](https://www.aeaweb.org/articles?id=10.1257/app.20170231)'s identification strategy in [Task 1](#task-1). This time, use the `parsnip` package for specifying and fitting the model. Print a summary of your model to the console.
+]
+.panel[.panel-name[Code]
+
+```r
+# Specify type and engine of the logit model
+logit_model &lt;- logistic_reg() %&gt;% 
+  set_engine("glm")
+
+# Fit the model in a separate step using the formula
+formula_full &lt;- formula(
+  as.factor(migrate) ~ fence + female + age + educ + married + 
+    as.factor(municipality) + as.factor(period)
+)
+
+logit_fit_full &lt;- logit_model %&gt;% 
+  fit(formula_full, data = df_mig)
+
+# Retrieve the fitted glm object and print a summary
+tidy(logit_fit_full) %&gt;% 
+  filter(term %in% c("fence", "female", "age", "educ", "married"))
+```
+
+]
+.panel[.panel-name[Output]
+
+```
+## # A tibble: 5 × 5
+##   term    estimate std.error statistic  p.value
+##   &lt;chr&gt;      &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+## 1 fence    -0.471    0.207       -2.28 2.28e- 2
+## 2 female   -0.473    0.0910      -5.19 2.07e- 7
+## 3 age      -0.0166   0.00390     -4.25 2.13e- 5
+## 4 educ      0.0119   0.0115       1.04 2.98e- 1
+## 5 married  -0.626    0.101       -6.18 6.28e-10
+```
+]
+]
+
+---
+
+name: task-3
+
+## Task 3: Fit Different Specification
+
+.panelset[
+.panel[.panel-name[Task]
+Use the same model type and engine as in [Task 2](#task-2), but exclude the additional controls in your regression formula: `$$Pr(Y_{mti}=1\mid z_{mti})=\wedge\left({\alpha+\delta\times fence_{mti}+\gamma_m+\tau_t}\right)$$`
+]
+.panel[.panel-name[Code]
+
+
+```r
+# Specify the formula without additional controls
+formula_reduced &lt;- formula(
+  as.factor(migrate) ~ fence + as.factor(municipality) + as.factor(period)
+)
+
+# Fit the formula to the logit model defined before
+logit_reduced_fit &lt;- logit_model %&gt;% 
+  fit(formula_reduced, data = df_mig)
+
+# Print a summary of the fitted glm model
+tidy(logit_reduced_fit) %&gt;% 
+  filter(term == "fence")
+```
+
+]
+.panel[.panel-name[Output]
+
+```
+## # A tibble: 1 × 5
+##   term  estimate std.error statistic p.value
+##   &lt;chr&gt;    &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
+## 1 fence   -0.449     0.206     -2.18  0.0294
+```
+]
+]
+
+---
+
+name: multiple-specifications
+
+## Estimating Multiple Specifications
+
+.pull-left[
+- As seen in [Task 3](#task-3), `parsnip` allows for greater flexibility in modeling than `base` R
+
+  - Various specifications can be run on the same model
+  - `base` R models would have to be specified independently
+  - Model engine can be easily exchanged as well
+
+- Especially useful when estimating a multitude of different specifications
+
+- Modeling via `parsnip` can be natively used in functional programming (see the code on the right)
+]
+.pull-left[
+
+```r
+logit_model &lt;- logistic_reg() %&gt;% 
+  set_engine("glm")
+
+formulas &lt;- list(
+  reduced = formula(
+    as.factor(migrate) ~ fence + 
+      as.factor(municipality) + 
+      as.factor(period)
+  ),
+  full = formula(
+    as.factor(migrate) ~ fence + female + 
+      age + educ + married + 
+      as.factor(municipality) + 
+      as.factor(period)
+  )
+)
+
+logit_fit &lt;- formulas %&gt;% 
+  map(~ fit(logit_model, ., data = df_mig))
+```
+
+]
+
+---
+
+layout: false
+class: middle
+background-image: url("https://raw.githubusercontent.com/rstudio/hex-stickers/master/SVG/workflows.svg")
+background-size: 100px
+background-position: 90% 10%
+
+# `workflows`
+
+&gt; Managing both a `parsnip` model and a preprocessor, such as a model formula or recipe from `recipes`, can often be challenging. The goal of `workflows` is to streamline this process by bundling the model alongside the preprocessor, all within the same object.
+&gt;
+&gt; .right[&lt;a name=cite-workflows&gt;&lt;/a&gt;[Vaughan and Couch (2022)](https://workflows.tidymodels.org/)]
+
+---
+
+## What constitutes a model?
+
+&gt; **Model fitting** is often **considered to be the only step in the modeling** process. Non-trivial data structures and models with high(er) complexity, however, require additional steps:
+
+--
+
+.pull-left.filled[
+### <svg aria-hidden="true" role="img" viewBox="0 0 640 512" style="height:1em;width:1.25em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:currentColor;overflow:visible;position:relative;"><path d="M308.5 135.3c7.1-6.3 9.9-16.2 6.2-25c-2.3-5.3-4.8-10.5-7.6-15.5L304 89.4c-3-5-6.3-9.9-9.8-14.6c-5.7-7.6-15.7-10.1-24.7-7.1l-28.2 9.3c-10.7-8.8-23-16-36.2-20.9L199 27.1c-1.9-9.3-9.1-16.7-18.5-17.8C173.9 8.4 167.2 8 160.4 8h-.7c-6.8 0-13.5 .4-20.1 1.2c-9.4 1.1-16.6 8.6-18.5 17.8L115 56.1c-13.3 5-25.5 12.1-36.2 20.9L50.5 67.8c-9-3-19-.5-24.7 7.1c-3.5 4.7-6.8 9.6-9.9 14.6l-3 5.3c-2.8 5-5.3 10.2-7.6 15.6c-3.7 8.7-.9 18.6 6.2 25l22.2 19.8C32.6 161.9 32 168.9 32 176s.6 14.1 1.7 20.9L11.5 216.7c-7.1 6.3-9.9 16.2-6.2 25c2.3 5.3 4.8 10.5 7.6 15.6l3 5.2c3 5.1 6.3 9.9 9.9 14.6c5.7 7.6 15.7 10.1 24.7 7.1l28.2-9.3c10.7 8.8 23 16 36.2 20.9l6.1 29.1c1.9 9.3 9.1 16.7 18.5 17.8c6.7 .8 13.5 1.2 20.4 1.2s13.7-.4 20.4-1.2c9.4-1.1 16.6-8.6 18.5-17.8l6.1-29.1c13.3-5 25.5-12.1 36.2-20.9l28.2 9.3c9 3 19 .5 24.7-7.1c3.5-4.7 6.8-9.5 9.8-14.6l3.1-5.4c2.8-5 5.3-10.2 7.6-15.5c3.7-8.7 .9-18.6-6.2-25l-22.2-19.8c1.1-6.8 1.7-13.8 1.7-20.9s-.6-14.1-1.7-20.9l22.2-19.8zM112 176a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zM504.7 500.5c6.3 7.1 16.2 9.9 25 6.2c5.3-2.3 10.5-4.8 15.5-7.6l5.4-3.1c5-3 9.9-6.3 14.6-9.8c7.6-5.7 10.1-15.7 7.1-24.7l-9.3-28.2c8.8-10.7 16-23 20.9-36.2l29.1-6.1c9.3-1.9 16.7-9.1 17.8-18.5c.8-6.7 1.2-13.5 1.2-20.4s-.4-13.7-1.2-20.4c-1.1-9.4-8.6-16.6-17.8-18.5L583.9 307c-5-13.3-12.1-25.5-20.9-36.2l9.3-28.2c3-9 .5-19-7.1-24.7c-4.7-3.5-9.6-6.8-14.6-9.9l-5.3-3c-5-2.8-10.2-5.3-15.6-7.6c-8.7-3.7-18.6-.9-25 6.2l-19.8 22.2c-6.8-1.1-13.8-1.7-20.9-1.7s-14.1 .6-20.9 1.7l-19.8-22.2c-6.3-7.1-16.2-9.9-25-6.2c-5.3 2.3-10.5 4.8-15.6 7.6l-5.2 3c-5.1 3-9.9 6.3-14.6 9.9c-7.6 5.7-10.1 15.7-7.1 24.7l9.3 28.2c-8.8 10.7-16 23-20.9 36.2L315.1 313c-9.3 1.9-16.7 9.1-17.8 18.5c-.8 6.7-1.2 13.5-1.2 20.4s.4 13.7 1.2 20.4c1.1 9.4 8.6 16.6 17.8 18.5l29.1 6.1c5 13.3 12.1 25.5 20.9 36.2l-9.3 28.2c-3 9-.5 19 7.1 24.7c4.7 3.5 9.5 6.8 14.6 9.8l5.4 3.1c5 2.8 10.2 5.3 15.5 7.6c8.7 3.7 18.6 .9 25-6.2l19.8-22.2c6.8 1.1 13.8 1.7 20.9 1.7s14.1-.6 20.9-1.7l19.8 22.2zM464 304a48 48 0 1 1 0 96 48 48 0 1 1 0-96z"/></svg> Pre-Processing
+
+- Selecting predictors from a set of candidates
+  - Exploratory data analysis
+  - Domain knowledge
+  - Data-driven algorithms
+- Imputation of missing values
+- Transforming the scale of a predictor
+]
+
+--
+
+.pull-right.filled[
+### Post-Processing
+
+- Transforming estimates into interpretable format, e. g. log-odds for logit regressions
+- Adjusting standard errors
+]
+
+---
+
+## Workflow Basics
+
+
+```r
+?workflow
+```
+
+&gt; A `workflow` is a container object that aggregates information required to fit and predict from a model. Workflows *always* require a `parsnip` model object **and** a preprocessor.
+
+#### Arguments:
+
+| Argument | Description |
+| -------- | ----------- |
+| `preprocessor` | A preprocessor used for processing the data prior to fitting the model. Can be an object of class `formula`, specifying the variables in a model. |
+| `spec` | A `parsnip` model specification. |
+
+---
+
+## Creating a Workflow
+
+.panelset[
+.panel[.panel-name[Code]
+.pull-left[
+- Use the formula incl. additional controls defined on previous slides as `preprocessor`
+
+- Set the workflow's model to the `parsnip` model object
+]
+.pull-right[
+
+```r
+# Add preprocessor and model to a workflow
+logit_full_wflow &lt;- workflow(
+  preprocessor = formula_full,
+  spec = logit_model
+)
+
+# Print the workflow object
+logit_full_wflow
+```
+]
+]
+.panel[.panel-name[Output]
+
+```
+## ══ Workflow ════════════════════════════════════════════════════════════════════
+## Preprocessor: Formula
+## Model: logistic_reg()
+## 
+## ── Preprocessor ────────────────────────────────────────────────────────────────
+## as.factor(migrate) ~ fence + female + age + educ + married + 
+##     as.factor(municipality) + as.factor(period)
+## 
+## ── Model ───────────────────────────────────────────────────────────────────────
+## Logistic Regression Model Specification (classification)
+## 
+## Computational engine: glm
+```
+]
+]
+
+---
+
+## Fitting a Workflow
+
+.panelset[
+.panel[.panel-name[Code]
+
+.pull-left[
+- `fit()` the workflow on the `df_mig` data set
+
+- Returns a workflow object with a fitted parsnip model in the `.$fit$fit` of the workflow object
+]
+
+.pull-right[
+
+```r
+# Fit the workflow to the CPR data
+logit_full_fit &lt;- fit(logit_full_wflow,
+                      df_mig)
+
+# Use the tidy command to get a tibble of
+# estimated coefficients
+logit_full_fit %&gt;% 
+  tidy() %&gt;% 
+  filter(
+    term %in% c(
+      "fence", "female", "age", "educ",
+      "married"
+    )
+  )
+```
+]
+
+]
+.panel[.panel-name[Output]
+
+```
+## # A tibble: 5 × 5
+##   term    estimate std.error statistic  p.value
+##   &lt;chr&gt;      &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+## 1 fence    -0.471    0.207       -2.28 2.28e- 2
+## 2 female   -0.473    0.0910      -5.19 2.07e- 7
+## 3 age      -0.0166   0.00390     -4.25 2.13e- 5
+## 4 educ      0.0119   0.0115       1.04 2.98e- 1
+## 5 married  -0.626    0.101       -6.18 6.28e-10
+```
+]
+]
+
+---
+
+layout: false
+
+class: middle
+background-image: url("https://raw.githubusercontent.com/rstudio/hex-stickers/master/SVG/recipes.svg")
+background-size: 100px
+background-position: 90% 10%
+
+# `recipes`
+
+&gt; With recipes, you can use `dplyr`-like pipeable sequences of feature engineering steps to get your data ready for modeling.
+&gt;
+&gt; .right[&lt;a name=cite-recipes&gt;&lt;/a&gt;[Kuhn and Wickham (2022)](#bib-recipes)]
+
+---
+
+layout: true
+
+## Recipe Basics
+
+
+
+```r
+?recipes::recipe
+```
+
+&gt; A recipe is a description of the steps to be applied to a data set in order to prepare it for data analysis.
+
+---
+
+It defines:
+
+#### 1. Variables
+
+Data columns in a `data.frame` or `tbl`
+
+#### 2. Roles
+
+Definition of how variable are used in a model, most commonly `outcome` or `response`
+
+#### 3. Terms
+
+Columns in a design matrix, such as `educ` or `educ:female`. Variables with the role `predictor` are automatically main effect terms.
+
+---
+
+#### Arguments:
+
+| Argument | Description |
+| -------- | ----------- |
+| `formula` | A model formula **without** in-line functions, e. g. `log()`. In-line functions that transform the data can be passed to the recipe using `step_*()` functions. |
+| `data` | A data frame or tibble of the *template* data set. `data` does not have to be the actual data, but must have the same names and types of the target data set. For large data sets, it is sufficient to simply pass `head(data)` to the recipe. |
+
+---
+
+layout: false
+
+## Creating a Recipe
+
+.panelset[
+.panel[.panel-name[Code]
+.pull-left[
+- Before creating the preprocessor, coerce `migrate`, `municipality` and `period` to factor (needed for estimation)
+
+- Can not be done as in-line function in the formula
+]
+.pull-right[
+
+```r
+# Coerce columns to factor
+fct_cols &lt;- c("migrate", "municipality",
+              "period")
+
+df_mig &lt;- df_mig %&gt;% 
+  mutate(across(all_of(fct_cols),
+                ~ forcats::as_factor(.)))
+
+formula_full &lt;- migrate ~ fence + female + 
+  age + educ + married + 
+  municipality + period
+
+# Create a recipe by providing a formula and
+# data frame for variable selection
+rec_full &lt;- recipe(formula_full, df_mig)
+
+rec_full
+```
+]
+]
+.panel[.panel-name[Output]
+
+```
+## Recipe
+## 
+## Inputs:
+## 
+##       role #variables
+##    outcome          1
+##  predictor          7
+```
+]
+]
+
+---
+
+layout: true
+
+## Adding Preprocessing Steps to a Recipe
+
+---
+
+- Recipes can be piped into step functions called `step_*()`
+
+- Step functions are preprocessing operations on the data that can be added sequentially to a recipe *without* being immediately executed
+
+- `dplyr`-like selector functions can be used to select columns to operate on
+
+- Offers greater flexibility than specifying e. g. variable transformations directly in the formula
+
+---
+
+#### General function structure:
+
+.pull-left[
+
+```r
+step_*(
+  recipe,
+  ...
+)
+```
+]
+
+.pull-right[
+| Argument | Description |
+| -------- | ----------- |
+| `recipe` | A recipe object. The step will be added to the sequence of operations for this recipe. |
+| `...` | One (or more) selector functions to choose variables (see `?selections` for more details).
+]
+
+---
+
+| Step Function | Description |
+| ------------- | ----------- |
+| `step_dummy()` | Converts nominal data into numeric binary model terms. |
+| `step_log()` | Log transforms variables. |
+| `step_interact()` | Creates new columns for interaction terms between variables. Terms for which interactions should be created are passed to the `terms` argument using a formula containing interactions or selectors. |
+| `step_mutate()` | Adds variables using `dplyr::mutate()` |
+| `step_filter()` | Removes rows using `dplyr::filter()` |
+| `step_select()` | Selects variables using `dplyr::select()` |
+| `step_naomit()` | Removes rows containing `NA` or `NaN` |
+
+*Note:* See the [`recipes` reference](https://recipes.tidymodels.org/reference/index.html) for a complete overview of step functions included in the package.
+
+---
+
+layout: false
+
+## Selector Functions for Preprocessing Steps
+
+
+```r
+?recipes::selections
+```
+
+&gt; When selecting variables or model terms in step functions, `dplyr`-like tools are used. The selector functions can choose variables based on their name, current role, data type, or any combination of these.
+
+| Selection | Description |
+| --------- | ----------- |
+| `all_numeric()` | Selection based on type |
+| `all_nominal()` | Selection based on type |
+| `all_predictors()` | Selection based on role |
+| `all_outcomes()` | Selection based on role |
+| `all_numeric_predictors()` | Selection based on type and role |
+| `all_nominal_predictors()` | Selection based on type and role |
+
+*Note:* `recipes` also supports select helpers from the `tidyselect` package, such as `everything()`, `all_of()` and `any_of()`.
+
+---
+
+## Preprocessing the Migration Data
+
+.panelset[
+.panel[.panel-name[Code]
+.pull-left[
+- Assign roles to the variables
+
+  - `migrate` is the outcome
+  - As before, `fence`, some of the socio-economic characteristics, `municipality` and `period` are the explanatory variables ("predictors")
+  
+- When fitting the recipe, the variables are included in the estimation as defined by their roles
+]
+.pull-right[
+
+```r
+predictors &lt;- c("fence", "female", "age",
+                "educ", "married",
+                "municipality", "period")
+
+# Create a preprocessor by specifying the
+# data set and assign roles
+rec_full &lt;- recipe(df_mig) %&gt;%
+  update_role(migrate,
+              new_role = "outcome") %&gt;% 
+  update_role(all_of(predictors),
+              new_role = "predictor")
+
+# Print preprocessor
+rec_full
+```
+]
+]
+.panel[.panel-name[Output]
+
+```
+## Recipe
+## 
+## Inputs:
+## 
+##       role #variables
+##    outcome          1
+##  predictor          7
+## 
+##   4 variables with undeclared roles
+```
+
+]
+]
+
+---
+
+## Fitting the Model with a Recipe
+
+.panelset[
+.panel[.panel-name[Code]
+
+```r
+# Create a workflow with the preprocessor and the model specification
+logit_full_wflow &lt;- workflow(preprocessor = rec_full,
+                             spec = logit_model)
+
+# Fit the workflow
+logit_full_fit &lt;- fit(logit_full_wflow, data = df_mig)
+
+# Print a model summary
+tidy(logit_full_fit) %&gt;% 
+  filter(term %in% c("fence", "female", "age", "educ", "married"))
+```
+]
+.panel[.panel-name[Output]
+
+```
+## # A tibble: 5 × 5
+##   term    estimate std.error statistic  p.value
+##   &lt;chr&gt;      &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+## 1 age      -0.0166   0.00390     -4.25 2.13e- 5
+## 2 educ      0.0119   0.0115       1.04 2.98e- 1
+## 3 female   -0.473    0.0910      -5.19 2.07e- 7
+## 4 married  -0.626    0.101       -6.18 6.28e-10
+## 5 fence    -0.471    0.207       -2.28 2.28e- 2
+```
+]
+]
+
+---
+
+name: task-4
+
+## Task 4: Fit Multiple Models
+
+.panelset[
+.panel[.panel-name[Task]
+Re-run the estimations from [Task 2](#task-2) and [Task 3](#task-3) but use workflows to fit your models. Additionally, make use of the functions provided in the `purrr` package.
+]
+.panel[.panel-name[Code]
+
+
+```r
+# Store recipes in a list
+recs &lt;- list(reduced = rec_full %&gt;% 
+               step_select(-age, - female, -educ, -married),
+             full = rec_full)
+
+# Specify the model
+logit_model &lt;- logistic_reg() %&gt;% 
+  set_engine("glm")
+
+# Map the preprocessors on workflows and fit the models
+models_fit &lt;- recs %&gt;% 
+  map(~ workflow(., spec = logit_model)) %&gt;% # Create a workflow for each list element
+  map(~ fit(., data = df_mig))                # Fit each workflow stored in the list
+```
+]
+
+.panel[.panel-name[Basic Specification]
+
+```
+## # A tibble: 1 × 5
+##   term  estimate std.error statistic p.value
+##   &lt;chr&gt;    &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
+## 1 fence   -0.449     0.206     -2.18  0.0294
+```
+]
+
+.panel[.panel-name[Full Specification]
+
+```
+## # A tibble: 5 × 5
+##   term    estimate std.error statistic  p.value
+##   &lt;chr&gt;      &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+## 1 age      -0.0166   0.00390     -4.25 2.13e- 5
+## 2 educ      0.0119   0.0115       1.04 2.98e- 1
+## 3 female   -0.473    0.0910      -5.19 2.07e- 7
+## 4 married  -0.626    0.101       -6.18 6.28e-10
+## 5 fence    -0.471    0.207       -2.28 2.28e- 2
+```
+]
+]
+
+---
+
+## Extract the Engine Fit
+
+&gt; The generic function `extract_fit_engine()` returns the underlying fitted model object. For a `parsnip` model with the `"lm"` engine, i. e. a `lm` object:
+
+
+```r
+logit_full_fit &lt;- extract_fit_engine(models_fit$full)
+
+class(logit_full_fit)
+```
+
+```
+## [1] "glm" "lm"
+```
+
+--
+
+.pull-left.short-width[
+.big-emoji[➡️]
+]
+
+
+.pull-right.lo-wi[
+Necessary when next steps in the data analysis process, e. g. creating regression tables, require objects of a certain class as an input factor
+]
+
+---
+
+layout: true
+
+## Regression Tables
+
+&gt; A variety of packages offers solutions to create off-the-shelve tables for regression output. The `msummary()` from the `modelsummary` package takes an `lm` object &amp;ndash; or a (named) list of `lm` objects &amp;ndash; as input and returns a customizable regression table.
+
+---
+
+.pull-left[
+
+```r
+msummary(
+  models,
+  output = "default",
+  vcov = NULL,
+  stars = FALSE,
+  title = NULL,
+  notes = NULL,
+  coef_map = NULL,
+  gof_map = NULL,
+  ...
+)
+```
+]
+
+---
+
+.pull-left[
+
+```r
+msummary(
+* models,
+  output = "default",
+  vcov = NULL,
+  stars = FALSE,
+  title = NULL,
+  notes = NULL,
+  coef_map = NULL,
+  gof_map = NULL,
+  ...
+)
+```
+]
+
+.pull-right[
+`models`
+
+A model object, such as `lm`, or a (named) list of models
+]
+
+---
+
+.pull-left[
+
+```r
+msummary(
+  models,
+* output = "default",
+  vcov = NULL,
+  stars = FALSE,
+  title = NULL,
+  notes = NULL,
+  coef_map = NULL,
+  gof_map = NULL,
+  ...
+)
+```
+]
+
+.pull-right[
+`output`
+
+If the table should be saved directly, the filename can be specified here. If the table should be customized afterwards, this argument should be set to the desired object type, e. g. `"kableExtra"`.
+]
+
+---
+
+.pull-left[
+
+```r
+msummary(
+  models,
+  output = "default",
+* vcov = NULL,
+  stars = FALSE,
+  title = NULL,
+  notes = NULL,
+  coef_map = NULL,
+  gof_map = NULL,
+  ...
+)
+```
+]
+
+.pull-right[
+`vcov`
+
+Replace model standard errors with robust standard errors by setting this argument to `"HC3"` or other variants of heteroscedasticity-consistent standard errors. Including robust standard errors in the table requires the `sandwich` package.
+]
+
+---
+
+.pull-left[
+
+```r
+msummary(
+  models,
+  output = "default",
+  vcov = NULL,
+* stars = FALSE,
+  title = NULL,
+  notes = NULL,
+  coef_map = NULL,
+  gof_map = NULL,
+  ...
+)
+```
+]
+
+.pull-right[
+`stars`
+
+Show stars to indicate statistical significance by passing a named numeric vector to this argument. Most commonly, this would be set to:
+
+`c("*" = .1, "**" = .05, "***" = .01)`
+]
+
+---
+
+.pull-left[
+
+```r
+msummary(
+  models,
+  output = "default",
+  vcov = NULL,
+  stars = FALSE,
+* title = NULL,
+  notes = NULL,
+  coef_map = NULL,
+  gof_map = NULL,
+  ...
+)
+```
+]
+
+.pull-right[
+`title`
+
+Title for the table given as a string.
+]
+
+---
+
+.pull-left[
+
+```r
+msummary(
+  models,
+  output = "default",
+  vcov = NULL,
+  stars = FALSE,
+  title = NULL,
+* notes = NULL,
+  coef_map = NULL,
+  gof_map = NULL,
+  ...
+)
+```
+]
+
+.pull-right[
+`notes`
+
+Pass a list or vector of strings to this arguments to show notes below the table.
+]
+
+---
+
+.pull-left[
+
+```r
+msummary(
+  models,
+  output = "default",
+  vcov = NULL,
+  stars = FALSE,
+  title = NULL,
+  notes = NULL,
+* coef_map = NULL,
+  gof_map = NULL,
+  ...
+)
+```
+]
+
+.pull-right[
+`coef_map`
+
+Use a named character vector to map model variable names to coefficient names, e. g. `c(female = "Female")`. Coefficients are shown in the order of the character vector. If a coefficient is not given in the vector, it will be omitted from the table.
+]
+
+---
+
+.pull-left[
+
+```r
+msummary(
+  models,
+  output = "default",
+  vcov = NULL,
+  stars = FALSE,
+  title = NULL,
+  notes = NULL,
+  coef_map = NULL,
+* gof_map = NULL,
+  ...
+)
+```
+]
+
+.pull-right[
+`gof_map`
+
+A character vector specifying goodness-of-fit statistics and other model information to show at the bottom of the table. Measures are reported in the order given in the vector. See `get_gof(&lt;YOUR-MODEL&gt;)` for a list of measures to choose from. Names of the `data.frame` correspond to measure names that have to be provided to show in the table.
+
+If you want to use a custom name for the measures, you can pass a `data.frame` object with the columns `"raw"`, `"clean"` and `"fmt"` instead of a character vector.
+]
+
+---
+
+layout: false
+
+## Task 5: Create a Summary Table Showing Your Results
+
+.panelset[
+.panel[.panel-name[Task]
+Use the `msummary()` function from the `modelsummary` package to create a table showing the results from the models estimated in [Task 4](#task-4).
+
+Show only coefficients for your variable of interest and the additional controls and cluster standard errors on municipality level using the `vcovCL()` function from the `sandwich` package.
+]
+.panel[.panel-name[Code]
+
+```r
+library(modelsummary)
+
+models_fit %&gt;% 
+  map(extract_fit_engine) %&gt;% 
+  set_names(c("(1)", "(2)")) %&gt;%
+  msummary(
+    output = "kableExtra", # May also be e. g. "latex" or a filename extension such as ".txt"
+    # Use sandwich package to calculate clustered vcov matrix
+    vcov = function(x) sandwich::vcovCL(x, cluster = df_mig$municipality),
+    stars = c("*" = .1, "**" = .05, "***" = .01),
+    title = "Impact of Fence Construction on Mexian-US Migration",
+    notes = "Parantheses show clustered standard errors.",
+    coef_map = c(fence = "Fence Construction", age = "Age", female = "Female",
+                 educ = "Years of Schooling", married = "Married"),
+    gof_map = c("nobs")
+  )
+```
+]
+]
+
+---
+
+class: middle
+
+&lt;table style="NAborder-bottom: 0; width: auto !important; margin-left: auto; margin-right: auto;" class="table"&gt;
+&lt;caption&gt;Impact of Fence Construction on Mexian-US Migration&lt;/caption&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt;   &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt;  (1) &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt;   (2) &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Fence Construction &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; -0.449** &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; -0.471** &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; (0.212) &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; (0.211) &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Age &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; -0.017*** &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; (0.005) &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Female &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; -0.473*** &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; (0.098) &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Years of Schooling &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 0.012 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; (0.021) &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Married &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; -0.626*** &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;box-shadow: 0px 1px"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;box-shadow: 0px 1px"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;box-shadow: 0px 1px"&gt; (0.104) &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Num.Obs. &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 156113 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 156113 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;tfoot&gt;
+&lt;tr&gt;&lt;td style="padding: 0; " colspan="100%"&gt;
+&lt;sup&gt;&lt;/sup&gt; * p &amp;lt; 0.1, ** p &amp;lt; 0.05, *** p &amp;lt; 0.01&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td style="padding: 0; " colspan="100%"&gt;
+&lt;sup&gt;&lt;/sup&gt; Parantheses show clustered standard errors.&lt;/td&gt;&lt;/tr&gt;
+&lt;/tfoot&gt;
+&lt;/table&gt;
+
+---
+
+layout: true
+
+# References
+
+---
+
+&lt;a name=bib-f20&gt;&lt;/a&gt;[Feigenberg, B.](#cite-f20) (2020a). "Fenced Out:
+The Impact of Border Construction on US-Mexico Migration". In:
+_American Economic Journal: Applied Economics_ 12.3, pp. 106-39. DOI:
+[10.1257/app.20170231](https://doi.org/10.1257%2Fapp.20170231). URL:
+[https://www.aeaweb.org/articles?id=10.1257/app.20170231](https://www.aeaweb.org/articles?id=10.1257/app.20170231).
+
+&lt;a name=bib-f20data&gt;&lt;/a&gt;[Feigenberg, B.](#cite-f20data) (2020b).
+_Replication package for: Fenced Out: The Impact of Border Construction
+on US-Mexico Migration._
+&lt;https://www.aeaweb.org/journals/dataset?id=10.1257/app.20170231&gt;, Last
+accessed on 2022-12-29.
+
+&lt;a name=bib-ks22&gt;&lt;/a&gt;[Kuhn, M. and J. Silge](#cite-ks22) (2022). _Tidy
+Modeling with R. A Framework for Modeling in the Tidyverse_. O'Reilly.
+URL: [https://www.tmwr.org/](https://www.tmwr.org/).
+
+&lt;a name=bib-parsnip&gt;&lt;/a&gt;[Kuhn, M. and D. Vaughan](#cite-parsnip)
+(2022). _parsnip: A Common API to Modeling and Analysis Functions_.
+https://parsnip.tidymodels.org/.
+
+&lt;a name=bib-tidymodels&gt;&lt;/a&gt;[Kuhn, M. and H. Wickham](#cite-tidymodels)
+(2020). _Tidymodels: a collection of packages for modeling and machine
+learning using tidyverse principles._ URL:
+[https://www.tidymodels.org](https://www.tidymodels.org).
+
+&lt;a name=bib-recipes&gt;&lt;/a&gt;[Kuhn, M. and H. Wickham](#cite-recipes)
+(2022). _recipes: Preprocessing and Feature Engineering Steps for
+Modeling_. https://recipes.tidymodels.org/.
+
+---
+
+&lt;a name=bib-workflows&gt;&lt;/a&gt;[Vaughan, D. and S. Couch](#cite-workflows)
+(2022). _workflows: Modeling Workflows_. URL:
+[https://workflows.tidymodels.org/](https://workflows.tidymodels.org/).
+
+&lt;a name=bib-r4ds&gt;&lt;/a&gt;[Wickham, H. and G. Grolemund](#cite-r4ds) (2016).
+_R for data science. import, tidy, transform, visualize, and model
+data_. O'Reilly. URL:
+[https://r4ds.had.co.nz/](https://r4ds.had.co.nz/).
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
