@@ -1,0 +1,1187 @@
+---
+title: "`r params$title`"
+subtitle: "`r params$subtitle`"
+author: "`r params$author`"
+date: "`r format(Sys.Date(), '%d.%m.%Y')`"
+output:
+  xaringan::moon_reader:
+    css: ["default", "default-fonts", "style.css"]
+    nature:
+      ratio: "16:9"
+      highlightLines: true
+      countIncrementalSlides: false
+params:
+  title: "Data Analysis using R"
+  subtitle: "R Basics"
+  author: "Sven Werenbeck-Ueding"
+  path_bib: "references.bib"
+  path_assets: "../../resources/assets/"
+  path_data: "../../data/"
+---
+
+<!-- Setup -->
+
+```{r setup, include=FALSE}
+#knitr::opts_chunk$set(echo = FALSE)
+
+library(tidyverse)
+library(fontawesome)
+library(DiagrammeR)
+library(RefManageR)
+
+# Theming
+xaringanExtra::use_panelset()
+xaringanExtra::use_tile_view() # Press o for overview in browser
+
+# Bibliography
+BibOptions(
+  check.entries = FALSE,
+  bib.style = "authoryear",
+  style = "markdown"
+)
+
+bib <- ReadBib(params$path_bib, check = FALSE)
+```
+
+```{r eval=TRUE, child = params$path_slides}
+```
+
+```{r pdf, include = FALSE}
+source("https://git.io/xaringan2pdf")
+xaringan_to_pdf(
+  input = "r_basics.html",
+  output_file = "r_basics.pdf")
+```
+
+## What is R?
+
+> R is a free, not-commercial, open-source software language for statistical computing and graphics. It comes with a lot of advantages, especially for data analysis projects.
+
+.pull-left.short-width[
+.big-emoji[`r emo::ji("hatching")`]
+]
+
+.pull-right.long-width[
+#### Origin
+- `R` is based on the programming language `S` ('dialect of S'), which in turn is based on the core programming language `C`
+
+- First version published by **R**oss Ihaka and **R**obert Gentlemen in 1993 (Name is based on their first initials)
+
+- intention of `R`: creating an environment where one doesn't consciously think of programming
+
+.right[`r Citet(bib, "rpaper")`]
+]
+
+---
+
+## What is R?
+
+> R is a free, not-commercial, open-source software language for statistical computing and graphics. It comes with a lot of advantages, especially for data analysis projects.
+
+.pull-left.short-width[
+.big-emoji[`r emo::ji("book")`]
+]
+
+.pull-right.long-width[
+#### General Information
+- `R` is case sensitive
+
+- `R` and his basic statistical functions can easily be extended by packages
+
+- Comprehensive R Archive Network (CRAN) is the main-platform for packages (extensions)
+
+- over 20,000 packages in 2021 (roughly 4,000 packages in 2013)
+
+.right[`r Citet(bib, "rproject")`]
+]
+
+
+---
+
+## What is R?
+
+> R is a free, not-commercial, open-source software language for statistical computing and graphics. It comes with a lot of advantages, especially for data analysis projects.
+
+
+.pull-left.short-width[
+.big-emoji[`r emo::ji("biceps")`]
+]
+
+.pull-right.long-width[
+#### Advantages/Strengths
+- free software
+
+- open-source: contributions from a large active and vibrant community (huge functionality)
+
+- great data visualization options
+
+- interfaces with many other languages (e.g. LaTeX, C, Markdown, Python, Java, HTML, CSS)
+
+- runs on almost every platform (through `C++` even on the PlayStation)
+
+.right[`r Citet(bib, "r4ds")`]
+]
+
+---
+
+## What is R?
+
+> R is a free, not-commercial, open-source software language for statistical computing and graphics. It comes with a lot of advantages, especially for data analysis projects.
+
+.pull-left.short-width[
+.big-emoji[`r emo::ji("question")`]
+]
+
+.pull-right.long-width[
+#### Need additional help?
+- use the built-in help system in `R` (`help("...")` and `?`)
+
+- use online-forums like [Stack Overflow](https://stackoverflow.com/) or [GitHub](https://github.com/) (developers are active here as well)
+
+- use the documentation files provided on the official [`R`-Website](https://www.r-project.org/)  (manuals, FAQs, books)
+
+]
+
+---
+
+layout: false
+class: middle
+
+> To understand computations in `R`, two slogans are helpful: Everything that exists is an object. Everything that happens is a function call.
+>
+> .right[`r Citet(bib, "chambers")`, Co-Founder of `S`]
+
+---
+
+class: middle
+
+> Good coding style is like using correct punctuation. You can manage without it, but it sure makes things easier to read. [...] you really should use a consistent style. Good style is important because while your code only has one author, it’ll usually have multiple readers. This is especially true when you’re writing code with others.
+>
+> .right[`r Citet(bib, "advancedr")`]
+
+---
+
+layout: false
+class: middle
+background-image: url("https://www.r-project.org/logo/Rlogo.png")
+background-size: 100px
+background-position: 90% 10%
+
+## Prerequisites 
+
+#### Download the appropiate versions of R and RStudio for your operating system
+
+- R can be downloaded via the [Comprehensive R Archive Network (CRAN)](https://cran.r-project.org/)
+
+- Best integrated development environment (IDE), i. e. where you write and compile your code, is RStudio and can be downloaded [here](https://posit.co/products/open-source/rstudio/)
+
+---
+layout: true
+
+## Basic Calculations
+
+---
+
+.pull-left.short-width[
+.big-emoji[`r emo::ji("calculation")`]
+]
+
+.pull-right.long-width[
+#### Math operators
+
+- `+`: addition
+- `-`: subtraction
+- `*`: multiplication (elementwise!)
+- `/`: division
+- `^`: power operator (e.g. $2^3$)
+]
+
+--
+
+.pull-left.short-width[
+.big-emoji[`r emo::ji("developer")`]
+]
+
+.pull-right.long-width[
+#### Commands
+
+- `abs()`: absolute value
+- `sqrt()`: square root
+- `exp()`: exponential function
+- `log()`: natural logarithm
+- `factorial()`: factorial (e.g. 8!)
+- `round( , digits = x)`: round to x digits
+]
+
+--
+
+*Note:* These operations work on different types (e.g. scalars, vectors, matrices, ...)
+
+---
+
+```{r}
+3 + 5 * 2
+```
+
+```{r}
+(3 + 5) * 2
+```
+
+```{r}
+sqrt(8.33)
+```
+
+```{r}
+round(sqrt(8.33), 2)
+```
+
+*Caution:* Decimal numbers use a dot instead of a comma (convenient in the US and in the UK)
+
+---
+
+layout: false
+
+## R-Scripts
+
+- Within R there are several file types to create
+
+- R-Scripts are simple text files (`<file_name>.R`) with a collection of commands (and comments)
+
+- Useful to store and document your statistical analyses
+
+- A new R-Script can be generated by clicking on `File > New File > R Script`
+
+- Run code from R scripts by highlighting the code snippet and typing `Ctrl` + `Enter`
+
+---
+
+## Comments
+
+- For better documentation, you can place comments in your R-Script using the symbol `#`
+
+- Everything placed behind the `#` and belonging to the same line is treated as a comment
+
+--
+
+.pull-left[
+```{r}
+# Multiply two by five
+2 * 5
+```
+]
+
+--
+
+.pull-right[
+```{r}
+10 / 4 # Divide ten by four
+```
+]
+
+---
+
+layout: true
+
+## R-Packages
+
+- R has a lot of built-in commands delivered by the installation of R
+
+- Often, these built-in commands are not sufficient (or convenient) to conduct more complex statistical analyses
+
+- Further commands can be used by installing specialized packages
+
+---
+
+---
+
+.pull-left[
+#### Installing
+
+- Run `install.packages()` while your PC is connected to the internet
+
+- Each package has to be installed **only once**
+
+```{r, eval=FALSE}
+# Installing the package rio
+install.packages("rio")
+```
+]
+
+--
+
+.pull-right[
+#### Loading
+
+- If you want to use a command from a specific package you need to activate the package by running the command `library()`
+
+- Packages need only to be activated **once per session**
+
+```{r, eval = FALSE}
+library(rio)
+```
+]
+
+---
+
+layout: false
+
+## Variables
+
+.pull-left[
+- Variables can take all kinds of different content (vectors, matrices, data sets, regression, ...)
+
+- Variables are created by the assignment operator `<-`
+
+- When variables are assigned, they are shown in RStudio's environment pane 
+
+- Using `=` to assign variables is considered bad practice
+]
+
+--
+
+.pull-right[
+```{r}
+# Assign value 4 to variable x
+x <- 4
+
+# Print x
+x
+```
+
+```{r}
+# Do some calculations with x
+x * 2
+```
+
+```{r}
+# Overwrite x
+x <- 1
+x
+```
+]
+
+---
+
+layout: false
+
+## Vectors
+
+- Vectors are the most important data type in R
+
+- What we normally refer to as vector is an "atomic vector" in R: A vector of elements with the same type
+
+  - Scalars in R are atomic vectors as well (length 1 vectors)
+
+- R allows vectors to have elements of different types, a so-called "list"
+  
+  - More complex than atomic vectors: Each element can be **any** type
+  
+  - Elements can differ in length
+  
+  - May contain several atomic vectors of different lengths with different types
+  
+---
+
+layout: true
+
+## Atomic Vectors
+
+.pull-left[
+- Four primary types:
+
+  1. **Logical**: `TRUE` or `FALSE`
+  
+  2. **Integer**: Whole numbers followed by `L`, e. g. `1234L`
+  
+  3. **Double**: Decimal number defined by the floating point standard, e. g. `0.1234`
+  
+  4. **Character**: Strings surrounded by `"` or `'`, e. g. `"this is a string"` or `'this as well'`
+
+- Integers and doubles are numeric with unique values `Inf`, `-Inf` and `NaN` (not a number)
+
+- Generate vectors with `c(1, 2, ...)`
+]
+
+---
+---
+
+.pull-right[
+#### Operations
+
+```{r}
+# Generate x and z
+x <- c(5, 1, 9, 3)
+z <- c(4, 9, 0, 4)
+```
+
+```{r}
+# Multiplication with scalar
+2 * x
+```
+
+```{r}
+# Elementwise multiplication
+x * z
+```
+]
+
+---
+
+.pull-right[
+#### Special Commands
+
+```{r}
+# vector with 5 ones
+rep(1, 5)
+```
+
+```{r}
+# sequence from 1 to 5
+seq(1, 5)
+```
+
+```{r}
+1:5
+```
+]
+
+---
+
+layout: true
+
+## Subsetting Vectors
+
+---
+
+.pull-left[
+- Sometimes we want to work with specific elements from a vector
+
+  1. Subset via element indices
+  
+  2. Subset via logicals
+
+- Specific elements can be extracted by enclosing the index with `[` and `]`
+]
+
+---
+
+.pull-left[
+- Sometimes we want to work with specific elements from a vector
+
+  1. **Subset via element indices**
+  
+  2. Subset via logicals
+
+- Specific elements can be extracted by enclosing the index with `[` and `]`
+]
+
+.pull-right[
+```{r}
+# Elements 2
+x[2]
+```
+
+```{r}
+# Elements 1 to 3
+x[1:3]
+```
+
+```{r}
+# All elements except the last one
+x[-4]
+```
+]
+
+---
+
+.pull-left[
+- Sometimes we want to work with specific elements from a vector
+
+  1. Subset via element indices
+  
+  2. **Subset via logicals**
+
+- Specific elements can be extracted by enclosing the index with `[` and `]`
+]
+
+.pull-right[
+```{r}
+# Subset with TRUE/FALSE
+x[c(TRUE, FALSE, FALSE, TRUE)]
+```
+]
+
+---
+
+layout: false
+
+## Factors
+
+.pull-left[
+- Vector that contains predefined values
+
+- Used to represent categorical data
+
+- Integer vectors with the following **attributes** (metadata of the vector):
+
+  1. `class`: "factor"
+  
+  2. `levels`: Set of allowed values, sorted into increasing order
+
+- Created by the `factor()` function
+
+- Can be ordered when setting the `ordered` argument of `factor()` to `TRUE`
+]
+
+--
+
+.pull-right[
+```{r}
+x <- factor(c("b", "a", "a", "b", "a"),
+            levels = c("a", "b"))
+
+class(x)
+
+levels(x)
+```
+]
+
+---
+
+layout: false
+
+## Missing Values
+
+- R reserves `NA` for missing values ("not applicable")
+
+.pull-left[
+- Most computations with missing values return missing values
+]
+.pull-right[
+```{r}
+NA * 10
+```
+]
+
+.pull-left[
+- Exception: When identity holds for all inputs, for example when computing $x^0$
+]
+.pull-right[
+```{r}
+NA^0
+```
+]
+
+.pull-left[
+- Use `is.na()` to test for missing values
+]
+.pull-right[
+```{r}
+x <- c(1, NA, 2, 3)
+
+is.na(x)
+```
+]
+
+---
+
+layout: true
+
+## Matrices
+
+.pull-left[
+- Vectors can have **attributes** (some metadata of the vector)
+
+- Adding the `dim` attribute to an atomic vector makes it a 2-dimensional matrix
+
+- Can be created by assigning `dim()` to an atomic vector or simply calling `matrix()`
+
+- Can also be created by binding atomic vectors with the same data type and length column-wise using `cbind()`or row-wise using `rbind()`
+]
+
+---
+---
+
+.pull-right[
+```{r}
+# Add dim attribute to atomic vector
+x <- 1:6
+
+dim(x) <- c(3, 2) # 3 rows, 2 columns
+
+x
+```
+]
+
+---
+
+.pull-right[
+```{r}
+# Use the matrix command to create a
+# matrix from a vector
+matrix(x, nrow = 3)
+
+# Specify ncol instead of nrow
+matrix(x, ncol = 2)
+```
+]
+
+---
+
+.pull-right[
+```{r}
+# Fill matrix column-wise instead of
+# row-wise
+matrix(x, ncol = 2, byrow = T)
+```
+]
+
+---
+
+.pull-right[
+```{r}
+# Bind atomic vectors column-wise
+cbind(1:3, 4:6)
+```
+]
+
+---
+
+layout: true
+
+## Matrix Operations
+
+.pull-left[
+- `t()`: transpose
+
+- `solve()`: inverse
+
+- `%*%`: matrix multiplication
+]
+
+---
+
+---
+
+.pull-right[
+```{r}
+A <- matrix(c(1, 2, 0, 3), ncol = 2)
+
+A
+
+t(A)
+
+solve(A)
+```
+]
+
+---
+
+.pull-right[
+```{r}
+B <- matrix(c(4, 7, 2, 6), ncol = 2)
+
+B
+
+A %*% B
+```
+]
+
+---
+
+layout: true
+
+## Subsetting Matrices
+
+.pull-left[
+- Specific elements can be extracted using `[` and `]`
+
+- To distinguish the row from the column positions, a comma is used within the brackets **`[row, column]`**
+]
+
+---
+
+.pull-right[
+```{r}
+C <- matrix(-5:6, ncol = 4)
+
+C
+```
+]
+
+---
+
+.pull-right[
+```{r}
+C[1, ]
+```
+
+```{r}
+C[, 1:3]
+```
+
+```{r}
+C[1:2, 2]
+```
+]
+
+--
+
+*Note:* Depending on the matrix and choice of subset, the subset may no longer be a matrix!
+
+---
+
+layout: false 
+
+## Useful Statistical/Mathematical Commands
+
+Suppose `x` and `y` are numeric vectors with same length:
+
+| Command       | Description                                           |
+|---------------|-------------------------------------------------------|
+| `sum(x)`      | Sum of `x`                                            |
+| `table(x)`    | Frequeny table for `x`                                |
+| `mean(x)`     | Average of `x`                                        |
+| `median(x)`   | Median of `x`                                         |
+| `var(x)`      | Variance of `x`                                       |
+| `sd(x)`       | Standard deviation of `x`                             |
+| `cov(x, y)`   | Covariance matrix of `x` and `y`                      |
+| `quantile(x)` | Quantiles of `x`                                      |
+| `min(x)`      | Minimum value of `x`                                  |
+| `max(x)`      | Maximum value of `x`                                  |
+
+--
+
+*Note:* Some of these commands can also be applied to matrices
+
+---
+
+layout: true
+
+## Lists
+
+.pull-left[
+- Each element can be **any** type
+
+- Can be constructed using `list()`
+
+- Just like with atomic vectors, elements in a list can be named
+
+- Subsetting lists is done via double brackets `[[` and `]]` or `$`
+]
+
+---
+
+.pull-right[
+```{r}
+x <- list(1:5, "a", c(TRUE, FALSE),
+          seq(0.2, 0.6, by = 0.2))
+
+typeof(x)
+
+x
+```
+]
+
+---
+
+.pull-right[
+```{r}
+x <- list(
+  integer_vector = 1:5,
+  character_vector = "a"
+)
+
+x
+```
+]
+
+---
+
+.pull-right[
+```{r}
+x$integer_vector
+
+x[[1]]
+```
+
+]
+
+---
+
+layout: false
+
+## Data Frames
+
+.pull-left[
+- Used when dealing with tabular data
+
+- Essentially a named list of vectors with
+
+  - **same length** of all elements
+  
+  - attributes for column **`names`** and **`row.names`**
+  
+  - and **"data.frame" as the `class`**
+  
+- Created using the `data.frame()` function
+]
+
+--
+
+.pull-right[
+```{r}
+df <- data.frame(x = 1:10, y = letters[1:10])
+
+df
+```
+]
+
+---
+
+layout: true
+
+## Useful Commands
+
+.pull-left[
+- `View(df)`: Opens `df` in a spreadsheet-style data viewer in RStudio
+
+- `summary(df)`: Produces summary statistics for each variable
+
+- `df$x`: Access variable with name `x`
+
+- `head(df)`: Shows first six rows of `df`
+
+- `tail(df)`: Shows last six rows of `df`
+
+- `nrow(df)`: Number of rows (observations)
+
+- `ncol(df)`: Number of columns (variables)
+
+- `names(df)`: Column names
+]
+
+---
+
+---
+
+.pull-right[
+```{r}
+summary(df)
+```
+]
+
+---
+
+.pull-right[
+```{r}
+df$x
+```
+]
+
+---
+
+.pull-right[
+```{r}
+nrow(df)
+```
+]
+
+---
+
+.pull-right[
+```{r}
+names(df)
+```
+]
+
+---
+
+layout: true
+
+## Working with Data Frames
+
+---
+
+.pull-left[
+Create a new column:
+]
+
+.pull-right[
+```{r}
+df$z <- seq(0.1, 1, by = 0.1)
+
+df
+```
+]
+
+---
+
+.pull-left[
+Select multiple columns by name:
+]
+
+.pull-right[
+```{r}
+df[, c("x", "z")]
+```
+]
+
+---
+
+.pull-left[
+Select a subset of observations based on a condition:
+
+- `df$x <= 5` evaluates to a vector of logicals with same length as the atomic vector `df$x`
+
+- Logical vector selects rows to keep when subsetting
+
+- Can of course also subset using a vector of indices
+]
+
+.pull-right[
+```{r}
+df[df$x <= 5,]
+```
+]
+
+---
+
+layout: false
+
+## Importing Data Sets
+
+.pull-left[
+- Data sets are usually stored in specific file formats such as `.csv`, `.xlsx` or Stata's `.dta`
+
+- Base R offers functions for the most common data storage formats
+
+- For some formats we have to use packages such as `haven` for `.dta` files (or write functions ourselves)
+
+- Import the `.csv` file stored under `data/processed/happiness.csv`, data from `r Citet(bib, "introecon")`
+]
+
+.pull-right[
+```{r eval=FALSE}
+df <- read.csv("data/processed/happiness.csv")
+```
+
+```{r include=FALSE}
+df <- read.csv(paste0(params$path_data, "processed/happiness.csv"))
+```
+]
+
+---
+
+## Note that...
+
+... you can change the working directory by using the command  `setwd("YOUR_PATH")` (recommended!)
+
+--
+
+... you can also change the working directory by clicking on `Session > Set Working Directory > Choose Directory`
+
+--
+
+... as a rule, `R` accepts "`/`" but does not accept "`\`" (which is often used on german PCs)
+
+--
+
+... if your working directory is specified you do not need to set the whole path for future operations (only the relative path)
+
+---
+
+layout: false
+
+## Linear Regression Models in R
+
+Let's build a linear probability model using the happiness data!
+
+--
+
+We are interested in analyzing how owning a gun has an effect on whether individuals see themselves as "very happy":
+
+$$vhappy = \alpha + \beta_1 \times educ + \beta_2 \times income + \beta_3 \times owngun + \varepsilon,$$
+
+where
+
+- $vhappy=1$ if the individual is very happy
+
+- $educ$: Years of schooling completed
+
+- $income$: Income brackets
+
+- $owngun=1$ if the individual owns a gun
+
+---
+
+## Inspect the Data
+
+```{r}
+summary(df[,c("vhappy", "educ", "income", "owngun")])
+```
+
+--
+
+- Contains `NA` `r emo::ji("right arrow")` need to be removed for the estimation
+
+--
+
+- `income` and `owngun` are of type character `r emo::ji("right arrow")` transform columns to correct format
+
+---
+
+layout: true
+
+## Clean the Data
+
+---
+
+Remove missing values using `na.omit()`:
+
+```{r}
+# Create a new data frame in the environment with a subset of columns used for the analysis
+df_clean <- df[,c("vhappy", "educ", "income", "owngun")]
+
+# Remove all rows containing NAs
+df_clean <- na.omit(df_clean)
+
+summary(df_clean)
+```
+
+---
+
+Recode `owngun` to a dummy variable using `ifelse()`:
+
+```{r}
+# Recode owngun to a dummy variable
+df_clean$owngun <- ifelse(df_clean$owngun == "yes", 1, 0)
+
+summary(df_clean)
+```
+
+---
+
+The `income` is given in the form of income brackets and stored as a character vector:
+
+```{r}
+# Take a look at unique values of the income
+unique(df_clean$income)
+```
+
+--
+
+`r emo::ji("right arrow")` Convert to factor
+
+---
+
+Convert `income` to an ordered factor:
+
+```{r}
+df_clean$income <- factor(df_clean$income,
+                          levels = c(
+                            "lt $1000", "$1000 to 2999", "$3000 to 3999", "$4000 to 4999",
+                            "$5000 to 5999", "$6000 to 6999", "$7000 to 7999", "$8000 to 9999",
+                            "$10000 - 14999", "$15000 - 19999", "$20000 - 24999", "$25000 or more"
+                          ),
+                          ordered = T)
+
+summary(df_clean)
+```
+
+---
+
+layout: true
+
+## Linear Model: `lm()`
+
+---
+
+.pull-left[
+- The function `lm()` is used to fit (multivariate) linear models
+
+- For the model defined before, we simply need:
+
+  1. `formula`: `vhappy ~ educ + income + owngun`
+  
+  2. `data`: The `df_clean` data frame we prepared
+]
+
+.pull-right[
+```{r}
+model <- lm(vhappy ~ educ + income + owngun,
+            df_clean)
+```
+
+]
+
+---
+
+```{r}
+model
+```
+
+---
+
+layout: false
+
+## Model Summary: `summary()`
+
+.scroll-box-18[
+```{r}
+summary(model)
+```
+]
+
+---
+
+## Extract Coefficients: `coef()`
+
+```{r}
+coef(model)
+```
+
+---
+
+layout: false
+
+## Formulas
+
+- Formulas have a special syntax in R and reference the column names given in the data
+
+- LHS and RHS are separated by `~`
+  
+- Variables to be included in the model are separated by `+`
+  
+- R automatically assumes an intercept: To remove the intercept, add `-1` at the start or `+0` at the end of the RHS
+  
+- May include transformations of the data, e. g. `log()`
+
+- `:` indicates interactions of variables
+
+- `*` denotes factor crossings, i. e. `a*b` is the same as `a + b + a:b`
+
+- `^` is used for polynomials, i. e. `a^2` translates to `a*a`
+
+---
+
+## Formulas: Examples
+
+| Formula                                   | Regression Model                |
+|-------------------------------------------|---------------------------------|
+| `y ~ x1 + x2 + x3`         | $y = \alpha + \beta_1 \times x_1 + \beta_2 \times x_2 + \beta_3 \times x_3 + \varepsilon$ |
+| `y ~ -1 + x1 + x2 + x3`         | $y = \beta_1 \times x_1 + \beta_2 \times x_2 + \beta_3 \times x_3 + \varepsilon$ |
+| `y ~ log(x1) + x2 + x3`         | $y = \alpha + \beta_1 \times \ln{x_1} + \beta_2 \times x_2 + \beta_3 \times x_3 + \varepsilon$ |
+| `y ~ x1*x1 + x2 + x3`    | $y = \alpha + \beta_1 \times x_1 + \beta_2 \times x_1^2 + \beta_3 \times x_2 + \beta_4 \times x_3 + \varepsilon$ |
+| `y ~ x1:x1 + x2 + x3`    | $y = \alpha + \beta_1 \times x_1^2 + \beta_2 \times x_2 + \beta_3 \times x_3 + \varepsilon$ |
+| `y ~ x1 + x2*x3`           | $y = \alpha + \beta_1 \times x_1 + \beta_2 \times x_2 + \beta_3 \times x_3 + \beta_4 \times x_2 \times x_3 + \varepsilon$ |
+
+---
+
+layout: false
+
+# References
+
+```{r, results='asis', echo=FALSE}
+PrintBibliography(bib)
+```
