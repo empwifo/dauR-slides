@@ -682,7 +682,7 @@ class: middle
 
 - Nesting functions may reduce readability and comprehensiveness of your code
 
-- Example: Applying `stanardize()` over columns of `df` returns a matrix. We may want to coerce the resulting matrix back to a data frame using `as.data.frame()`
+- Example: Applying `standardize()` over columns of `df` returns a matrix. We may want to coerce the resulting matrix back to a data frame using `as.data.frame()`
 ]
 .pull-left[
 .panelset[
@@ -966,7 +966,7 @@ library(tidyverse)
 
 - Existing data structures are re-used whenever possible
 
-- Common data structures are **easier for users to get accustomed to** than than special-purpose structures
+- Common data structures are **easier for users to get accustomed to** than special-purpose structures
 
 - R is mainly for statistical programming: Many packages work with rectangular data with observations as rows and variables as columns &rarr; using the `base` R data structure for rectangular data
 
@@ -1047,7 +1047,7 @@ class: middle
 
 - Organize files in folders
 - Give concise and descriptive names to folders
-- Store script where only functions are defined in a folder called "R"
+- Store scripts where only functions are defined in a folder called "R"
 - Complex functions should be stored in separate files
 ]
 .pull-right[
