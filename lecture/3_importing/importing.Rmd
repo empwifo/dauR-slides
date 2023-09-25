@@ -1219,7 +1219,8 @@ write_csv(
 .pull-right[
 `append`
 
-If `FALSE`, the default, the existing will be overwritten. If `TRUE`, it will be appended to the existing file.
+- If `FALSE`, the default, the existing will be overwritten. 
+- If `TRUE`, it will be appended to the existing file.
 ]
 
 ---
