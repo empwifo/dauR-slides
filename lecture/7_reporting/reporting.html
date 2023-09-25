@@ -33,7 +33,7 @@ class: center, middle, inverse, title-slide
 ### Sven Werenbeck-Ueding
 ]
 .date[
-### 22.09.2023
+### 25.09.2023
 ]
 
 ---
@@ -47,13 +47,8 @@ class: center, middle, inverse, title-slide
 
 
 
-<<<<<<< HEAD
-<div id="htmlwidget-bf36191f45fe8832737a" style="width:100%;height:504px;" class="grViz html-widget"></div>
-<script type="application/json" data-for="htmlwidget-bf36191f45fe8832737a">{"x":{"diagram":"\n  digraph {\n    fontname=\"Helvetica,Arial,sans-serif\"\n\tnode [fontname=\"Helvetica,Arial,sans-serif\"]\n\tedge [fontname=\"Helvetica,Arial,sans-serif\"]\n    \n    rankdir=LR\n    \n    subgraph cluster_0 {\n        style = rounded\n        color = black\n    \n        {\n            node [style = rounded, shape = box]\n            Import -> Tidy\n        }\n    \n        subgraph cluster_1 {\n            style = rounded\n            color = black\n            \n            node [style = rounded, shape = box]\n            Transform Visualize Model\n            \n            edge []\n            Transform -> Visualize\n            Visualize -> Model\n            Model -> Transform\n            \n            label = \"Exploration\"\n            labeljust = \"l\"\n            labelloc = \"b\"\n        }\n    \n        {\n            node [style = rounded, shape = box]\n            Communicate\n        }\n    \n        Tidy -> Transform\n        Model -> Communicate [ltail = cluster_1]\n        \n        label = \"Programming\"\n        labeljust = \"l\"\n        labelloc = \"b\"\n    }\n  }\n  ","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
-=======
-<div id="htmlwidget-5d7912c50a9ca7f371e4" style="width:100%;height:504px;" class="grViz html-widget"></div>
-<script type="application/json" data-for="htmlwidget-5d7912c50a9ca7f371e4">{"x":{"diagram":"\n  digraph {\n    fontname=\"Helvetica,Arial,sans-serif\"\n\tnode [fontname=\"Helvetica,Arial,sans-serif\"]\n\tedge [fontname=\"Helvetica,Arial,sans-serif\"]\n    \n    rankdir=LR\n    \n    subgraph cluster_0 {\n        style = rounded\n        color = black\n    \n        {\n            node [style = rounded, shape = box]\n            Import -> Tidy\n        }\n    \n        subgraph cluster_1 {\n            style = rounded\n            color = black\n            \n            node [style = rounded, shape = box]\n            Transform Visualize Model\n            \n            edge []\n            Transform -> Visualize\n            Visualize -> Model\n            Model -> Transform\n            \n            label = \"Exploration\"\n            labeljust = \"l\"\n            labelloc = \"b\"\n        }\n    \n        {\n            node [style = rounded, shape = box]\n            Communicate\n        }\n    \n        Tidy -> Transform\n        Model -> Communicate [ltail = cluster_1]\n        \n        label = \"Programming\"\n        labeljust = \"l\"\n        labelloc = \"b\"\n    }\n  }\n  ","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
->>>>>>> d9f6a6537729e8a874296de5b1e156d69107ad38
+<div id="htmlwidget-736528f1fd9081d6c8ec" style="width:100%;height:504px;" class="grViz html-widget"></div>
+<script type="application/json" data-for="htmlwidget-736528f1fd9081d6c8ec">{"x":{"diagram":"\n  digraph {\n    fontname=\"Helvetica,Arial,sans-serif\"\n\tnode [fontname=\"Helvetica,Arial,sans-serif\"]\n\tedge [fontname=\"Helvetica,Arial,sans-serif\"]\n    \n    rankdir=LR\n    \n    subgraph cluster_0 {\n        style = rounded\n        color = black\n    \n        {\n            node [style = rounded, shape = box]\n            Import -> Tidy\n        }\n    \n        subgraph cluster_1 {\n            style = rounded\n            color = black\n            \n            node [style = rounded, shape = box]\n            Transform Visualize Model\n            \n            edge []\n            Transform -> Visualize\n            Visualize -> Model\n            Model -> Transform\n            \n            label = \"Exploration\"\n            labeljust = \"l\"\n            labelloc = \"b\"\n        }\n    \n        {\n            node [style = rounded, shape = box]\n            Communicate\n        }\n    \n        Tidy -> Transform\n        Model -> Communicate [ltail = cluster_1]\n        \n        label = \"Programming\"\n        labeljust = \"l\"\n        labelloc = \"b\"\n    }\n  }\n  ","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 
 .right[*Source:* &lt;a name=cite-r4ds&gt;&lt;/a&gt;[Wickham and Grolemund (2016)](https://r4ds.had.co.nz/)]
 
@@ -451,9 +446,9 @@ an empty line!
 
 ## Equations
 
-- Equations in inline math mode can be written by surrounding the equation by dollar signs (`$`), e. g. `$y_i=X_i\beta+\varepsilon_i$` renders to `\(y_i=X_i\beta+\varepsilon_i\)`
+- Equations in **inline math mode** can be written by surrounding the equation by dollar signs (`$`), e. g. `$y_i=X_i\beta+\varepsilon_i$` renders to `\(y_i=X_i\beta+\varepsilon_i\)`
 
-- Equations in display math mode can be written by surrounding the equation by two dollar signs (`$$`), e. g. surrounding the equation above with two dollar signs on each side renders to `$$y_i=X_i\beta+\varepsilon_i$$`
+- Equations in **display math mode** can be written by surrounding the equation by two dollar signs (`$$`), e. g. surrounding the equation above with two dollar signs on each side renders to `$$y_i=X_i\beta+\varepsilon_i$$`
 
 - For more information on how to write equations, see the documentation on mathematical expressions in LaTeX on [Overleaf](https://www.overleaf.com/learn/latex/Mathematical_expressions)
 
@@ -842,7 +837,7 @@ library(kableExtra)
   - `kable_styling()`
   - ...
 
-- Functions can be piped and usually support both HTMl and PDF format
+- Functions can be piped and usually support both HTML and PDF format
 
 - Replaced `kable()` with `kbl()` to generate the table (better documentation and format detection)
 
@@ -858,7 +853,7 @@ library(kableExtra)
 .panel[.panel-name[Task]
 Add further customization to the table created before using the `kableExtra` package. For this, add
 
-- a header to group the columns by their respective cylinder category and
+- a header to group the columns by their respective cylinder category, and
 
 - footnote below the table.
 
@@ -1141,7 +1136,7 @@ editor: source
 ## Adjusting Themes
 
 .pull-left[
-- Beamer themes are generally not that aesthetically pleasent
+- Beamer themes are generally not that aesthetically pleasant
 
 - You may want to tweak the colors of your chosen theme
 
