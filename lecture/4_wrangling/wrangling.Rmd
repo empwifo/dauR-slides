@@ -141,7 +141,7 @@ background-position: 90% 10%
 # `dplyr`
 
 > `dplyr` is a grammar of data manipulation, providing a consistent set of verbs that help you solve the most common data manipulation challenges:
-> - `mutate()` adds new variables that are functions of existing variables
+> - `mutate()` adds new variables that are functions of existing variables.
 > - `select()` picks variables based on their names.
 > - `filter()` picks cases based on their values.
 > - `summarise()` reduces multiple values down to a single summary.
@@ -802,11 +802,11 @@ class: middle
 
 - Data can be represented in many ways:
 
-  - Variables values may be spread over several columns, e. g. one colum for each year
+  - Variables values may be spread over several columns, e. g. one column for each year
   
   - Many variables may be stored in one column, e. g. `income` and `age` are stored in the same column `value` and another column specifies which variable the value in `value` corresponds to
   
-  - Observations may be spreach across columns
+  - Observations may be spread across columns
   
 --
   
@@ -1131,7 +1131,7 @@ class: middle
 ?dplyr::bind_cols
 ```
 
-- Efficient implementation of `base` R's `r`bind()` function that takes several data frames or a list of data frames as argument and returns a single column-binded data frame
+- Efficient implementation of `base` R's `r`bind() function that takes several data frames or a list of data frames as argument and returns a single column-binded data frame
 
 - Rows are matched by position &rarr; data frames have to be of the same length
 
