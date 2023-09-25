@@ -491,9 +491,9 @@ an empty line!
 
 ## Equations
 
-- Equations in inline math mode can be written by surrounding the equation by dollar signs (`$`), e. g. `$y_i=X_i\beta+\varepsilon_i$` renders to $y_i=X_i\beta+\varepsilon_i$
+- Equations in **inline math mode** can be written by surrounding the equation by dollar signs (`$`), e. g. `$y_i=X_i\beta+\varepsilon_i$` renders to $y_i=X_i\beta+\varepsilon_i$
 
-- Equations in display math mode can be written by surrounding the equation by two dollar signs (`$$`), e. g. surrounding the equation above with two dollar signs on each side renders to $$y_i=X_i\beta+\varepsilon_i$$
+- Equations in **display math mode** can be written by surrounding the equation by two dollar signs (`$$`), e. g. surrounding the equation above with two dollar signs on each side renders to $$y_i=X_i\beta+\varepsilon_i$$
 
 - For more information on how to write equations, see the documentation on mathematical expressions in LaTeX on [Overleaf](https://www.overleaf.com/learn/latex/Mathematical_expressions)
 
@@ -865,7 +865,7 @@ library(kableExtra)
   - `kable_styling()`
   - ...
 
-- Functions can be piped and usually support both HTMl and PDF format
+- Functions can be piped and usually support both HTML and PDF format
 
 - Replaced `kable()` with `kbl()` to generate the table (better documentation and format detection)
 
@@ -881,7 +881,7 @@ library(kableExtra)
 .panel[.panel-name[Task]
 Add further customization to the table created before using the `kableExtra` package. For this, add
 
-- a header to group the columns by their respective cylinder category and
+- a header to group the columns by their respective cylinder category, and
 
 - footnote below the table.
 
@@ -1109,7 +1109,7 @@ editor: source
 ## Adjusting Themes
 
 .pull-left[
-- Beamer themes are generally not that aesthetically pleasent
+- Beamer themes are generally not that aesthetically pleasant
 
 - You may want to tweak the colors of your chosen theme
 

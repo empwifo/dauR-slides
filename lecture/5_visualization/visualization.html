@@ -31,7 +31,7 @@ class: center, middle, inverse, title-slide
 ### Sven Werenbeck-Ueding
 ]
 .date[
-### 22.09.2023
+### 25.09.2023
 ]
 
 ---
@@ -45,8 +45,8 @@ class: center, middle, inverse, title-slide
 
 
 
-<div id="htmlwidget-c9374019751a4b096837" style="width:100%;height:504px;" class="grViz html-widget"></div>
-<script type="application/json" data-for="htmlwidget-c9374019751a4b096837">{"x":{"diagram":"\n  digraph {\n  graph [fontname=\"Helvetica,Arial,sans-serif\", compound = true]\n\tnode [fontname=\"Helvetica,Arial,sans-serif\"]\n\tedge [fontname=\"Helvetica,Arial,sans-serif\"]\n    \n    rankdir=LR\n    \n    subgraph cluster_0 {\n        style = rounded\n        color = black\n    \n        {\n            node [style = rounded, shape = box]\n            Import -> Tidy\n        }\n    \n        subgraph cluster_1 {\n            style = rounded\n            color = black\n            \n            node [style = rounded, shape = box]\n            Transform Visualize Model\n            \n            edge []\n            Transform -> Visualize\n            Visualize -> Model\n            Model -> Transform\n            \n            label = \"Exploration\"\n            labeljust = \"l\"\n            labelloc = \"b\"\n        }\n    \n        {\n            node [style = rounded, shape = box]\n            Communicate\n        }\n    \n        Tidy -> Transform [lhead = cluster_1]\n        Model -> Communicate [ltail = cluster_1]\n        \n        label = \"Programming\"\n        labeljust = \"l\"\n        labelloc = \"b\"\n    }\n  }\n  ","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-6d5579000b4228ee7cba" style="width:100%;height:504px;" class="grViz html-widget"></div>
+<script type="application/json" data-for="htmlwidget-6d5579000b4228ee7cba">{"x":{"diagram":"\n  digraph {\n  graph [fontname=\"Helvetica,Arial,sans-serif\", compound = true]\n\tnode [fontname=\"Helvetica,Arial,sans-serif\"]\n\tedge [fontname=\"Helvetica,Arial,sans-serif\"]\n    \n    rankdir=LR\n    \n    subgraph cluster_0 {\n        style = rounded\n        color = black\n    \n        {\n            node [style = rounded, shape = box]\n            Import -> Tidy\n        }\n    \n        subgraph cluster_1 {\n            style = rounded\n            color = black\n            \n            node [style = rounded, shape = box]\n            Transform Visualize Model\n            \n            edge []\n            Transform -> Visualize\n            Visualize -> Model\n            Model -> Transform\n            \n            label = \"Exploration\"\n            labeljust = \"l\"\n            labelloc = \"b\"\n        }\n    \n        {\n            node [style = rounded, shape = box]\n            Communicate\n        }\n    \n        Tidy -> Transform [lhead = cluster_1]\n        Model -> Communicate [ltail = cluster_1]\n        \n        label = \"Programming\"\n        labeljust = \"l\"\n        labelloc = \"b\"\n    }\n  }\n  ","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 
 .right[*Source:* &lt;a name=cite-r4ds&gt;&lt;/a&gt;[Wickham and Grolemund (2016)](https://r4ds.had.co.nz/)]
 
@@ -177,7 +177,7 @@ layout: true
 ---
 
 .pull-left[
-- Graphics template consists of seven parameters (in brackets)
+- Graphics template consists of seven parameters (in angle brackets)
 
 - *Any* plot can be generated from this template
 
@@ -274,7 +274,7 @@ ggplot(
 
 - Default list of aesthetic mappings to use for plotting
 
-- If not specified must be supplied in each layer added to the plot
+- If not specified, must be supplied in each layer added to the plot
 ]
 
 ---
@@ -1006,7 +1006,7 @@ Themes are used to modify non-data components of plots, such as titles, labels, 
 
 ## More Themes
 
-The `ggthemes` package offers more out-of-the-box themes. Have a look at e. g. the Stata theme:
+The `ggthemes` package offers more out-of-the-box themes. Have a look at the Stata theme, e.g.:
 
 &lt;img src="visualization_files/figure-html/unnamed-chunk-60-1.png" style="display: block; margin: auto;" /&gt;
 

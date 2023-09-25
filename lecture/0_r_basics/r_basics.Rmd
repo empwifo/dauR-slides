@@ -65,9 +65,9 @@ xaringan_to_pdf(
 #### Origin
 - `R` is based on the programming language `S` ('dialect of S'), which in turn is based on the core programming language `C`
 
-- First version published by **R**oss Ihaka and **R**obert Gentlemen in 1993 (Name is based on their first initials)
+- First version published by **R**oss Ihaka and **R**obert Gentlemen in 1993 (name is based on their first initials)
 
-- intention of `R`: creating an environment where one doesn't consciously think of programming
+- Intention of `R`: creating an environment where one doesn't consciously think of programming
 
 .right[`r Citet(bib, "rpaper")`]
 ]
@@ -90,7 +90,7 @@ xaringan_to_pdf(
 
 - Comprehensive R Archive Network (CRAN) is the main-platform for packages (extensions)
 
-- over 20,000 packages in 2021 (roughly 4,000 packages in 2013)
+- Over 20,000 packages in 2021 (roughly 4,000 packages in 2013)
 
 .right[`r Citet(bib, "rproject")`]
 ]
@@ -109,15 +109,15 @@ xaringan_to_pdf(
 
 .pull-right.long-width[
 #### Advantages/Strengths
-- free software
+- Free software
 
-- open-source: contributions from a large active and vibrant community (huge functionality)
+- Open-source: contributions from a large active and vibrant community (huge functionality)
 
-- great data visualization options
+- Great data visualization options
 
-- interfaces with many other languages (e.g. LaTeX, C, Markdown, Python, Java, HTML, CSS)
+- Interfaces with many other languages (e.g. LaTeX, C, Markdown, Python, Java, HTML, CSS)
 
-- runs on almost every platform (through `C++` even on the PlayStation)
+- Runs on almost every platform (through `C++` even on the PlayStation)
 
 .right[`r Citet(bib, "r4ds")`]
 ]
@@ -134,11 +134,11 @@ xaringan_to_pdf(
 
 .pull-right.long-width[
 #### Need additional help?
-- use the built-in help system in `R` (`help("...")` and `?`)
+- Use the built-in help system in `R` (`help("...")` and `?"..."`)
 
-- use online-forums like [Stack Overflow](https://stackoverflow.com/) or [GitHub](https://github.com/) (developers are active here as well)
+- Use online-forums like [Stack Overflow](https://stackoverflow.com/) or [GitHub](https://github.com/) (developers are active here as well)
 
-- use the documentation files provided on the official [`R`-Website](https://www.r-project.org/)  (manuals, FAQs, books)
+- Use the documentation files provided on the official [`R`-Website](https://www.r-project.org/)  (manuals, FAQs, books)
 
 ]
 

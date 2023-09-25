@@ -31,7 +31,7 @@ class: center, middle, inverse, title-slide
 ### Sven Werenbeck-Ueding
 ]
 .date[
-### 22.09.2023
+### 25.09.2023
 ]
 
 ---
@@ -45,8 +45,8 @@ class: center, middle, inverse, title-slide
 
 
 
-<div id="htmlwidget-61f492908899a8a96925" style="width:100%;height:504px;" class="grViz html-widget"></div>
-<script type="application/json" data-for="htmlwidget-61f492908899a8a96925">{"x":{"diagram":"\n  digraph {\n    fontname=\"Helvetica,Arial,sans-serif\"\n\tnode [fontname=\"Helvetica,Arial,sans-serif\"]\n\tedge [fontname=\"Helvetica,Arial,sans-serif\"]\n    \n    rankdir=LR\n    \n    subgraph cluster_0 {\n        style = rounded\n        color = black\n    \n        {\n            node [style = rounded, shape = box]\n            Import -> Tidy\n        }\n    \n        subgraph cluster_1 {\n            style = rounded\n            color = black\n            \n            node [style = rounded, shape = box]\n            Transform Visualize Model\n            \n            edge []\n            Transform -> Visualize\n            Visualize -> Model\n            Model -> Transform\n            \n            label = \"Exploration\"\n            labeljust = \"l\"\n            labelloc = \"b\"\n        }\n    \n        {\n            node [style = rounded, shape = box]\n            Communicate\n        }\n    \n        Tidy -> Transform\n        Model -> Communicate [ltail = cluster_1]\n        \n        label = \"Programming\"\n        labeljust = \"l\"\n        labelloc = \"b\"\n    }\n  }\n  ","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-84185564eef0f0112125" style="width:100%;height:504px;" class="grViz html-widget"></div>
+<script type="application/json" data-for="htmlwidget-84185564eef0f0112125">{"x":{"diagram":"\n  digraph {\n    fontname=\"Helvetica,Arial,sans-serif\"\n\tnode [fontname=\"Helvetica,Arial,sans-serif\"]\n\tedge [fontname=\"Helvetica,Arial,sans-serif\"]\n    \n    rankdir=LR\n    \n    subgraph cluster_0 {\n        style = rounded\n        color = black\n    \n        {\n            node [style = rounded, shape = box]\n            Import -> Tidy\n        }\n    \n        subgraph cluster_1 {\n            style = rounded\n            color = black\n            \n            node [style = rounded, shape = box]\n            Transform Visualize Model\n            \n            edge []\n            Transform -> Visualize\n            Visualize -> Model\n            Model -> Transform\n            \n            label = \"Exploration\"\n            labeljust = \"l\"\n            labelloc = \"b\"\n        }\n    \n        {\n            node [style = rounded, shape = box]\n            Communicate\n        }\n    \n        Tidy -> Transform\n        Model -> Communicate [ltail = cluster_1]\n        \n        label = \"Programming\"\n        labeljust = \"l\"\n        labelloc = \"b\"\n    }\n  }\n  ","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 
 .right[*Source:* &lt;a name=cite-r4ds&gt;&lt;/a&gt;[Wickham and Grolemund (2016)](https://r4ds.had.co.nz/)]
 
@@ -91,7 +91,7 @@ layout: false
 
 ## Example Data
 
-- Mexican survey data used in &lt;a name=cite-f20&gt;&lt;/a&gt;[Feigenberg (2020a)](https://www.aeaweb.org/articles?id=10.1257/app.20170231) and provided by &lt;a name=cite-f20data&gt;&lt;/a&gt;[Feigenberg (2020b)](#bib-f20data)
+- Mexican survey data used in &lt;a name=cite-f20&gt;&lt;/a&gt;[Feigenberg (2020a)](https://www.aeaweb.org/articles?id=10.1257/app.20170231) and provided by &lt;a name=cite-f20data&gt;&lt;/a&gt;[Feigenberg (2020b)](https://www.aeaweb.org/journals/dataset?id=10.1257/app.20170231)
 
   - Encuesta Nacional de Ocupación y Empleo (ENOE)
   - Q3 2003 to Q3 2013
@@ -1421,7 +1421,8 @@ write_csv(
 .pull-right[
 `append`
 
-If `FALSE`, the default, the existing will be overwritten. If `TRUE`, it will be appended to the existing file.
+- If `FALSE`, the default, the existing will be overwritten. 
+- If `TRUE`, it will be appended to the existing file.
 ]
 
 ---
@@ -1495,9 +1496,8 @@ _American Economic Journal: Applied Economics_ 12.3, pp. 106-39. DOI:
 
 &lt;a name=bib-f20data&gt;&lt;/a&gt;[Feigenberg, B.](#cite-f20data) (2020b).
 _Replication package for: Fenced Out: The Impact of Border Construction
-on US-Mexico Migration._
-&lt;https://www.aeaweb.org/journals/dataset?id=10.1257/app.20170231&gt;, Last
-accessed on 2022-12-29.
+on US-Mexico Migration._ American Economic Association. URL:
+[https://www.aeaweb.org/journals/dataset?id=10.1257/app.20170231](https://www.aeaweb.org/journals/dataset?id=10.1257/app.20170231).
 
 &lt;a name=bib-tibble&gt;&lt;/a&gt;[Müller, K. and H. Wickham](#cite-tibble)
 (2022). _tibble: Simple Data Frames_. https://tibble.tidyverse.org/,
