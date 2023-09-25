@@ -33,7 +33,7 @@ class: center, middle, inverse, title-slide
 ### Sven Werenbeck-Ueding
 ]
 .date[
-### 22.09.2023
+### 25.09.2023
 ]
 
 ---
@@ -47,8 +47,8 @@ class: center, middle, inverse, title-slide
 
 
 
-<div id="htmlwidget-76f3bb274dd34447c773" style="width:100%;height:504px;" class="grViz html-widget"></div>
-<script type="application/json" data-for="htmlwidget-76f3bb274dd34447c773">{"x":{"diagram":"\n  digraph {\n  graph [fontname=\"Helvetica,Arial,sans-serif\", compound = true]\n\tnode [fontname=\"Helvetica,Arial,sans-serif\"]\n\tedge [fontname=\"Helvetica,Arial,sans-serif\"]\n    \n    rankdir=LR\n    \n    subgraph cluster_0 {\n        style = rounded\n        color = black\n    \n        {\n            node [style = rounded, shape = box]\n            Import -> Tidy\n        }\n    \n        subgraph cluster_1 {\n            style = rounded\n            color = black\n            \n            node [style = rounded, shape = box]\n            Transform Visualize Model\n            \n            edge []\n            Transform -> Visualize\n            Visualize -> Model\n            Model -> Transform\n            \n            label = \"Exploration\"\n            labeljust = \"l\"\n            labelloc = \"b\"\n        }\n    \n        {\n            node [style = rounded, shape = box]\n            Communicate\n        }\n    \n        Tidy -> Transform [lhead = cluster_1]\n        Model -> Communicate [ltail = cluster_1]\n        \n        label = \"Programming\"\n        labeljust = \"l\"\n        labelloc = \"b\"\n    }\n  }\n  ","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-6cd11dae18224e42fbf2" style="width:100%;height:504px;" class="grViz html-widget"></div>
+<script type="application/json" data-for="htmlwidget-6cd11dae18224e42fbf2">{"x":{"diagram":"\n  digraph {\n  graph [fontname=\"Helvetica,Arial,sans-serif\", compound = true]\n\tnode [fontname=\"Helvetica,Arial,sans-serif\"]\n\tedge [fontname=\"Helvetica,Arial,sans-serif\"]\n    \n    rankdir=LR\n    \n    subgraph cluster_0 {\n        style = rounded\n        color = black\n    \n        {\n            node [style = rounded, shape = box]\n            Import -> Tidy\n        }\n    \n        subgraph cluster_1 {\n            style = rounded\n            color = black\n            \n            node [style = rounded, shape = box]\n            Transform Visualize Model\n            \n            edge []\n            Transform -> Visualize\n            Visualize -> Model\n            Model -> Transform\n            \n            label = \"Exploration\"\n            labeljust = \"l\"\n            labelloc = \"b\"\n        }\n    \n        {\n            node [style = rounded, shape = box]\n            Communicate\n        }\n    \n        Tidy -> Transform [lhead = cluster_1]\n        Model -> Communicate [ltail = cluster_1]\n        \n        label = \"Programming\"\n        labeljust = \"l\"\n        labelloc = \"b\"\n    }\n  }\n  ","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 
 .right[*Source:* &lt;a name=cite-r4ds&gt;&lt;/a&gt;[Wickham and Grolemund (2016)](https://r4ds.had.co.nz/)]
 
@@ -173,7 +173,7 @@ df_mig &lt;- read_csv("data/processed/fence_migration.csv")
 ]
 
 .pull-right.long-width[
-- For this course, a random 50% sample of the full sample was drawn from the data set provided by &lt;a name=cite-f20data&gt;&lt;/a&gt;[Feigenberg (2020b)](#bib-f20data)
+- For this course, a random 50% sample of the full sample was drawn from the data set provided by &lt;a name=cite-f20data&gt;&lt;/a&gt;[Feigenberg (2020b)](https://www.aeaweb.org/journals/dataset?id=10.1257/app.20170231)
 
 - Our results may differ
 ]
@@ -388,7 +388,7 @@ background-position: 90% 10%
 
 &gt; The goal of parsnip is to provide a tidy, unified interface to models that can be used to try a range of models without getting bogged down in the syntactical minutiae of the underlying packages.
 &gt;
-&gt; .right[&lt;a name=cite-parsnip&gt;&lt;/a&gt;[Kuhn and Vaughan (2022)](#bib-parsnip)]
+&gt; .right[&lt;a name=cite-parsnip&gt;&lt;/a&gt;[Kuhn and Vaughan (2022)](https://parsnip.tidymodels.org/)]
 
 ---
 
@@ -727,7 +727,7 @@ background-position: 90% 10%
 
 &gt; With recipes, you can use `dplyr`-like pipeable sequences of feature engineering steps to get your data ready for modeling.
 &gt;
-&gt; .right[&lt;a name=cite-recipes&gt;&lt;/a&gt;[Kuhn and Wickham (2022)](#bib-recipes)]
+&gt; .right[&lt;a name=cite-recipes&gt;&lt;/a&gt;[Kuhn and Wickham (2022)](https://recipes.tidymodels.org/)]
 
 ---
 
@@ -749,11 +749,11 @@ It defines:
 
 #### 1. Variables
 
-Data columns in a `data.frame` or `tbl`
+Data columns in a `data.frame` or `tbl`.
 
 #### 2. Roles
 
-Definition of how variable are used in a model, most commonly `outcome` or `response`
+Definition of how variable are used in a model, most commonly `outcome` or `response`.
 
 #### 3. Terms
 
@@ -862,10 +862,10 @@ step_*(
 | `step_dummy()` | Converts nominal data into numeric binary model terms. |
 | `step_log()` | Log transforms variables. |
 | `step_interact()` | Creates new columns for interaction terms between variables. Terms for which interactions should be created are passed to the `terms` argument using a formula containing interactions or selectors. |
-| `step_mutate()` | Adds variables using `dplyr::mutate()` |
-| `step_filter()` | Removes rows using `dplyr::filter()` |
-| `step_select()` | Selects variables using `dplyr::select()` |
-| `step_naomit()` | Removes rows containing `NA` or `NaN` |
+| `step_mutate()` | Adds variables using `dplyr::mutate()`. |
+| `step_filter()` | Removes rows using `dplyr::filter()`. |
+| `step_select()` | Selects variables using `dplyr::select()`. |
+| `step_naomit()` | Removes rows containing `NA` or `NaN`. |
 
 *Note:* See the [`recipes` reference](https://recipes.tidymodels.org/reference/index.html) for a complete overview of step functions included in the package.
 
@@ -1111,7 +1111,7 @@ msummary(
 .pull-right[
 `models`
 
-A model object, such as `lm`, or a (named) list of models
+A model object, such as `lm`, or a (named) list of models.
 ]
 
 ---
@@ -1422,9 +1422,8 @@ _American Economic Journal: Applied Economics_ 12.3, pp. 106-39. DOI:
 
 &lt;a name=bib-f20data&gt;&lt;/a&gt;[Feigenberg, B.](#cite-f20data) (2020b).
 _Replication package for: Fenced Out: The Impact of Border Construction
-on US-Mexico Migration._
-&lt;https://www.aeaweb.org/journals/dataset?id=10.1257/app.20170231&gt;, Last
-accessed on 2022-12-29.
+on US-Mexico Migration._ American Economic Association. URL:
+[https://www.aeaweb.org/journals/dataset?id=10.1257/app.20170231](https://www.aeaweb.org/journals/dataset?id=10.1257/app.20170231).
 
 &lt;a name=bib-ks22&gt;&lt;/a&gt;[Kuhn, M. and J. Silge](#cite-ks22) (2022). _Tidy
 Modeling with R. A Framework for Modeling in the Tidyverse_. O'Reilly.
@@ -1432,7 +1431,8 @@ URL: [https://www.tmwr.org/](https://www.tmwr.org/).
 
 &lt;a name=bib-parsnip&gt;&lt;/a&gt;[Kuhn, M. and D. Vaughan](#cite-parsnip)
 (2022). _parsnip: A Common API to Modeling and Analysis Functions_.
-https://parsnip.tidymodels.org/.
+URL:
+[https://parsnip.tidymodels.org/](https://parsnip.tidymodels.org/).
 
 &lt;a name=bib-tidymodels&gt;&lt;/a&gt;[Kuhn, M. and H. Wickham](#cite-tidymodels)
 (2020). _Tidymodels: a collection of packages for modeling and machine
@@ -1441,7 +1441,8 @@ learning using tidyverse principles._ URL:
 
 &lt;a name=bib-recipes&gt;&lt;/a&gt;[Kuhn, M. and H. Wickham](#cite-recipes)
 (2022). _recipes: Preprocessing and Feature Engineering Steps for
-Modeling_. https://recipes.tidymodels.org/.
+Modeling_. URL:
+[https://recipes.tidymodels.org/](https://recipes.tidymodels.org/).
 
 ---
 

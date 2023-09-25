@@ -762,11 +762,11 @@ It defines:
 
 #### 1. Variables
 
-Data columns in a `data.frame` or `tbl`
+Data columns in a `data.frame` or `tbl`.
 
 #### 2. Roles
 
-Definition of how variable are used in a model, most commonly `outcome` or `response`
+Definition of how variable are used in a model, most commonly `outcome` or `response`.
 
 #### 3. Terms
 
@@ -865,10 +865,10 @@ step_*(
 | `step_dummy()` | Converts nominal data into numeric binary model terms. |
 | `step_log()` | Log transforms variables. |
 | `step_interact()` | Creates new columns for interaction terms between variables. Terms for which interactions should be created are passed to the `terms` argument using a formula containing interactions or selectors. |
-| `step_mutate()` | Adds variables using `dplyr::mutate()` |
-| `step_filter()` | Removes rows using `dplyr::filter()` |
-| `step_select()` | Selects variables using `dplyr::select()` |
-| `step_naomit()` | Removes rows containing `NA` or `NaN` |
+| `step_mutate()` | Adds variables using `dplyr::mutate()`. |
+| `step_filter()` | Removes rows using `dplyr::filter()`. |
+| `step_select()` | Selects variables using `dplyr::select()`. |
+| `step_naomit()` | Removes rows containing `NA` or `NaN`. |
 
 *Note:* See the [`recipes` reference](https://recipes.tidymodels.org/reference/index.html) for a complete overview of step functions included in the package.
 
@@ -1074,7 +1074,7 @@ msummary(
 .pull-right[
 `models`
 
-A model object, such as `lm`, or a (named) list of models
+A model object, such as `lm`, or a (named) list of models.
 ]
 
 ---
