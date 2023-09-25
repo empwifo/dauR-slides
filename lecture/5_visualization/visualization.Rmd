@@ -270,7 +270,7 @@ layers_plot
 ---
 
 .pull-left[
-- Graphics template consists of seven parameters (in brackets)
+- Graphics template consists of seven parameters (in angle brackets)
 
 - *Any* plot can be generated from this template
 
@@ -362,7 +362,7 @@ ggplot(
 
 - Default list of aesthetic mappings to use for plotting
 
-- If not specified must be supplied in each layer added to the plot
+- If not specified, must be supplied in each layer added to the plot
 ]
 
 ---
@@ -1170,7 +1170,7 @@ layers_plot +
 
 ## More Themes
 
-The `ggthemes` package offers more out-of-the-box themes. Have a look at e. g. the Stata theme:
+The `ggthemes` package offers more out-of-the-box themes. Have a look at the Stata theme, e.g.:
 
 ```{r echo=FALSE, fig.align='center', fig.height=6, fig.width=8}
 layers_plot +
