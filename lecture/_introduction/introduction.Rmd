@@ -46,11 +46,11 @@ bib <- ReadBib(params$path_bib, check = FALSE)
 ```{r eval=TRUE, child = params$path_slides}
 ```
 
-```{r pdf, include = FALSE, eval=FALSE}
+```{r pdf, include = FALSE, eval=TRUE}
 source("https://git.io/xaringan2pdf")
 xaringan_to_pdf(
-  input = "_introduction.html",
-  output_file = "_introduction.pdf"
+  input = "introduction.html",
+  output_file = "introduction.pdf"
 )
 ```
 
@@ -61,8 +61,11 @@ xaringan_to_pdf(
 - Covers data analysis process from beginning to end:
   
   1. Importing and cleaning raw data
+  
   2. Exploratory data analysis and visualization
+  
   3. Formulating the empirical model
+  
   4. Communicating the results
 
 --
@@ -79,11 +82,11 @@ xaringan_to_pdf(
 
 ## Learning Outcomes
 
-By the end of the semester, you will be able to...
+By the end of the semester, you will...
 
 --
 
-.right[... conduct empirical projects on your own]
+.right[... be able to conduct empirical projects on your own]
 
 --
 
@@ -91,11 +94,11 @@ By the end of the semester, you will be able to...
 
 --
 
-.right[... use GitHub for version control of your code and collaboration]
+.right[... be able to use GitHub for version control of your code and collaboration]
 
 --
 
-.right[... create dynamic, technical reports using Quarto]
+.right[... be able to create dynamic, technical reports using Quarto]
 
 ---
 
@@ -105,6 +108,8 @@ By the end of the semester, you will be able to...
 
 .pull-left[
 #### Lecture
+
+- Class times: Wednesday, 14:00 &ndash; 18:00, GD 03/354
 
 - First half of the semester
 
@@ -122,9 +127,11 @@ By the end of the semester, you will be able to...
 
 - Working on an own data analysis project
   
-  - In groups of up to **TBD** students
+  - In groups of 2 or 3 students
   
-  - Presentation at the end of the semester
+  - Submission of course work on **30.01.2024**
+  
+  - Presentation of results on **31.01.2024**
   
 - Code repository and presentation count equally towards the final grade
 ]
@@ -211,7 +218,7 @@ grViz(
 
 ---
 
-## Relevant Literature
+## Main Literature
 
 `r NoCite(bib, "r4ds")`
 
@@ -229,8 +236,38 @@ PrintBibliography(bib)
 
 - Registration via Flexnow required!
   
-  - Registration period: **TBD** to **TBD**
+  - Registration period: **24.10.2023** to **07.11.2023**
   
   - *Note:* Registration has to be done before the group work starts
+  
+- Use the Moodle forum to form groups of 2 to 3 students yourselves
 
-- If you have questions: [sven.werenbeck-ueding@ruhr-uni-bochum.de](mailto:sven.werenbeck-ueding@ruhr-uni-bochum.de)
+--
+
+- After the registration period and when all groups are formed, the data will be provided to you via [sciebo](https://hochschulcloud.nrw/)
+
+  - Cloud service with 30GB storage
+
+  - Register via your RUB-mail (or any other mail from a higher education institution in NRW)
+  
+  - A folder containing the data will be shared with you
+  
+--
+  
+.pull-left.short-width[
+.big-emoji[`r emo::ji("warning")`]
+]
+
+.pull-right.lo-wi[
+#### **Do not store this data anywhere else than your own sciebo folder!**
+]
+
+---
+
+## Contact Information
+  
+  - Mail: [sven.werenbeck-ueding@ruhr-uni-bochum.de](mailto:sven.werenbeck-ueding@ruhr-uni-bochum.de)
+  
+  - Office: GD 03/367
+  
+  - Office hours: Please make an appointment via [email](mailto:sven.werenbeck-ueding@ruhr-uni-bochum.de) in advance

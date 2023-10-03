@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Data Analysis using R</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Sven Werenbeck-Ueding" />
+    <script src="assignment_files/header-attrs-2.20/header-attrs.js"></script>
+    <link href="assignment_files/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="assignment_files/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+    <link href="assignment_files/panelset-0.2.6/panelset.css" rel="stylesheet" />
+    <script src="assignment_files/panelset-0.2.6/panelset.js"></script>
+    <link href="assignment_files/tile-view-0.2.6/tile-view.css" rel="stylesheet" />
+    <script src="assignment_files/tile-view-0.2.6/tile-view.js"></script>
+    <script src="assignment_files/kePrint-0.0.1/kePrint.js"></script>
+    <link href="assignment_files/lightable-0.0.1/lightable.css" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Data Analysis using R
+]
+.subtitle[
+## Assignment
+]
+.author[
+### Sven Werenbeck-Ueding
+]
+.date[
+### 04.10.2023
+]
+
+---
+
+
+&lt;!-- Setup --&gt;
+
+
+
+
+
+
+
+## Course Work
+
+- For this course, you are tasked with conducting your empirical research in groups of 2 to 3 students
+
+- You will be creating your own GitHub repository where you will collaborate with your group members
+
+- The repository has to be submitted until 30.01.2024 and the results have to be presented on 31.01.2024
+
+- Code repository and presentation count equally towards the final grade
+
+- You will be analyzing real-world data provided by the RWI &amp;ndash; Leibniz Institute for Economic Research and the North Rhine-Westphalia Ministry of Schools and Education
+
+---
+
+## Timeline
+
+| Date                          |   |
+|-------------------------------|---|
+| 24.10.2023 &amp;ndash; 07.11.2023 | Register via Flexnow&lt;br/&gt;&lt;br/&gt;Form groups of 2 to 3 students (use the Moodle forum) |
+| today &amp;ndash; 08.11.2023      | Register on sciebo: https://hochschulcloud.nrw/&lt;br/&gt;&lt;br/&gt;Send an email to [sven.werenbeck-ueding@rub.de](mailto:sven.werenbeck-ueding@ruhr-uni-bochum.de) containing the members of your group with name, student ID and the email with which they registered on sciebo |
+| 09.11.2023                    | Copy the data from the shared sciebo folder to your own folder in sciebo and start working on your project by creating a GitHub repository dedicated to your project&lt;br/&gt;&lt;br/&gt;Add the GitHub user "swerenbeck" (that's me) as a collaborator to your GitHub repository |
+| 30.01.2024                    | Create a feature branch labelled "submission" to submit your repository and also submit your repository as a ZIP archive via email to [sven.werenbeck-ueding@rub.de](mailto:sven.werenbeck-ueding@ruhr-uni-bochum.de) |
+| 31.01.2024                    | Present your results in class |
+
+---
+
+## Assignment: Housing Prices and School Quality
+
+- Large number of studies find significant willingness-to-pay for living near better-performing schools, see e. g. the meta study by &lt;a name=cite-m11&gt;&lt;/a&gt;[Machin (2011)](https://www.sciencedirect.com/science/article/pii/S0927537111000601)
+
+  - School performance usually measured through average test scores
+  
+  - (Elementary) schools in the neighborhood are a deciding factor for parents when buying a home
+  
+  - Parents pay a mark-up to live near "better" schools with a good learning environment for their child ➡️ reflected in higher prices for these homes
+  
+--
+
+- In North Rhine-Westphalia, schools are assigned a school social index reflecting the social composition of a school's student body
+
+  - A bad score indicates that a school is confronted with severe challenges
+  
+  - Might indicate a less favorable learning environment for a child
+  
+  - Similar to the above example with average test scores, parents would likely choose to buy a home near schools with a better social school index ➡️ should be reflected in higher house/apartment prices
+
+---
+
+## School Social Index in NRW
+
+- The School Social Index is a school-specific social index for general public education schools (primary schools, secondary schools, i. e. *Hauptschule* and *Realschule*, comprehensive schools and grammar schools)
+
+- The index ranging from 1 (good) to 9 (bad) reflects the social composition of a school's student body and is taken into account in the distribution of resources
+
+--
+
+- The social composition of the pupils in the schools is mapped via the following four indicators:
+
+  1. Children and youth poverty: The social space indicator used is based on the density of the SGB II rate of minors in the estimated catchment area of primary schools.
+
+  2. Share of pupils with predominantly German family language
+
+  3. Share of pupils with migration background (first-generation immigrants)
+
+  4. Share of pupils with special needs (focus: learning, emotional and social development, speaking)
+  
+--
+
+*Note:* More information can be found [here](https://www.schulministerium.nrw/sozialindex) (unfortunately, only in German... 🙄)
+
+---
+
+## School Social Index in NRW
+
+&lt;table style="NAborder-bottom: 0;"&gt;
+ &lt;thead&gt;
+&lt;tr&gt;
+&lt;th style="empty-cells: hide;border-bottom:hidden;" colspan="1"&gt;&lt;/th&gt;
+&lt;th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="10"&gt;&lt;div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; "&gt;School social index&lt;/div&gt;&lt;/th&gt;
+&lt;th style="empty-cells: hide;border-bottom:hidden;" colspan="1"&gt;&lt;/th&gt;
+&lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; School type &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; 1 &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; 2 &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; 3 &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; 4 &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; 5 &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; 6 &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; 7 &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; 8 &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; 9 &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; w/o index &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Sum &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr grouplength="1"&gt;&lt;td colspan="12" style="border-bottom: 1px solid;"&gt;&lt;em&gt;Primary education&lt;/em&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;
+   &lt;td style="text-align:left;padding-left: 2em;" indentlevel="1"&gt; Elementary school &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 644 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 823 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 529 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 300 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 175 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 145 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 70 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 14 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 8 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2712 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr grouplength="5"&gt;&lt;td colspan="12" style="border-bottom: 1px solid;"&gt;&lt;em&gt;Secondary education&lt;/em&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;
+   &lt;td style="text-align:left;padding-left: 2em;" indentlevel="1"&gt; Secondary school (Hauptschule) &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 7 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 25 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 40 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 35 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 32 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 27 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 7 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 179 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;padding-left: 2em;" indentlevel="1"&gt; Secondary school (Realschule) &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 48 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 95 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 104 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 53 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 25 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; - &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; - &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 332 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;padding-left: 2em;" indentlevel="1"&gt; Secondary school &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 44 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 36 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 11 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; - &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; - &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; - &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 107 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;padding-left: 2em;" indentlevel="1"&gt; Comprehensive school &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 30 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 129 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 91 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 39 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 9 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 7 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; - &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; - &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 11 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 318 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;padding-left: 2em;" indentlevel="1"&gt; Grammar school &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 260 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 186 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 45 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 10 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; - &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; - &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; - &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 504 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;tfoot&gt;
+&lt;tr&gt;&lt;td style="padding: 0; " colspan="100%"&gt;&lt;span style="font-style: italic;"&gt;Note: &lt;/span&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td style="padding: 0; " colspan="100%"&gt;
+&lt;sup&gt;&lt;/sup&gt; School social indexes were calculated on the basis of the Official School Data 2018/2019. The data was taken from: https://www.schulministerium.nrw/sozialindex (last accessed on 03.10.2023).&lt;/td&gt;&lt;/tr&gt;
+&lt;/tfoot&gt;
+&lt;/table&gt;
+
+---
+
+## Valuing Amenities: Hedonic Pricing
+
+...
+
+---
+
+## Your Task
+
+...
+
+---
+
+## Housing Data
+
+- The *Research Data Center Ruhr* (FDZ Ruhr) publishes on a regular basis all residential properties advertised on the internet platform *ImmobilienScout24* that are offered for sale or rent
+
+- Datasets provide detailed information on housing attributes and location of these properties
+
+- You will be provided access to a campus file containing all advertisements from 2022
+
+#### Citation:
+
+RWI and ImmobilienScout24 (2023). RWI Real Estate Data - Campus File Cross-Section. Version: 1. RWI &amp;ndash; Leibniz Institute for Economic Research. Dataset. [doi.org/10.7807/immo:red:cross:v4](https://doi.org/10.7807/immo:red:cross:v4)
+
+---
+
+## School Data
+
+The provided data on schools contains the following data sets:
+
+- `school_data.csv`: Basic information on all schools in NRW
+
+  - School type
+  - Legal form
+  - ZIP code area
+  - District
+  - ...
+
+- `2022_social_index.csv`: Social school indexes per school for the year 2022
+
+- `number_pupils.xlsx`: Number of pupils/students per school
+
+- `keys.xlsx`: Labels for the keys `legal_form`, `district`, `school_operation` and `school_type` in the `school_data.csv` data set
+
+*Note:* The data was taken from the North Rhine-Westphalia Ministry of Schools and Education (https://www.schulministerium.nrw/open-data, last accessed on 03.10.2023)
+
+---
+
+## Data Access
+
+After the registration period and when all groups are formed, the data will be provided to you via [sciebo](https://hochschulcloud.nrw/):
+
+- Cloud service with 30GB storage
+
+- Register via your RUB-mail (or any other mail from a higher education institution in NRW)
+  
+- A folder containing the data will be shared with you
+
+--
+
+.pull-left.short-width[
+.big-emoji[⚠️]
+]
+
+.pull-right.lo-wi[
+#### **Don't store the data anywhere else than sciebo!**
+]
+
+---
+
+## Code Repository
+
+- GitHub repository containing **all** code and results
+
+- Collaborate in the repository with your group members
+
+- Use the features provided by GitHub:
+  
+  - Split your analysis in reasonable subtasks using GitHub issues
+  
+  - Work on feature branches to complete the tasks
+  
+  - Make use of commits and commit messages
+  
+  - Use pull requests to review each other's code
+
+- Follow the guidelines stated in the lecture(s)
+
+--
+
+.pull-left.short-width[
+.big-emoji[⚠️]
+]
+
+.pull-right.lo-wi[
+#### **Do not push the provided data to your code repository!**
+]
+
+---
+
+## Presentation
+
+- **15 min. presentation** followed by a **5 min. discussion**
+
+- Every group member has to contribute to the presentation to equal parts
+
+- Has to be created using [Quarto](https://quarto.org/) and submitted as PDF
+
+- Should give insights on
+
+  - Motivation, research question and contribution to the existing literature
+  
+  - Data used and empirical strategy
+  
+  - Main findings
+  
+  - Limitations of your approach
+  
+---
+
+## General Remarks on Presentation Structure
+
+--
+
+#### Introduction
+
+  - Introduce and motivate your topic
+  - What is your research question?
+  - What are the main findings of the related literature and how does your research contribute to it?
+
+--
+
+#### Data and Empirical Strategy
+
+  - What data do you use and how did you pre-process it? Were some observations omitted? If so, why?
+  - Which empirical strategy do you use to answer your research question? And why this approach?
+
+--
+
+#### Results
+
+  - What are the main findings?
+  - Are there heterogeneous effects?
+
+--
+
+#### Conclusion
+
+  - Summarize your findings and set them in the context of the existing literature
+  - State the limitations of your approach
+
+---
+
+## Submission
+
+**Deadline: 30.01.2024**
+
+.pull-left[
+#### Code Repository
+
+- GitHub repository for collaboration with your group members and containing **all** code and results of your group work (including the presentation as PDF)
+
+- Add "swerenbeck" (that's me) as a collaborator
+
+- Create a feature branch labelled "submission" which will be graded
+]
+
+.pull-right[
+#### Email
+
+- One email per group to [sven.werenbeck-ueding@rub.de](mailto:sven.werenbeck-ueding@rub.de)
+
+- Attach the whole repository from the feature branch "submission" as a ZIP archive and the presentation as PDF
+
+- To create a ZIP archive right-click with your mouse on the repository folder on your local machine and select "In ZIP-Datei komprimieren" / "Compress to ZIP file"
+]
+
+---
+
+# References
+
+&lt;a name=bib-m11&gt;&lt;/a&gt;[Machin, S.](#cite-m11) (2011). "Houses and
+schools: Valuation of school quality through the housing market". In:
+_Labour Economics_ 18 (6), pp. 723-729. DOI:
+[https://doi.org/10.1016/j.labeco.2011.05.005](https://doi.org/https%3A%2F%2Fdoi.org%2F10.1016%2Fj.labeco.2011.05.005).
+URL:
+[https://www.sciencedirect.com/science/article/pii/S0927537111000601](https://www.sciencedirect.com/science/article/pii/S0927537111000601).
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

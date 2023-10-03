@@ -1,0 +1,342 @@
+---
+title: "`r params$title`"
+subtitle: "`r params$subtitle`"
+author: "`r params$author`"
+date: "`r format(Sys.Date(), '%d.%m.%Y')`"
+output:
+  xaringan::moon_reader:
+    css: ["default", "default-fonts", "style.css"]
+    nature:
+      ratio: "16:9"
+      highlightLines: true
+      countIncrementalSlides: false
+params:
+  title: "Data Analysis using R"
+  subtitle: "Assignment"
+  author: "Sven Werenbeck-Ueding"
+  path_bib: "references.bib"
+  path_assets: "../../resources/assets/"
+  path_data: "../../data/"
+---
+
+<!-- Setup -->
+
+```{r setup, include=FALSE}
+#knitr::opts_chunk$set(echo = FALSE)
+
+library(tidyverse)
+library(fontawesome)
+library(DiagrammeR)
+library(RefManageR)
+library(kableExtra)
+
+# Theming
+xaringanExtra::use_panelset()
+xaringanExtra::use_tile_view() # Press o for overview in browser
+
+# Bibliography
+BibOptions(
+  check.entries = FALSE,
+  bib.style = "authoryear",
+  style = "markdown"
+)
+
+bib <- ReadBib(params$path_bib, check = FALSE)
+```
+
+```{r eval=TRUE, child = params$path_slides}
+```
+
+```{r pdf, include = FALSE, eval=FALSE}
+source("https://git.io/xaringan2pdf")
+xaringan_to_pdf(
+  input = "introduction.html",
+  output_file = "introduction.pdf"
+)
+```
+
+## Course Work
+
+- For this course, you are tasked with conducting your empirical research in groups of 2 to 3 students
+
+- You will be creating your own GitHub repository where you will collaborate with your group members
+
+- The repository has to be submitted until 30.01.2024 and the results have to be presented on 31.01.2024
+
+- Code repository and presentation count equally towards the final grade
+
+- You will be analyzing real-world data provided by the RWI &ndash; Leibniz Institute for Economic Research and the North Rhine-Westphalia Ministry of Schools and Education
+
+---
+
+## Timeline
+
+| Date                          |   |
+|-------------------------------|---|
+| 24.10.2023 &ndash; 07.11.2023 | Register via Flexnow<br/><br/>Form groups of 2 to 3 students (use the Moodle forum) |
+| today &ndash; 08.11.2023      | Register on sciebo: https://hochschulcloud.nrw/<br/><br/>Send an email to [sven.werenbeck-ueding@rub.de](mailto:sven.werenbeck-ueding@ruhr-uni-bochum.de) containing the members of your group with name, student ID and the email with which they registered on sciebo |
+| 09.11.2023                    | Copy the data from the shared sciebo folder to your own folder in sciebo and start working on your project by creating a GitHub repository dedicated to your project<br/><br/>Add the GitHub user "swerenbeck" (that's me) as a collaborator to your GitHub repository |
+| 30.01.2024                    | Create a feature branch labelled "submission" to submit your repository and also submit your repository as a ZIP archive via email to [sven.werenbeck-ueding@rub.de](mailto:sven.werenbeck-ueding@ruhr-uni-bochum.de) |
+| 31.01.2024                    | Present your results in class |
+
+---
+
+## Assignment: Housing Prices and School Quality
+
+- Large number of studies find significant willingness-to-pay for living near better-performing schools, see e. g. the meta study by `r Citet(bib, "m11")`
+
+  - School performance usually measured through average test scores
+  
+  - (Elementary) schools in the neighborhood are a deciding factor for parents when buying a home
+  
+  - Parents pay a mark-up to live near "better" schools with a good learning environment for their child `r emo::ji("right arrow")` reflected in higher prices for these homes
+  
+--
+
+- In North Rhine-Westphalia, schools are assigned a school social index reflecting the social composition of a school's student body
+
+  - A bad score indicates that a school is confronted with severe challenges
+  
+  - Might indicate a less favorable learning environment for a child
+  
+  - Similar to the above example with average test scores, parents would likely choose to buy a home near schools with a better social school index `r emo::ji("right arrow")` should be reflected in higher house/apartment prices
+
+---
+
+## School Social Index in NRW
+
+- The School Social Index is a school-specific social index for general public education schools (primary schools, secondary schools, i. e. *Hauptschule* and *Realschule*, comprehensive schools and grammar schools)
+
+- The index ranging from 1 (good) to 9 (bad) reflects the social composition of a school's student body and is taken into account in the distribution of resources
+
+--
+
+- The social composition of the pupils in the schools is mapped via the following four indicators:
+
+  1. Children and youth poverty: The social space indicator used is based on the density of the SGB II rate of minors in the estimated catchment area of primary schools.
+
+  2. Share of pupils with predominantly German family language
+
+  3. Share of pupils with migration background (first-generation immigrants)
+
+  4. Share of pupils with special needs (focus: learning, emotional and social development, speaking)
+  
+--
+
+*Note:* More information can be found [here](https://www.schulministerium.nrw/sozialindex) (unfortunately, only in German... `r emo::ji("face with rolling eyes")`)
+
+---
+
+## School Social Index in NRW
+
+```{r echo=FALSE}
+tribble(
+  ~ "School type", ~ "1", ~ "2", ~ "3", ~ "4", ~ "5", ~ "6", ~ "7", ~ "8", ~ "9", ~ "w/o index",
+  "Elementary school", 644, 823, 529, 300, 175, 145, 70, 14, 4, 8,
+  "Secondary school (Hauptschule)", 1, 7, 25, 40, 35, 32, 27, 7, 4, 1,
+  "Secondary school (Realschule)", 48, 95, 104, 53, 25, 3, 3, NA, NA, 1,
+  "Secondary school", 4, 44, 36, 11, 5, 2, NA, NA, NA, 5,
+  "Comprehensive school", 30, 129, 91, 39, 9, 7, 2, NA, NA, 11,
+  "Grammar school", 260, 186, 45, 10, 1, 1, 1, NA, NA, NA,
+) %>% 
+  mutate(
+    Sum = rowSums(across(where(is.numeric), ~ .), na.rm = T),
+    across(everything(), as.character),
+    across(everything(), ~ ifelse(is.na(.), "-", .))
+  ) %>% 
+  kbl(align = c("l", rep("r", 11))) %>% 
+  add_header_above(c(" " = 1, "School social index" = 10, " " = 1)) %>% 
+  pack_rows(
+    index = c("Primary education" = 1, "Secondary education" = 5),
+    bold = F, italic = T
+  ) %>% 
+  footnote("School social indexes were calculated on the basis of the Official School Data 2018/2019. The data was taken from: https://www.schulministerium.nrw/sozialindex (last accessed on 03.10.2023).")
+
+```
+
+---
+
+## Valuing Amenities: Hedonic Pricing
+
+...
+
+---
+
+## Your Task
+
+...
+
+---
+
+## Housing Data
+
+- The *Research Data Center Ruhr* (FDZ Ruhr) publishes on a regular basis all residential properties advertised on the internet platform *ImmobilienScout24* that are offered for sale or rent
+
+- Datasets provide detailed information on housing attributes and location of these properties
+
+- You will be provided access to a campus file containing all advertisements from 2022
+
+#### Citation:
+
+RWI and ImmobilienScout24 (2023). RWI Real Estate Data - Campus File Cross-Section. Version: 1. RWI &ndash; Leibniz Institute for Economic Research. Dataset. [doi.org/10.7807/immo:red:cross:v4](https://doi.org/10.7807/immo:red:cross:v4)
+
+---
+
+## School Data
+
+The provided data on schools contains the following data sets:
+
+- `school_data.csv`: Basic information on all schools in NRW
+
+  - School type
+  - Legal form
+  - ZIP code area
+  - District
+  - ...
+
+- `2022_social_index.csv`: Social school indexes per school for the year 2022
+
+- `number_pupils.xlsx`: Number of pupils/students per school
+
+- `keys.xlsx`: Labels for the keys `legal_form`, `district`, `school_operation` and `school_type` in the `school_data.csv` data set
+
+*Note:* The data was taken from the North Rhine-Westphalia Ministry of Schools and Education (https://www.schulministerium.nrw/open-data, last accessed on 03.10.2023)
+
+---
+
+## Data Access
+
+After the registration period and when all groups are formed, the data will be provided to you via [sciebo](https://hochschulcloud.nrw/):
+
+- Cloud service with 30GB storage
+
+- Register via your RUB-mail (or any other mail from a higher education institution in NRW)
+  
+- A folder containing the data will be shared with you
+
+--
+
+.pull-left.short-width[
+.big-emoji[`r emo::ji("warning")`]
+]
+
+.pull-right.lo-wi[
+#### **Don't store the data anywhere else than sciebo!**
+]
+
+---
+
+## Code Repository
+
+- GitHub repository containing **all** code and results
+
+- Collaborate in the repository with your group members
+
+- Use the features provided by GitHub:
+  
+  - Split your analysis in reasonable subtasks using GitHub issues
+  
+  - Work on feature branches to complete the tasks
+  
+  - Make use of commits and commit messages
+  
+  - Use pull requests to review each other's code
+
+- Follow the guidelines stated in the lecture(s)
+
+--
+
+.pull-left.short-width[
+.big-emoji[`r emo::ji("warning")`]
+]
+
+.pull-right.lo-wi[
+#### **Do not push the provided data to your code repository!**
+]
+
+---
+
+## Presentation
+
+- **15 min. presentation** followed by a **5 min. discussion**
+
+- Every group member has to contribute to the presentation to equal parts
+
+- Has to be created using [Quarto](https://quarto.org/) and submitted as PDF
+
+- Should give insights on
+
+  - Motivation, research question and contribution to the existing literature
+  
+  - Data used and empirical strategy
+  
+  - Main findings
+  
+  - Limitations of your approach
+  
+---
+
+## General Remarks on Presentation Structure
+
+--
+
+#### Introduction
+
+  - Introduce and motivate your topic
+  - What is your research question?
+  - What are the main findings of the related literature and how does your research contribute to it?
+
+--
+
+#### Data and Empirical Strategy
+
+  - What data do you use and how did you pre-process it? Were some observations omitted? If so, why?
+  - Which empirical strategy do you use to answer your research question? And why this approach?
+
+--
+
+#### Results
+
+  - What are the main findings?
+  - Are there heterogeneous effects?
+
+--
+
+#### Conclusion
+
+  - Summarize your findings and set them in the context of the existing literature
+  - State the limitations of your approach
+
+---
+
+## Submission
+
+**Deadline: 30.01.2024**
+
+.pull-left[
+#### Code Repository
+
+- GitHub repository for collaboration with your group members and containing **all** code and results of your group work (including the presentation as PDF)
+
+- Add "swerenbeck" (that's me) as a collaborator
+
+- Create a feature branch labelled "submission" which will be graded
+]
+
+.pull-right[
+#### Email
+
+- One email per group to [sven.werenbeck-ueding@rub.de](mailto:sven.werenbeck-ueding@rub.de)
+
+- Attach the whole repository from the feature branch "submission" as a ZIP archive and the presentation as PDF
+
+- To create a ZIP archive right-click with your mouse on the repository folder on your local machine and select "In ZIP-Datei komprimieren" / "Compress to ZIP file"
+]
+
+---
+
+# References
+
+```{r, results='asis', echo=FALSE}
+PrintBibliography(bib)
+```
