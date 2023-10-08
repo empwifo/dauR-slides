@@ -232,6 +232,16 @@ PrintBibliography(bib, start = 1, end = 2)
 
 ---
 
+## Contact Information
+
+- Mail: [sven.werenbeck-ueding@ruhr-uni-bochum.de](mailto:sven.werenbeck-ueding@ruhr-uni-bochum.de)
+  
+- Office: GD 03/367
+  
+- Office hours: Please make an appointment via [email](mailto:sven.werenbeck-ueding@ruhr-uni-bochum.de) in advance
+
+---
+
 class: middle
 
 # The Assignment
