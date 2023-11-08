@@ -4,14 +4,14 @@
     <title>Data Analysis using R</title>
     <meta charset="utf-8" />
     <meta name="author" content="Sven Werenbeck-Ueding" />
-    <script src="introduction_files/header-attrs-2.20/header-attrs.js"></script>
+    <script src="introduction_files/header-attrs-2.23.3/header-attrs.js"></script>
     <link href="introduction_files/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link href="introduction_files/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
     <link href="introduction_files/panelset-0.2.6/panelset.css" rel="stylesheet" />
     <script src="introduction_files/panelset-0.2.6/panelset.js"></script>
     <link href="introduction_files/tile-view-0.2.6/tile-view.css" rel="stylesheet" />
     <script src="introduction_files/tile-view-0.2.6/tile-view.js"></script>
-    <script src="introduction_files/htmlwidgets-1.6.1/htmlwidgets.js"></script>
+    <script src="introduction_files/htmlwidgets-1.5.4/htmlwidgets.js"></script>
     <script src="introduction_files/viz-1.8.2/viz.js"></script>
     <link href="introduction_files/DiagrammeR-styles-0.2/styles.css" rel="stylesheet" />
     <script src="introduction_files/grViz-binding-1.0.9/grViz.js"></script>
@@ -31,7 +31,7 @@ class: center, middle, inverse, title-slide
 ### Sven Werenbeck-Ueding
 ]
 .date[
-### 25.09.2023
+### 08.11.2023
 ]
 
 ---
@@ -133,7 +133,7 @@ By the end of the semester, you will be able to...
 | 3       | [Programming](https://data-analysis-using-r.netlify.app/lecture_htmls/programming) |
 | 4       | [Importing](https://data-analysis-using-r.netlify.app/lecture_htmls/importing) |
 | 5       | [Data Wrangling](https://data-analysis-using-r.netlify.app/lecture_htmls/wrangling) |
-| 6       | [Visualization](https://data-analysis-using-r.netlify.app/lecture_htmls/visaulization) |
+| 6       | [Visualization](https://data-analysis-using-r.netlify.app/lecture_htmls/visualization) |
 | 7       | [Modeling](https://data-analysis-using-r.netlify.app/lecture_htmls/modeling) |
 | 8       | [Reporting](https://data-analysis-using-r.netlify.app/lecture_htmls/reporting) |
 
@@ -141,8 +141,8 @@ By the end of the semester, you will be able to...
 
 .pull-right[
 
-<div class="grViz html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-9bd049870e199385cda9" style="width:504px;height:50%;"></div>
-<script type="application/json" data-for="htmlwidget-9bd049870e199385cda9">{"x":{"diagram":"\n  digraph {\n    fontname=\"Helvetica,Arial,sans-serif\"\n\tnode [fontname=\"Helvetica,Arial,sans-serif\"]\n\tedge [fontname=\"Helvetica,Arial,sans-serif\"]\n    \n    rankdir=LR\n    \n    subgraph cluster_0 {\n        style = rounded\n        color = black\n    \n        {\n            node [style = rounded, shape = box]\n            Import -> Tidy\n        }\n    \n        subgraph cluster_1 {\n            style = rounded\n            color = black\n            \n            node [style = rounded, shape = box]\n            Transform Visualize Model\n            \n            edge []\n            Transform -> Visualize\n            Visualize -> Model\n            Model -> Transform\n            \n            label = \"Exploration\"\n            labeljust = \"l\"\n            labelloc = \"b\"\n        }\n    \n        {\n            node [style = rounded, shape = box]\n            Communicate\n        }\n    \n        Tidy -> Transform\n        Model -> Communicate [ltail = cluster_1]\n        \n        label = \"Programming\"\n        labeljust = \"l\"\n        labelloc = \"b\"\n    }\n  }\n  ","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-c05eb7a51363841c9c8a" style="width:504px;height:50%;" class="grViz html-widget"></div>
+<script type="application/json" data-for="htmlwidget-c05eb7a51363841c9c8a">{"x":{"diagram":"\n  digraph {\n    fontname=\"Helvetica,Arial,sans-serif\"\n\tnode [fontname=\"Helvetica,Arial,sans-serif\"]\n\tedge [fontname=\"Helvetica,Arial,sans-serif\"]\n    \n    rankdir=LR\n    \n    subgraph cluster_0 {\n        style = rounded\n        color = black\n    \n        {\n            node [style = rounded, shape = box]\n            Import -> Tidy\n        }\n    \n        subgraph cluster_1 {\n            style = rounded\n            color = black\n            \n            node [style = rounded, shape = box]\n            Transform Visualize Model\n            \n            edge []\n            Transform -> Visualize\n            Visualize -> Model\n            Model -> Transform\n            \n            label = \"Exploration\"\n            labeljust = \"l\"\n            labelloc = \"b\"\n        }\n    \n        {\n            node [style = rounded, shape = box]\n            Communicate\n        }\n    \n        Tidy -> Transform\n        Model -> Communicate [ltail = cluster_1]\n        \n        label = \"Programming\"\n        labeljust = \"l\"\n        labelloc = \"b\"\n    }\n  }\n  ","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 
 .right[*Source:* &lt;a name=cite-r4ds&gt;&lt;/a&gt;[Wickham and Grolemund (2016)](https://r4ds.had.co.nz/)]
 

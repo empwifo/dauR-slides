@@ -142,7 +142,7 @@ By the end of the semester, you will be able to...
 | 3       | [Programming](https://data-analysis-using-r.netlify.app/lecture_htmls/programming) |
 | 4       | [Importing](https://data-analysis-using-r.netlify.app/lecture_htmls/importing) |
 | 5       | [Data Wrangling](https://data-analysis-using-r.netlify.app/lecture_htmls/wrangling) |
-| 6       | [Visualization](https://data-analysis-using-r.netlify.app/lecture_htmls/visaulization) |
+| 6       | [Visualization](https://data-analysis-using-r.netlify.app/lecture_htmls/visualization) |
 | 7       | [Modeling](https://data-analysis-using-r.netlify.app/lecture_htmls/modeling) |
 | 8       | [Reporting](https://data-analysis-using-r.netlify.app/lecture_htmls/reporting) |
 
