@@ -48,7 +48,8 @@ source("../../R/xaringan_to_pdf.R")
 
 xaringan_to_pdf(
   input = "wrangling.html",
-  output_file = "wrangling.pdf")
+  output_file = "wrangling.pdf"
+)
 ```
 
 ```{r echo=FALSE, out.width="100%", fig.align='center'}

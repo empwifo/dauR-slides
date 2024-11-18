@@ -51,7 +51,8 @@ source("../../R/xaringan_to_pdf.R")
 
 xaringan_to_pdf(
   input = "version_control.html",
-  output_file = "version_control.pdf")
+  output_file = "version_control.pdf"
+)
 ```
 
 ##  Introduction

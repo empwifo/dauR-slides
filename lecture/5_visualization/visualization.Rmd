@@ -51,7 +51,8 @@ source("../../R/xaringan_to_pdf.R")
 
 xaringan_to_pdf(
   input = "visualization.html",
-  output_file = "visualization.pdf")
+  output_file = "visualization.pdf"
+)
 ```
 
 ```{r echo=FALSE, out.width="100%", fig.align='center'}

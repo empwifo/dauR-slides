@@ -51,7 +51,8 @@ source("../../R/xaringan_to_pdf.R")
 
 xaringan_to_pdf(
   input = "programming.html",
-  output_file = "programming.pdf")
+  output_file = "programming.pdf"
+)
 ```
 
 ```{r echo=FALSE, out.width="100%", fig.align='center'}
