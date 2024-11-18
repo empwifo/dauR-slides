@@ -4,17 +4,17 @@
     <title>Data Analysis using R</title>
     <meta charset="utf-8" />
     <meta name="author" content="Sven Werenbeck-Ueding" />
-    <script src="importing_files/header-attrs-2.23.3/header-attrs.js"></script>
+    <script src="importing_files/header-attrs-2.25/header-attrs.js"></script>
     <link href="importing_files/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link href="importing_files/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
-    <link href="importing_files/panelset-0.2.6/panelset.css" rel="stylesheet" />
-    <script src="importing_files/panelset-0.2.6/panelset.js"></script>
+    <link href="importing_files/panelset-0.3.0/panelset.css" rel="stylesheet" />
+    <script src="importing_files/panelset-0.3.0/panelset.js"></script>
     <link href="importing_files/tile-view-0.2.6/tile-view.css" rel="stylesheet" />
     <script src="importing_files/tile-view-0.2.6/tile-view.js"></script>
-    <script src="importing_files/htmlwidgets-1.5.4/htmlwidgets.js"></script>
+    <script src="importing_files/htmlwidgets-1.6.4/htmlwidgets.js"></script>
     <script src="importing_files/viz-1.8.2/viz.js"></script>
     <link href="importing_files/DiagrammeR-styles-0.2/styles.css" rel="stylesheet" />
-    <script src="importing_files/grViz-binding-1.0.9/grViz.js"></script>
+    <script src="importing_files/grViz-binding-1.0.11/grViz.js"></script>
     <link rel="stylesheet" href="style.css" type="text/css" />
   </head>
   <body>
@@ -31,7 +31,7 @@ class: center, middle, inverse, title-slide
 ### Sven Werenbeck-Ueding
 ]
 .date[
-### 25.09.2023
+### 16.09.2024
 ]
 
 ---
@@ -45,8 +45,8 @@ class: center, middle, inverse, title-slide
 
 
 
-<div id="htmlwidget-84185564eef0f0112125" style="width:100%;height:504px;" class="grViz html-widget"></div>
-<script type="application/json" data-for="htmlwidget-84185564eef0f0112125">{"x":{"diagram":"\n  digraph {\n    fontname=\"Helvetica,Arial,sans-serif\"\n\tnode [fontname=\"Helvetica,Arial,sans-serif\"]\n\tedge [fontname=\"Helvetica,Arial,sans-serif\"]\n    \n    rankdir=LR\n    \n    subgraph cluster_0 {\n        style = rounded\n        color = black\n    \n        {\n            node [style = rounded, shape = box]\n            Import -> Tidy\n        }\n    \n        subgraph cluster_1 {\n            style = rounded\n            color = black\n            \n            node [style = rounded, shape = box]\n            Transform Visualize Model\n            \n            edge []\n            Transform -> Visualize\n            Visualize -> Model\n            Model -> Transform\n            \n            label = \"Exploration\"\n            labeljust = \"l\"\n            labelloc = \"b\"\n        }\n    \n        {\n            node [style = rounded, shape = box]\n            Communicate\n        }\n    \n        Tidy -> Transform\n        Model -> Communicate [ltail = cluster_1]\n        \n        label = \"Programming\"\n        labeljust = \"l\"\n        labelloc = \"b\"\n    }\n  }\n  ","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div class="grViz html-widget html-fill-item" id="htmlwidget-5eba35098ffb70e62b35" style="width:100%;height:504px;"></div>
+<script type="application/json" data-for="htmlwidget-5eba35098ffb70e62b35">{"x":{"diagram":"\n  digraph {\n    fontname=\"Helvetica,Arial,sans-serif\"\n\tnode [fontname=\"Helvetica,Arial,sans-serif\"]\n\tedge [fontname=\"Helvetica,Arial,sans-serif\"]\n    \n    rankdir=LR\n    \n    subgraph cluster_0 {\n        style = rounded\n        color = black\n    \n        {\n            node [style = rounded, shape = box]\n            Import -> Tidy\n        }\n    \n        subgraph cluster_1 {\n            style = rounded\n            color = black\n            \n            node [style = rounded, shape = box]\n            Transform Visualize Model\n            \n            edge []\n            Transform -> Visualize\n            Visualize -> Model\n            Model -> Transform\n            \n            label = \"Exploration\"\n            labeljust = \"l\"\n            labelloc = \"b\"\n        }\n    \n        {\n            node [style = rounded, shape = box]\n            Communicate\n        }\n    \n        Tidy -> Transform\n        Model -> Communicate [ltail = cluster_1]\n        \n        label = \"Programming\"\n        labeljust = \"l\"\n        labelloc = \"b\"\n    }\n  }\n  ","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 
 .right[*Source:* &lt;a name=cite-r4ds&gt;&lt;/a&gt;[Wickham and Grolemund (2016)](https://r4ds.had.co.nz/)]
 
@@ -423,20 +423,22 @@ read_excel("data/raw/enoe/enoe.xlsx")
 
 ```
 ## # A tibble: 165,460 × 12
-##    Encuesta …¹ ...2  ...3  ...4  ...5  ...6  ...7  ...8  ...9  ...10 ...11 ...12
-##    &lt;chr&gt;       &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;
-##  1 &lt;NA&gt;        &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt; 
-##  2 &lt;NA&gt;        &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt; 
-##  3 id          migr… age   muni… fence year  quar… sex   mari… empl… educ  inco…
-##  4 189889      No    50    2004  0     2004  Q3    Fema… Sing… Unem… 12    0    
-##  5 189889      No    50    2004  0     2004  Q4    Fema… Sing… Unem… 12    0    
-##  6 189889      No    50    2004  0     2005  Q1    Fema… Sing… Unem… 12    0    
-##  7 189890      No    26    2004  0     2005  Q4    Male  Marr… Full… 10    &lt;NA&gt; 
-##  8 189890      No    26    2004  0     2006  Q1    Male  Marr… Full… 10    &lt;NA&gt; 
-##  9 189890      No    26    2004  0     2006  Q2    Male  N/A   Full… 10    &lt;NA&gt; 
-## 10 189891      No    36    2004  0     2006  Q4    Male  Marr… Full… 6     3440 
-## # … with 165,450 more rows, and abbreviated variable name
+##    Encuesta Nacional de …¹ ...2  ...3  ...4  ...5  ...6  ...7  ...8  ...9  ...10
+##    &lt;chr&gt;                   &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;
+##  1 &lt;NA&gt;                    &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt; 
+##  2 &lt;NA&gt;                    &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt; 
+##  3 id                      migr… age   muni… fence year  quar… sex   mari… empl…
+##  4 189889                  No    50    2004  0     2004  Q3    Fema… Sing… Unem…
+##  5 189889                  No    50    2004  0     2004  Q4    Fema… Sing… Unem…
+##  6 189889                  No    50    2004  0     2005  Q1    Fema… Sing… Unem…
+##  7 189890                  No    26    2004  0     2005  Q4    Male  Marr… Full…
+##  8 189890                  No    26    2004  0     2006  Q1    Male  Marr… Full…
+##  9 189890                  No    26    2004  0     2006  Q2    Male  N/A   Full…
+## 10 189891                  No    36    2004  0     2006  Q4    Male  Marr… Full…
+## # ℹ 165,450 more rows
+## # ℹ abbreviated name:
 ## #   ¹​`Encuesta Nacional de Empleo/Encuesta Nacional de Ocupación y Empleo (Q3 2003 to Q3 2013`
+## # ℹ 2 more variables: ...11 &lt;chr&gt;, ...12 &lt;chr&gt;
 ```
 ]
 ]
@@ -514,20 +516,20 @@ read_excel("data/raw/enoe/enoe.xlsx",
 
 ```
 ## # A tibble: 165,457 × 12
-##    id     migrate age   munici…¹ fence year  quarter sex   marit…² empl_…³ educ 
-##    &lt;chr&gt;  &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;    &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;
-##  1 189889 No      50    2004     0     2004  Q3      Fema… Single  Unempl… 12   
-##  2 189889 No      50    2004     0     2004  Q4      Fema… Single  Unempl… 12   
-##  3 189889 No      50    2004     0     2005  Q1      Fema… Single  Unempl… 12   
-##  4 189890 No      26    2004     0     2005  Q4      Male  Married Full-t… 10   
-##  5 189890 No      26    2004     0     2006  Q1      Male  Married Full-t… 10   
-##  6 189890 No      26    2004     0     2006  Q2      Male  &lt;NA&gt;    Full-t… 10   
-##  7 189891 No      36    2004     0     2006  Q4      Male  Married Full-t… 6    
-##  8 189891 No      36    2004     0     2007  Q1      Male  Married Full-t… 6    
-##  9 189891 No      36    2004     0     2007  Q2      Male  Married Full-t… 6    
-## 10 189894 No      33    2004     1     2010  Q3      &lt;NA&gt;  Married Full-t… 9    
-## # … with 165,447 more rows, 1 more variable: income &lt;chr&gt;, and abbreviated
-## #   variable names ¹​municipality, ²​marital_status, ³​empl_status
+##    id     migrate age   municipality fence year  quarter sex    marital_status
+##    &lt;chr&gt;  &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;        &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;  &lt;chr&gt;         
+##  1 189889 No      50    2004         0     2004  Q3      Female Single        
+##  2 189889 No      50    2004         0     2004  Q4      Female Single        
+##  3 189889 No      50    2004         0     2005  Q1      Female Single        
+##  4 189890 No      26    2004         0     2005  Q4      Male   Married       
+##  5 189890 No      26    2004         0     2006  Q1      Male   Married       
+##  6 189890 No      26    2004         0     2006  Q2      Male   &lt;NA&gt;          
+##  7 189891 No      36    2004         0     2006  Q4      Male   Married       
+##  8 189891 No      36    2004         0     2007  Q1      Male   Married       
+##  9 189891 No      36    2004         0     2007  Q2      Male   Married       
+## 10 189894 No      33    2004         1     2010  Q3      &lt;NA&gt;   Married       
+## # ℹ 165,447 more rows
+## # ℹ 3 more variables: empl_status &lt;chr&gt;, educ &lt;chr&gt;, income &lt;chr&gt;
 ```
 ]
 ]
@@ -811,20 +813,22 @@ read_csv("data/raw/enoe/enoe.csv")
 
 ```
 ## # A tibble: 165,460 × 12
-##    Encuesta …¹ ...2  ...3  ...4  ...5  ...6  ...7  ...8  ...9  ...10 ...11 ...12
-##          &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;
-##  1          NA &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt; 
-##  2          NA &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt; 
-##  3          NA migr… age   muni… fence year  quar… sex   mari… empl… educ  inco…
-##  4      189889 No    50    2004  0     2004  Q3    Fema… Sing… Unem… 12    0    
-##  5      189889 No    50    2004  0     2004  Q4    Fema… Sing… Unem… 12    0    
-##  6      189889 No    50    2004  0     2005  Q1    Fema… Sing… Unem… 12    0    
-##  7      189890 No    26    2004  0     2005  Q4    Male  Marr… Full… 10    &lt;NA&gt; 
-##  8      189890 No    26    2004  0     2006  Q1    Male  Marr… Full… 10    &lt;NA&gt; 
-##  9      189890 No    26    2004  0     2006  Q2    Male  N/A   Full… 10    &lt;NA&gt; 
-## 10      189891 No    36    2004  0     2006  Q4    Male  Marr… Full… 6     3440 
-## # … with 165,450 more rows, and abbreviated variable name
+##    Encuesta Nacional de …¹ ...2  ...3  ...4  ...5  ...6  ...7  ...8  ...9  ...10
+##                      &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;
+##  1                      NA &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt; 
+##  2                      NA &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt; 
+##  3                      NA migr… age   muni… fence year  quar… sex   mari… empl…
+##  4                  189889 No    50    2004  0     2004  Q3    Fema… Sing… Unem…
+##  5                  189889 No    50    2004  0     2004  Q4    Fema… Sing… Unem…
+##  6                  189889 No    50    2004  0     2005  Q1    Fema… Sing… Unem…
+##  7                  189890 No    26    2004  0     2005  Q4    Male  Marr… Full…
+##  8                  189890 No    26    2004  0     2006  Q1    Male  Marr… Full…
+##  9                  189890 No    26    2004  0     2006  Q2    Male  N/A   Full…
+## 10                  189891 No    36    2004  0     2006  Q4    Male  Marr… Full…
+## # ℹ 165,450 more rows
+## # ℹ abbreviated name:
 ## #   ¹​`Encuesta Nacional de Empleo/Encuesta Nacional de Ocupación y Empleo (Q3 2003 to Q3 2013`
+## # ℹ 2 more variables: ...11 &lt;chr&gt;, ...12 &lt;chr&gt;
 ```
 ]
 ]
@@ -877,20 +881,20 @@ read_csv("data/raw/enoe/enoe.csv",
 
 ```
 ## # A tibble: 165,457 × 12
-##        id migrate age   munici…¹ fence year  quarter sex   marit…² empl_…³ educ 
-##     &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;    &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;
-##  1 189889 No      50    2004     0     2004  Q3      Fema… Single  Unempl… 12   
-##  2 189889 No      50    2004     0     2004  Q4      Fema… Single  Unempl… 12   
-##  3 189889 No      50    2004     0     2005  Q1      Fema… Single  Unempl… 12   
-##  4 189890 No      26    2004     0     2005  Q4      Male  Married Full-t… 10   
-##  5 189890 No      26    2004     0     2006  Q1      Male  Married Full-t… 10   
-##  6 189890 No      26    2004     0     2006  Q2      Male  &lt;NA&gt;    Full-t… 10   
-##  7 189891 No      36    2004     0     2006  Q4      Male  Married Full-t… 6    
-##  8 189891 No      36    2004     0     2007  Q1      Male  Married Full-t… 6    
-##  9 189891 No      36    2004     0     2007  Q2      Male  Married Full-t… 6    
-## 10 189894 No      33    2004     1     2010  Q3      NA    Married Full-t… 9    
-## # … with 165,447 more rows, 1 more variable: income &lt;chr&gt;, and abbreviated
-## #   variable names ¹​municipality, ²​marital_status, ³​empl_status
+##        id migrate age   municipality fence year  quarter sex    marital_status
+##     &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;        &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;  &lt;chr&gt;         
+##  1 189889 No      50    2004         0     2004  Q3      Female Single        
+##  2 189889 No      50    2004         0     2004  Q4      Female Single        
+##  3 189889 No      50    2004         0     2005  Q1      Female Single        
+##  4 189890 No      26    2004         0     2005  Q4      Male   Married       
+##  5 189890 No      26    2004         0     2006  Q1      Male   Married       
+##  6 189890 No      26    2004         0     2006  Q2      Male   &lt;NA&gt;          
+##  7 189891 No      36    2004         0     2006  Q4      Male   Married       
+##  8 189891 No      36    2004         0     2007  Q1      Male   Married       
+##  9 189891 No      36    2004         0     2007  Q2      Male   Married       
+## 10 189894 No      33    2004         1     2010  Q3      NA     Married       
+## # ℹ 165,447 more rows
+## # ℹ 3 more variables: empl_status &lt;chr&gt;, educ &lt;chr&gt;, income &lt;chr&gt;
 ```
 ]
 ]

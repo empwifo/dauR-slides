@@ -4,17 +4,17 @@
     <title>Data Analysis using R</title>
     <meta charset="utf-8" />
     <meta name="author" content="Sven Werenbeck-Ueding" />
-    <script src="intro_assignment_files/header-attrs-2.23.3/header-attrs.js"></script>
+    <script src="intro_assignment_files/header-attrs-2.25/header-attrs.js"></script>
     <link href="intro_assignment_files/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link href="intro_assignment_files/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
-    <link href="intro_assignment_files/panelset-0.2.6/panelset.css" rel="stylesheet" />
-    <script src="intro_assignment_files/panelset-0.2.6/panelset.js"></script>
+    <link href="intro_assignment_files/panelset-0.3.0/panelset.css" rel="stylesheet" />
+    <script src="intro_assignment_files/panelset-0.3.0/panelset.js"></script>
     <link href="intro_assignment_files/tile-view-0.2.6/tile-view.css" rel="stylesheet" />
     <script src="intro_assignment_files/tile-view-0.2.6/tile-view.js"></script>
-    <script src="intro_assignment_files/htmlwidgets-1.5.4/htmlwidgets.js"></script>
+    <script src="intro_assignment_files/htmlwidgets-1.6.4/htmlwidgets.js"></script>
     <script src="intro_assignment_files/viz-1.8.2/viz.js"></script>
     <link href="intro_assignment_files/DiagrammeR-styles-0.2/styles.css" rel="stylesheet" />
-    <script src="intro_assignment_files/grViz-binding-1.0.9/grViz.js"></script>
+    <script src="intro_assignment_files/grViz-binding-1.0.11/grViz.js"></script>
     <script src="intro_assignment_files/kePrint-0.0.1/kePrint.js"></script>
     <link href="intro_assignment_files/lightable-0.0.1/lightable.css" rel="stylesheet" />
     <link rel="stylesheet" href="style.css" type="text/css" />
@@ -33,7 +33,7 @@ class: center, middle, inverse, title-slide
 ### Sven Werenbeck-Ueding
 ]
 .date[
-### 08.11.2023
+### 16.09.2024
 ]
 
 ---
@@ -122,9 +122,11 @@ By the end of the semester, you will...
   
   - In groups of 2 or 3 students
   
-  - Submission of course work on **30.01.2024**
+  - Presentation of outlines on **04.12.2024**
   
-  - Presentation of results on **31.01.2024**
+  - Submission of course work on **28.01.2025**
+  
+  - Presentation of results on **29.01.2025**
   
 - Code repository and presentation count equally towards the final grade
 ]
@@ -150,8 +152,8 @@ By the end of the semester, you will...
 
 .pull-right[
 
-<div id="htmlwidget-e5e8ed242ed61756ecc6" style="width:504px;height:50%;" class="grViz html-widget"></div>
-<script type="application/json" data-for="htmlwidget-e5e8ed242ed61756ecc6">{"x":{"diagram":"\n  digraph {\n    fontname=\"Helvetica,Arial,sans-serif\"\n\tnode [fontname=\"Helvetica,Arial,sans-serif\"]\n\tedge [fontname=\"Helvetica,Arial,sans-serif\"]\n    \n    rankdir=LR\n    \n    subgraph cluster_0 {\n        style = rounded\n        color = black\n    \n        {\n            node [style = rounded, shape = box]\n            Import -> Tidy\n        }\n    \n        subgraph cluster_1 {\n            style = rounded\n            color = black\n            \n            node [style = rounded, shape = box]\n            Transform Visualize Model\n            \n            edge []\n            Transform -> Visualize\n            Visualize -> Model\n            Model -> Transform\n            \n            label = \"Exploration\"\n            labeljust = \"l\"\n            labelloc = \"b\"\n        }\n    \n        {\n            node [style = rounded, shape = box]\n            Communicate\n        }\n    \n        Tidy -> Transform\n        Model -> Communicate [ltail = cluster_1]\n        \n        label = \"Programming\"\n        labeljust = \"l\"\n        labelloc = \"b\"\n    }\n  }\n  ","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div class="grViz html-widget html-fill-item" id="htmlwidget-0b23b65afd3e4c49cdfd" style="width:504px;height:50%;"></div>
+<script type="application/json" data-for="htmlwidget-0b23b65afd3e4c49cdfd">{"x":{"diagram":"\n  digraph {\n    fontname=\"Helvetica,Arial,sans-serif\"\n\tnode [fontname=\"Helvetica,Arial,sans-serif\"]\n\tedge [fontname=\"Helvetica,Arial,sans-serif\"]\n    \n    rankdir=LR\n    \n    subgraph cluster_0 {\n        style = rounded\n        color = black\n    \n        {\n            node [style = rounded, shape = box]\n            Import -> Tidy\n        }\n    \n        subgraph cluster_1 {\n            style = rounded\n            color = black\n            \n            node [style = rounded, shape = box]\n            Transform Visualize Model\n            \n            edge []\n            Transform -> Visualize\n            Visualize -> Model\n            Model -> Transform\n            \n            label = \"Exploration\"\n            labeljust = \"l\"\n            labelloc = \"b\"\n        }\n    \n        {\n            node [style = rounded, shape = box]\n            Communicate\n        }\n    \n        Tidy -> Transform\n        Model -> Communicate [ltail = cluster_1]\n        \n        label = \"Programming\"\n        labeljust = \"l\"\n        labelloc = \"b\"\n    }\n  }\n  ","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 
 .right[*Source:* &lt;a name=cite-r4ds&gt;&lt;/a&gt;[Wickham and Grolemund (2016)](https://r4ds.had.co.nz/)]
 
@@ -273,7 +275,7 @@ Hedonic price functions are usually estimated using a log-linear functional form
 ]
 
 .pull-right.lo-wi[
-`\(\hat{\beta}\)` and `\(\hat{\gamma}\)` give a vectors of estimated implicit prices for structural and neighborhood characteristics under the c. p. condition
+`\(\hat{\beta}\)` and `\(\hat{\gamma}\)` give vectors of estimated implicit prices for structural and neighborhood characteristics under the c. p. condition
 ]
 
 ---
@@ -290,7 +292,7 @@ Hedonic price functions are usually estimated using a log-linear functional form
   
   - Bad learning environment probably outweighs the additional resources
   
-- Similar to the example with average test scores, parents would likely choose to buy a home near schools with a better social school index
+- Similar to the example with average test scores, parents would likely choose to buy a home near schools with a better school social index
 
 --
 
@@ -486,11 +488,30 @@ Neighborhoods with "better" schools may attract more parents, resulting in highe
 
 | Date                          |   |
 |-------------------------------|---|
-| 24.10.2023 &amp;ndash; 07.11.2023 | Register via Flexnow&lt;br/&gt;&lt;br/&gt;Form groups of 2 to 3 students (use the Moodle forum) |
-| today &amp;ndash; 08.11.2023      | Register on sciebo: https://hochschulcloud.nrw/&lt;br/&gt;&lt;br/&gt;Send an email to [sven.werenbeck-ueding@rub.de](mailto:sven.werenbeck-ueding@ruhr-uni-bochum.de) containing the members of your group with name, student ID and the email with which they registered on sciebo |
-| 09.11.2023                    | Copy the data from the shared sciebo folder to your own folder in sciebo and start working on your project by creating a GitHub repository dedicated to your project&lt;br/&gt;&lt;br/&gt;Add the GitHub user "swerenbeck" (that's me) as a collaborator to your GitHub repository |
-| 30.01.2024                    | Create a feature branch labelled "submission" to submit your repository and also submit your repository as a ZIP archive via email to [sven.werenbeck-ueding@rub.de](mailto:sven.werenbeck-ueding@ruhr-uni-bochum.de) |
-| 31.01.2024                    | Present your results in class |
+| 16.10.2024 &amp;ndash; 30.10.2024 | Register via Flexnow&lt;br/&gt;&lt;br/&gt;Form groups of 2 to 3 students (use the Moodle forum) |
+| today &amp;ndash; 31.10.2024      | Register on sciebo: https://hochschulcloud.nrw/&lt;br/&gt;&lt;br/&gt;Send an email to [sven.werenbeck-ueding@rub.de](mailto:sven.werenbeck-ueding@ruhr-uni-bochum.de) containing the members of your group with name, student ID and the email with which they registered on sciebo |
+| 04.11.2024                    | Copy the data from the shared sciebo folder to your own folder in sciebo and start working on your project by creating a GitHub repository dedicated to your project&lt;br/&gt;&lt;br/&gt;Add the GitHub user "Solaire-patch" (that's me) as a collaborator to your GitHub repository |
+| 04.12.2025                    | Present an outline of your project |
+| 28.01.2025                    | Create a feature branch labelled "submission" to submit your repository and also submit your repository as a ZIP archive via email to [sven.werenbeck-ueding@rub.de](mailto:sven.werenbeck-ueding@ruhr-uni-bochum.de) |
+| 29.01.2025                    | Present your results in class |
+
+---
+
+## Presentation of Project Outlines
+
+- **5 to 10 min.** presentation of your research idea
+  
+  - What is your research question?
+  - How do you motivate your research question?
+  - What are key insights from related literature?
+
+- Provide an overview of your empirical strategy
+
+  - What data will you use and how are you processing the data?
+  - What is your empirical model?
+  - Are there issues with your empirical strategy?
+  
+- Presentation on **04.12.2024**
 
 ---
 
@@ -579,7 +600,7 @@ Neighborhoods with "better" schools may attract more parents, resulting in highe
 
 ## Submission
 
-**Deadline: 30.01.2024**
+**Deadline: 28.01.2025**
 
 .pull-left[
 #### Code Repository
@@ -628,19 +649,15 @@ RWI and ImmobilienScout24 (2023). RWI Real Estate Data - Campus File Cross-Secti
 The provided data on schools contains the following data sets:
 
 - `school_data.csv`: Basic information on all schools in NRW
-
   - School type
   - Legal form
   - ZIP code area
   - District
   - ...
-
 - `2022_social_index.csv`: Social school indexes per school for the year 2022
-
 - `number_pupils.xlsx`: Number of pupils/students per school
-
 - `keys.xlsx`: Labels for the keys `legal_form`, `district`, `school_operation` and `school_type` in the `school_data.csv` data set
-
+- `distance_to_schools.csv`: Distance between a square kilometer grid cell's centroid and the first as well as second nearest school (for each school type)
 - `plz_AGS.csv`: Mapping between ZIP codes and the AGS (*Allgemeinder Gemeindeschlüssel*, municipality code)
 
 *Note:* The data was taken from the North Rhine-Westphalia Ministry of Schools and Education (https://www.schulministerium.nrw/open-data, last accessed on 03.10.2023)
@@ -649,25 +666,18 @@ The provided data on schools contains the following data sets:
 
 ## Regional Data
 
-- The data set `region_data.csv` contains demographics on municipality-level in NRW (*Gemeinde*):
+The data set `region_data.csv` contains demographics on municipality-level in NRW (*Gemeinde*):
 
-  - `munic_name`, `AGS`: Name and code of the municipality
-
-  - `population`: Population count
+- `munic_name`, `AGS`: Name and code of the municipality
+- `population`: Population count
+- `work_age_population`: Working age population count (16 to 65 years old)
+- `unemployed`: Number of unemployed
+- `low_income_hh`, `middle_income_hh`, `high_income_hh`: Share of low (&lt; 1.500€ per month), middle (between 1.500€ and 3.600€ per month) and high (&gt; 3.600€ per month) income households
+- `population_density`: Population density (inhabitants per `\(km^2\)`)
+- `migrants`: Number of migrants
+- `region_type`: Region type, i. e. urban (metropolitan), urban (regiopolitan), rural (close to city region) or rural (peripheral)
   
-  - `work_age_population`: Working age population count (16 to 65 years old)
-  
-  - `unemployed`: Number of unemployed
-  
-  - `low_income_hh`, `middle_income_hh`, `high_income_hh`: Share of low (&lt; 1.500€ per month), middle (between 1.500€ and 3.600€ per month) and high (&gt; 3.600€ per month) income households
-  
-  - `population_density`: Population density (inhabitants per `\(km^2\)`)
-  
-  - `migrants`: Number of migrants
-  
-  - `region_type`: Region type, i. e. urban (metropolitan), urban (regiopolitan), rural (close to city region) or rural (peripheral)
-  
-*Note:* The number of migrants was taken from the regional database of the [Federal Statistical Office](https://www.regionalstatistik.de/genesis/online/logon) and is based on the 2011 census and the rest of the data was obtained from [INKAR](https://www.inkar.de/) is from 31.12.2020
+*Note:* The number of migrants was taken from the regional database of the [Federal Statistical Office](https://www.regionalstatistik.de/genesis/online/logon) and is based on the 2011 census and the rest of the data was obtained from [INKAR](https://www.inkar.de/) and is from 31.12.2020
 
 ---
 
@@ -708,20 +718,6 @@ Not controlling for socio-economic indicators will confound your estimates for t
 ⚠️ These indicators are not available to you on the lowest regional aggregation level of schools (ZIP code areas)
 
 ⚠️ You may not be able to control for the location of a dwelling inside a region
-
----
-
-You will have to use the SSI on an aggregate level on which you can also control for the socio-economic indicators to entangle the effect of a region's average school quality from its local economic condition, such that `$$\ln p_{itr}=S_{it}\beta+N_{r}\gamma+\tau_t+\rho_r+\varepsilon_{it},$$` where `\(N_r\)` are region-specific SSI and socio-economic indicators.
-
---
-
-.pull-left.short-width[
-.big-emoji[⚠️]
-]
-
-.pull-right.lo-wi[
-Your analysis will still suffer from omitted variable bias as you can not control for the location of a dwelling inside a region (and thus its actual distance to the nearest school)
-]
 
 ---
 

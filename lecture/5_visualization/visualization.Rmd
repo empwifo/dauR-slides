@@ -47,7 +47,8 @@ bib <- ReadBib(params$path_bib, check = FALSE)
 ```
 
 ```{r pdf, include = FALSE}
-source("https://git.io/xaringan2pdf")
+source("../../R/xaringan_to_pdf.R")
+
 xaringan_to_pdf(
   input = "visualization.html",
   output_file = "visualization.pdf")

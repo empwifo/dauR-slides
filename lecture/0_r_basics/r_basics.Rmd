@@ -46,8 +46,9 @@ bib <- ReadBib(params$path_bib, check = FALSE)
 ```{r eval=TRUE, child = params$path_slides}
 ```
 
-```{r pdf, include = FALSE}
-source("https://git.io/xaringan2pdf")
+```{r pdf, include=FALSE, eval=TRUE}
+source("../../R/xaringan_to_pdf.R")
+
 xaringan_to_pdf(
   input = "r_basics.html",
   output_file = "r_basics.pdf")

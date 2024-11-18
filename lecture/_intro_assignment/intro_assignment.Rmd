@@ -49,7 +49,8 @@ bib <- ReadBib(params$path_bib, check = FALSE)
 ```
 
 ```{r pdf, include = FALSE, eval=TRUE}
-source("https://git.io/xaringan2pdf")
+source("../../R/xaringan_to_pdf.R")
+
 xaringan_to_pdf(
   input = "intro_assignment.html",
   output_file = "intro_assignment.pdf"
@@ -131,9 +132,11 @@ By the end of the semester, you will...
   
   - In groups of 2 or 3 students
   
-  - Submission of course work on **30.01.2024**
+  - Presentation of outlines on **04.12.2024**
   
-  - Presentation of results on **31.01.2024**
+  - Submission of course work on **28.01.2025**
+  
+  - Presentation of results on **29.01.2025**
   
 - Code repository and presentation count equally towards the final grade
 ]
@@ -329,7 +332,7 @@ $$\ln p_{itr}=S_{it}\beta+N_{it}\gamma+\tau_t+\rho_r+\varepsilon_{it}$$
 ]
 
 .pull-right.lo-wi[
-$\hat{\beta}$ and $\hat{\gamma}$ give a vectors of estimated implicit prices for structural and neighborhood characteristics under the c. p. condition
+$\hat{\beta}$ and $\hat{\gamma}$ give vectors of estimated implicit prices for structural and neighborhood characteristics under the c. p. condition
 ]
 
 ---
@@ -346,7 +349,7 @@ $\hat{\beta}$ and $\hat{\gamma}$ give a vectors of estimated implicit prices for
   
   - Bad learning environment probably outweighs the additional resources
   
-- Similar to the example with average test scores, parents would likely choose to buy a home near schools with a better social school index
+- Similar to the example with average test scores, parents would likely choose to buy a home near schools with a better school social index
 
 --
 
@@ -471,11 +474,30 @@ sf %>%
 
 | Date                          |   |
 |-------------------------------|---|
-| 24.10.2023 &ndash; 07.11.2023 | Register via Flexnow<br/><br/>Form groups of 2 to 3 students (use the Moodle forum) |
-| today &ndash; 08.11.2023      | Register on sciebo: https://hochschulcloud.nrw/<br/><br/>Send an email to [sven.werenbeck-ueding@rub.de](mailto:sven.werenbeck-ueding@ruhr-uni-bochum.de) containing the members of your group with name, student ID and the email with which they registered on sciebo |
-| 09.11.2023                    | Copy the data from the shared sciebo folder to your own folder in sciebo and start working on your project by creating a GitHub repository dedicated to your project<br/><br/>Add the GitHub user "swerenbeck" (that's me) as a collaborator to your GitHub repository |
-| 30.01.2024                    | Create a feature branch labelled "submission" to submit your repository and also submit your repository as a ZIP archive via email to [sven.werenbeck-ueding@rub.de](mailto:sven.werenbeck-ueding@ruhr-uni-bochum.de) |
-| 31.01.2024                    | Present your results in class |
+| 16.10.2024 &ndash; 30.10.2024 | Register via Flexnow<br/><br/>Form groups of 2 to 3 students (use the Moodle forum) |
+| today &ndash; 31.10.2024      | Register on sciebo: https://hochschulcloud.nrw/<br/><br/>Send an email to [sven.werenbeck-ueding@rub.de](mailto:sven.werenbeck-ueding@ruhr-uni-bochum.de) containing the members of your group with name, student ID and the email with which they registered on sciebo |
+| 04.11.2024                    | Copy the data from the shared sciebo folder to your own folder in sciebo and start working on your project by creating a GitHub repository dedicated to your project<br/><br/>Add the GitHub user "Solaire-patch" (that's me) as a collaborator to your GitHub repository |
+| 04.12.2025                    | Present an outline of your project |
+| 28.01.2025                    | Create a feature branch labelled "submission" to submit your repository and also submit your repository as a ZIP archive via email to [sven.werenbeck-ueding@rub.de](mailto:sven.werenbeck-ueding@ruhr-uni-bochum.de) |
+| 29.01.2025                    | Present your results in class |
+
+---
+
+## Presentation of Project Outlines
+
+- **5 to 10 min.** presentation of your research idea
+  
+  - What is your research question?
+  - How do you motivate your research question?
+  - What are key insights from related literature?
+
+- Provide an overview of your empirical strategy
+
+  - What data will you use and how are you processing the data?
+  - What is your empirical model?
+  - Are there issues with your empirical strategy?
+  
+- Presentation on **04.12.2024**
 
 ---
 
@@ -564,7 +586,7 @@ sf %>%
 
 ## Submission
 
-**Deadline: 30.01.2024**
+**Deadline: 28.01.2025**
 
 .pull-left[
 #### Code Repository
@@ -613,19 +635,15 @@ RWI and ImmobilienScout24 (2023). RWI Real Estate Data - Campus File Cross-Secti
 The provided data on schools contains the following data sets:
 
 - `school_data.csv`: Basic information on all schools in NRW
-
   - School type
   - Legal form
   - ZIP code area
   - District
   - ...
-
 - `2022_social_index.csv`: Social school indexes per school for the year 2022
-
 - `number_pupils.xlsx`: Number of pupils/students per school
-
 - `keys.xlsx`: Labels for the keys `legal_form`, `district`, `school_operation` and `school_type` in the `school_data.csv` data set
-
+- `distance_to_schools.csv`: Distance between a square kilometer grid cell's centroid and the first as well as second nearest school (for each school type)
 - `plz_AGS.csv`: Mapping between ZIP codes and the AGS (*Allgemeinder Gemeindeschlüssel*, municipality code)
 
 *Note:* The data was taken from the North Rhine-Westphalia Ministry of Schools and Education (https://www.schulministerium.nrw/open-data, last accessed on 03.10.2023)
@@ -634,25 +652,18 @@ The provided data on schools contains the following data sets:
 
 ## Regional Data
 
-- The data set `region_data.csv` contains demographics on municipality-level in NRW (*Gemeinde*):
+The data set `region_data.csv` contains demographics on municipality-level in NRW (*Gemeinde*):
 
-  - `munic_name`, `AGS`: Name and code of the municipality
-
-  - `population`: Population count
+- `munic_name`, `AGS`: Name and code of the municipality
+- `population`: Population count
+- `work_age_population`: Working age population count (16 to 65 years old)
+- `unemployed`: Number of unemployed
+- `low_income_hh`, `middle_income_hh`, `high_income_hh`: Share of low (< 1.500€ per month), middle (between 1.500€ and 3.600€ per month) and high (> 3.600€ per month) income households
+- `population_density`: Population density (inhabitants per $km^2$)
+- `migrants`: Number of migrants
+- `region_type`: Region type, i. e. urban (metropolitan), urban (regiopolitan), rural (close to city region) or rural (peripheral)
   
-  - `work_age_population`: Working age population count (16 to 65 years old)
-  
-  - `unemployed`: Number of unemployed
-  
-  - `low_income_hh`, `middle_income_hh`, `high_income_hh`: Share of low (< 1.500€ per month), middle (between 1.500€ and 3.600€ per month) and high (> 3.600€ per month) income households
-  
-  - `population_density`: Population density (inhabitants per $km^2$)
-  
-  - `migrants`: Number of migrants
-  
-  - `region_type`: Region type, i. e. urban (metropolitan), urban (regiopolitan), rural (close to city region) or rural (peripheral)
-  
-*Note:* The number of migrants was taken from the regional database of the [Federal Statistical Office](https://www.regionalstatistik.de/genesis/online/logon) and is based on the 2011 census and the rest of the data was obtained from [INKAR](https://www.inkar.de/) is from 31.12.2020
+*Note:* The number of migrants was taken from the regional database of the [Federal Statistical Office](https://www.regionalstatistik.de/genesis/online/logon) and is based on the 2011 census and the rest of the data was obtained from [INKAR](https://www.inkar.de/) and is from 31.12.2020
 
 ---
 
@@ -693,20 +704,6 @@ Not controlling for socio-economic indicators will confound your estimates for t
 `r emo::ji("warning")` These indicators are not available to you on the lowest regional aggregation level of schools (ZIP code areas)
 
 `r emo::ji("warning")` You may not be able to control for the location of a dwelling inside a region
-
----
-
-You will have to use the SSI on an aggregate level on which you can also control for the socio-economic indicators to entangle the effect of a region's average school quality from its local economic condition, such that $$\ln p_{itr}=S_{it}\beta+N_{r}\gamma+\tau_t+\rho_r+\varepsilon_{it},$$ where $N_r$ are region-specific SSI and socio-economic indicators.
-
---
-
-.pull-left.short-width[
-.big-emoji[`r emo::ji("warning")`]
-]
-
-.pull-right.lo-wi[
-Your analysis will still suffer from omitted variable bias as you can not control for the location of a dwelling inside a region (and thus its actual distance to the nearest school)
-]
 
 ---
 

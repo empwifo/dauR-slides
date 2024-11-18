@@ -4,17 +4,17 @@
     <title>Data Analysis using R</title>
     <meta charset="utf-8" />
     <meta name="author" content="Sven Werenbeck-Ueding" />
-    <script src="reporting_files/header-attrs-2.23.3/header-attrs.js"></script>
+    <script src="reporting_files/header-attrs-2.25/header-attrs.js"></script>
     <link href="reporting_files/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link href="reporting_files/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
-    <link href="reporting_files/panelset-0.2.6/panelset.css" rel="stylesheet" />
-    <script src="reporting_files/panelset-0.2.6/panelset.js"></script>
+    <link href="reporting_files/panelset-0.3.0/panelset.css" rel="stylesheet" />
+    <script src="reporting_files/panelset-0.3.0/panelset.js"></script>
     <link href="reporting_files/tile-view-0.2.6/tile-view.css" rel="stylesheet" />
     <script src="reporting_files/tile-view-0.2.6/tile-view.js"></script>
-    <script src="reporting_files/htmlwidgets-1.5.4/htmlwidgets.js"></script>
+    <script src="reporting_files/htmlwidgets-1.6.4/htmlwidgets.js"></script>
     <script src="reporting_files/viz-1.8.2/viz.js"></script>
     <link href="reporting_files/DiagrammeR-styles-0.2/styles.css" rel="stylesheet" />
-    <script src="reporting_files/grViz-binding-1.0.9/grViz.js"></script>
+    <script src="reporting_files/grViz-binding-1.0.11/grViz.js"></script>
     <script src="reporting_files/kePrint-0.0.1/kePrint.js"></script>
     <link href="reporting_files/lightable-0.0.1/lightable.css" rel="stylesheet" />
     <link rel="stylesheet" href="style.css" type="text/css" />
@@ -33,7 +33,7 @@ class: center, middle, inverse, title-slide
 ### Sven Werenbeck-Ueding
 ]
 .date[
-### 25.09.2023
+### 16.09.2024
 ]
 
 ---
@@ -47,8 +47,8 @@ class: center, middle, inverse, title-slide
 
 
 
-<div id="htmlwidget-736528f1fd9081d6c8ec" style="width:100%;height:504px;" class="grViz html-widget"></div>
-<script type="application/json" data-for="htmlwidget-736528f1fd9081d6c8ec">{"x":{"diagram":"\n  digraph {\n    fontname=\"Helvetica,Arial,sans-serif\"\n\tnode [fontname=\"Helvetica,Arial,sans-serif\"]\n\tedge [fontname=\"Helvetica,Arial,sans-serif\"]\n    \n    rankdir=LR\n    \n    subgraph cluster_0 {\n        style = rounded\n        color = black\n    \n        {\n            node [style = rounded, shape = box]\n            Import -> Tidy\n        }\n    \n        subgraph cluster_1 {\n            style = rounded\n            color = black\n            \n            node [style = rounded, shape = box]\n            Transform Visualize Model\n            \n            edge []\n            Transform -> Visualize\n            Visualize -> Model\n            Model -> Transform\n            \n            label = \"Exploration\"\n            labeljust = \"l\"\n            labelloc = \"b\"\n        }\n    \n        {\n            node [style = rounded, shape = box]\n            Communicate\n        }\n    \n        Tidy -> Transform\n        Model -> Communicate [ltail = cluster_1]\n        \n        label = \"Programming\"\n        labeljust = \"l\"\n        labelloc = \"b\"\n    }\n  }\n  ","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div class="grViz html-widget html-fill-item" id="htmlwidget-6ec90a1ae41ef05efa0c" style="width:100%;height:504px;"></div>
+<script type="application/json" data-for="htmlwidget-6ec90a1ae41ef05efa0c">{"x":{"diagram":"\n  digraph {\n    fontname=\"Helvetica,Arial,sans-serif\"\n\tnode [fontname=\"Helvetica,Arial,sans-serif\"]\n\tedge [fontname=\"Helvetica,Arial,sans-serif\"]\n    \n    rankdir=LR\n    \n    subgraph cluster_0 {\n        style = rounded\n        color = black\n    \n        {\n            node [style = rounded, shape = box]\n            Import -> Tidy\n        }\n    \n        subgraph cluster_1 {\n            style = rounded\n            color = black\n            \n            node [style = rounded, shape = box]\n            Transform Visualize Model\n            \n            edge []\n            Transform -> Visualize\n            Visualize -> Model\n            Model -> Transform\n            \n            label = \"Exploration\"\n            labeljust = \"l\"\n            labelloc = \"b\"\n        }\n    \n        {\n            node [style = rounded, shape = box]\n            Communicate\n        }\n    \n        Tidy -> Transform\n        Model -> Communicate [ltail = cluster_1]\n        \n        label = \"Programming\"\n        labeljust = \"l\"\n        labelloc = \"b\"\n    }\n  }\n  ","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 
 .right[*Source:* &lt;a name=cite-r4ds&gt;&lt;/a&gt;[Wickham and Grolemund (2016)](https://r4ds.had.co.nz/)]
 
