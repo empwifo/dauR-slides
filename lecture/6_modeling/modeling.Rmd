@@ -46,12 +46,12 @@ bib <- ReadBib(params$path_bib, check = FALSE)
 ```{r eval=TRUE, child = params$path_slides}
 ```
 
-```{r pdf, include = FALSE, eval=FALSE}
-source("../../../R/xaringan_to_pdf.R")
+```{r pdf, include = FALSE, eval=TRUE}
+source("../../R/xaringan_to_pdf.R")
 
 xaringan_to_pdf(
-  input = "visualization.html",
-  output_file = "visualization.pdf"
+  input = "modeling.html",
+  output_file = "modeling.pdf"
 )
 ```
 
@@ -220,9 +220,7 @@ knitr::include_graphics(
 ## Prerequisites
 
 ```{r eval=FALSE}
-# install.packages("tidymodels")
 library(tidyverse)
-library(tidymodels)
 
 # Import the data set and convert municipality and period identifiers to
 # factor variables (both have to be converted to character first). Set the
@@ -236,8 +234,6 @@ df_mig <- read_csv("data/processed/fence_migration.csv") %>%
 ```
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
-library(tidymodels)
-
 df_mig <- paste0(params$path_data, "processed/fence_migration.csv") %>% 
   read_csv() %>% 
   mutate(
@@ -455,7 +451,7 @@ broom::tidy(lp_coeftest)
 .pull-left[
 - A particular type of homoscedasticity violation is usually found when the data is structured hierarchically
 
-- Observations may be correlated within groups (clusters) but independent across groups
+- Observations may be correlated within groups (clusters) but independent across groups: Violates the assumption that errors are independent
 
 - In `r Citet(bib, "f20")`: One-way clustering standard errors on municipality level
 
@@ -648,67 +644,127 @@ class: middle
 
 - Since this is essentially including a (potentially large) set of region and/or year dummies, the estimation of fixed effects models can become computationally extensive even with moderate sample sizes
 
-- The `fixest` package offers a fast implementation of fixed effects estimators, covering a wide range of (micro-)econometric applications
+- The `fixest` package `r Citep(bib, "fixest")` offers a fast implementation of fixed effects estimators, covering a wide range of (micro-)econometric applications
 
 ---
 
 ## Fast LPM Implementation
 
-- ...
+.panelset[
+.panel[.panel-name[Code]
+
+.pull-left[
+- Fixed effects are specified following `|` on the RHS of the formula
+
+- The `vcov` argument let's you handle the computation of standard errors, e.g. 
+
+  - "iid" for homoscedastic SE
+  - "hetero" for heteroscedastic White SE
+  - "cluster" for clustered SE
+
+- Generic function `summary()` handles `fixest` models (slightly) different
+]
+.pull-right[
+```{r fixest-ols, eval=FALSE}
+library(fixest)
+
+fe_lp_model <- feols(
+  migrate ~ 
+    fence + female + age + educ + married | 
+    municipality + period,
+  vcov = "cluster",
+  data = df_mig
+)
+
+summary(fe_lp_model)
+```
+]
+]
+.panel[.panel-name[Summary]
+.scroll-box-20[
+```{r ref.label="fixest-ols", eval=TRUE, echo=FALSE, message=FALSE, warning=FALSE}
+
+```
+]
+]
+]
 
 ---
 
 ## Fast Logit Implementation
 
-- ...
+.panelset[
+.panel[.panel-name[Code]
 
----
+.pull-left[
+- Logit models can be easily computed by specifying the corresponding function family ("binomial")
 
-## Econometricians seldomly estimate just one model!
-
-.pull-left.short-width[
-.big-emoji[`r emo::ji("warning")`]
+- Overall handling very similar to the base R solution but computationally much faster
 ]
+.pull-right[
+```{r fixest-logit, eval=FALSE}
+fe_logit_model <- feglm(
+  migrate ~ 
+    fence + female + age + educ + married | 
+    municipality + period,
+  family = "binomial",
+  vcov = "cluster",
+  data = df_mig
+)
 
-.pull-right.long-width[
-#### Different model specifications serve different purposes
-
-- Including additional controls for robustness checks
-- Investigating heterogeneity by interacting variables
-- Transforming variables, e. g. `log(y)`
+summary(fe_logit_model)
+```
 ]
-
---
-
-.pull-left.short-width[
-.big-emoji[`r emo::ji("warning")`]
 ]
+.panel[.panel-name[Summary]
+.scroll-box-20[
+```{r ref.label="fixest-logit", eval=TRUE, echo=FALSE, message=FALSE, warning=FALSE}
 
-.pull-right.long-width[
-#### In some cases, specifications are estimated using different models
-
-- Estimating logit and LPM for robustness check
-- Finding the best predictor among a set of models (common in machine learning applications)
+```
 ]
-
---
-
-.pull-left.short-width[
-.big-emoji[`r emo::ji("right arrow")`]
 ]
-
-.pull-right.long-width[
-#### Writing clean and easily understandable code becomes difficult
-
-- R implementations of models have different interfaces
-- Preprocessing steps are not easily interchangable using base R
 ]
 
 ---
 
-## Estimating Multiple Models
+## Performing Multiple Estimations
 
-- ...
+.panelset[
+.panel[.panel-name[Code]
+
+.pull-left[
+- Different model specifications serve different purposes, i.e. robustness checks, investigating effect heterogeneity, transforming variables
+
+- `fixest` offers easy ways to handle mutliple LHS and/or RHS estimations
+
+  - Wrap outcome variables inside a vector, e.g. `c(y1, y2) ~ x1`
+  - Use the `sw()` function for stepwise replacement of the RHS, e.g. `y ~ x1 + sw(x2, x3)` evaluates to `y ~ x1 + x2` and `y ~ x1 + x3`
+  - Use the `csw()` for stepwise adding of variables to the RHS, e.g. `y ~ csw(x1 + x2, x3)` evaluates to `y ~ x1 + x2` and `y ~ x1 + x2 + x3`
+]
+.pull-right[
+```{r fixest-ols-2, eval=FALSE}
+library(fixest)
+
+fe_lp_models <- feols(
+  migrate ~ 
+    csw(fence, female + age + educ + married) | 
+    municipality + period,
+  vcov = "cluster",
+  data = df_mig
+)
+
+summary(fe_lp_models)
+```
+]
+]
+.panel[.panel-name[Summary]
+.scroll-box-20[
+```{r ref.label="fixest-ols-2", eval=TRUE, echo=FALSE, message=FALSE, warning=FALSE}
+
+```
+]
+]
+]
 
 ---
 
@@ -942,31 +998,46 @@ If you want to use a custom name for the measures, you can pass a `data.frame` o
 
 layout: false
 
-## Task 5: Create a Summary Table Showing Your Results
+## Creating Regression Tables
 
 .panelset[
 .panel[.panel-name[Task]
-Use the `msummary()` function from the `modelsummary` package to create a table showing the results from the models estimated in [Task 4](#task-4).
+Use the `msummary()` function from the `modelsummary` package to create a table showing the results from the LPM and the logit models used so far.
 
-Show only coefficients for your variable of interest and the additional controls and cluster standard errors on municipality level using the `vcovCL()` function from the `sandwich` package.
+Show only coefficients for your variable of interest and additional controls. Cluster standard errors on municipality level.
 ]
-.panel[.panel-name[Code]
-```{r summary_table, eval=FALSE}
+.panel[.panel-name[Code (models)]
+```{r}
 library(modelsummary)
 
-list(lp_model, logit_model) %>% 
-  set_names(c("(1)", "(2)")) %>%
-  msummary(
-    output = "kableExtra", # May also be e. g. "latex" or a filename extension such as ".txt"
-    # Use sandwich package to calculate clustered vcov matrix
-    vcov = function(x) sandwich::vcovCL(x, cluster = df_mig$municipality),
-    stars = c("*" = .1, "**" = .05, "***" = .01),
-    title = "Impact of Fence Construction on Mexian-US Migration",
-    notes = "Parantheses show clustered standard errors.",
-    coef_map = c(fence = "Fence Construction", age = "Age", female = "Female",
-                 educ = "Years of Schooling", married = "Married"),
-    gof_map = c("nobs")
+formula <- migrate ~ 
+  csw(fence, female + age + educ + married) | municipality + period
+
+lpm <- feols(formula, vcov = "cluster", data = df_mig)
+
+logit <- feglm(formula, family = "binomial", vcov = "cluster", data = df_mig)
+```
+]
+.panel[.panel-name[Code (table)]
+```{r summary_table, eval=FALSE}
+msummary(
+  list(lpm, logit),
+  output = "kableExtra",
+  col.names = c("", "(1)", "(2)", "(3)", "(4)"),
+  stars = c("*" = .1, "**" = .05, "***" = .01),
+  title = "Impact of Fence Construction on Mexico-US Migration",
+  notes = str_c(
+    "Columns (1) and (2) show OLS results, columns (3) and (4) show Logit results. ",
+    "Parantheses show clustered standard errors."
+  ),
+  coef_map = c(
+    fence = "Fence Construction", age = "Age", female = "Female", 
+    educ = "Years of Schooling", married = "Married"
+  ),
+  gof_map = c(
+    "r2", "r2.adjusted", "r2.within", "r2.within.adjusted", "nobs"
   )
+)
 ```
 ]
 ]
@@ -975,7 +1046,7 @@ list(lp_model, logit_model) %>%
 
 class: middle
 
-```{r ref.label="summary_table", echo=FALSE, warning=FALSE, eval=FALSE}
+```{r ref.label="summary_table", echo=FALSE, warning=FALSE, eval=TRUE}
 ```
 
 ---
@@ -987,11 +1058,5 @@ layout: true
 ---
 
 ```{r, results='asis', echo=FALSE}
-PrintBibliography(bib, start = 1, end = 6)
-```
-
----
-
-```{r, results='asis', echo=FALSE}
-PrintBibliography(bib, start = 7)
+PrintBibliography(bib)
 ```
