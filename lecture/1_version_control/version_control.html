@@ -4,7 +4,7 @@
     <title>Data Analysis using R</title>
     <meta charset="utf-8" />
     <meta name="author" content="Sven Werenbeck-Ueding" />
-    <script src="version_control_files/header-attrs-2.25/header-attrs.js"></script>
+    <script src="version_control_files/header-attrs-2.30/header-attrs.js"></script>
     <link href="version_control_files/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link href="version_control_files/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
     <link href="version_control_files/panelset-0.3.0/panelset.css" rel="stylesheet" />
@@ -27,7 +27,7 @@ class: center, middle, inverse, title-slide
 ### Sven Werenbeck-Ueding
 ]
 .date[
-### 18.11.2024
+### 10.10.2025
 ]
 
 ---
@@ -125,7 +125,7 @@ class: middle
 - Go to the shell and enter one of these commands to elicit an offer to install developer command line tools:
 
 
-```r
+``` r
 git --version
 git config
 ```
@@ -143,7 +143,7 @@ Install Git from &lt;http://git-scm.com/downloads&gt;
 Start RStudio and connect your previously registered GitHub account to Git using the `usethis` package:
 
 
-```r
+``` r
 # If you do not have the package installed, run:
 # install.packages("usethis")
 
@@ -182,7 +182,7 @@ layout: true
 ]
 .pull-right[
 
-```r
+``` r
 usethis::create_github_token()
 ```
 ]
@@ -198,7 +198,7 @@ You can store your PAT using the `gitcreds` package. `gitcreds_set()` will open 
 ]
 
 
-```r
+``` r
 gitcreds::gitcreds_set()
 ```
 
@@ -337,7 +337,7 @@ class: middle
 ]
 .pull-right[
 
-```r
+``` r
 # Create a linear regression model
 model &lt;- lm(mpg ~ log(hp) + cyl,
             data = mtcars)
@@ -640,7 +640,7 @@ class: middle
 ]
 .pull-right[
 
-```r
+``` r
 # Create list of specifications
 formulas &lt;- list(
   model_1 = formula(mpg ~ hp + cyl),
@@ -770,7 +770,7 @@ Just keep a cool head and do not start doing anything in hope of magically resol
 5. Commit your changes with a comment:
 
 
-```r
+``` r
 git commit -m "Resolved merge conflict by deleting base code."
 ```
 
@@ -797,9 +797,9 @@ accessed on 2022-09-21.
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
-"ratio": "16:9",
-"highlightLines": true,
-"countIncrementalSlides": false
+  "ratio": "16:9",
+  "highlightLines": true,
+  "countIncrementalSlides": false
 });
 if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
   window.dispatchEvent(new Event('resize'));

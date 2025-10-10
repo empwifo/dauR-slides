@@ -4,13 +4,14 @@
     <title>Data Analysis using R</title>
     <meta charset="utf-8" />
     <meta name="author" content="Sven Werenbeck-Ueding" />
-    <script src="importing_files/header-attrs-2.25/header-attrs.js"></script>
+    <script src="importing_files/header-attrs-2.30/header-attrs.js"></script>
     <link href="importing_files/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link href="importing_files/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
     <link href="importing_files/panelset-0.3.0/panelset.css" rel="stylesheet" />
     <script src="importing_files/panelset-0.3.0/panelset.js"></script>
     <link href="importing_files/tile-view-0.2.6/tile-view.css" rel="stylesheet" />
     <script src="importing_files/tile-view-0.2.6/tile-view.js"></script>
+    <link href="importing_files/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet" />
     <script src="importing_files/htmlwidgets-1.6.4/htmlwidgets.js"></script>
     <script src="importing_files/viz-1.8.2/viz.js"></script>
     <link href="importing_files/DiagrammeR-styles-0.2/styles.css" rel="stylesheet" />
@@ -31,7 +32,7 @@ class: center, middle, inverse, title-slide
 ### Sven Werenbeck-Ueding
 ]
 .date[
-### 18.11.2024
+### 10.10.2025
 ]
 
 ---
@@ -45,8 +46,8 @@ class: center, middle, inverse, title-slide
 
 
 
-<div class="grViz html-widget html-fill-item" id="htmlwidget-052156e846d623e56bbc" style="width:100%;height:504px;"></div>
-<script type="application/json" data-for="htmlwidget-052156e846d623e56bbc">{"x":{"diagram":"\n  digraph {\n    fontname=\"Helvetica,Arial,sans-serif\"\n\tnode [fontname=\"Helvetica,Arial,sans-serif\"]\n\tedge [fontname=\"Helvetica,Arial,sans-serif\"]\n    \n    rankdir=LR\n    \n    subgraph cluster_0 {\n        style = rounded\n        color = black\n    \n        {\n            node [style = rounded, shape = box]\n            Import -> Tidy\n        }\n    \n        subgraph cluster_1 {\n            style = rounded\n            color = black\n            \n            node [style = rounded, shape = box]\n            Transform Visualize Model\n            \n            edge []\n            Transform -> Visualize\n            Visualize -> Model\n            Model -> Transform\n            \n            label = \"Exploration\"\n            labeljust = \"l\"\n            labelloc = \"b\"\n        }\n    \n        {\n            node [style = rounded, shape = box]\n            Communicate\n        }\n    \n        Tidy -> Transform\n        Model -> Communicate [ltail = cluster_1]\n        \n        label = \"Programming\"\n        labeljust = \"l\"\n        labelloc = \"b\"\n    }\n  }\n  ","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div class="grViz html-widget html-fill-item" id="htmlwidget-3c6ffe25388aca79a370" style="width:100%;height:504px;"></div>
+<script type="application/json" data-for="htmlwidget-3c6ffe25388aca79a370">{"x":{"diagram":"\n  digraph {\n    fontname=\"Helvetica,Arial,sans-serif\"\n\tnode [fontname=\"Helvetica,Arial,sans-serif\"]\n\tedge [fontname=\"Helvetica,Arial,sans-serif\"]\n    \n    rankdir=LR\n    \n    subgraph cluster_0 {\n        style = rounded\n        color = black\n    \n        {\n            node [style = rounded, shape = box]\n            Import -> Tidy\n        }\n    \n        subgraph cluster_1 {\n            style = rounded\n            color = black\n            \n            node [style = rounded, shape = box]\n            Transform Visualize Model\n            \n            edge []\n            Transform -> Visualize\n            Visualize -> Model\n            Model -> Transform\n            \n            label = \"Exploration\"\n            labeljust = \"l\"\n            labelloc = \"b\"\n        }\n    \n        {\n            node [style = rounded, shape = box]\n            Communicate\n        }\n    \n        Tidy -> Transform\n        Model -> Communicate [ltail = cluster_1]\n        \n        label = \"Programming\"\n        labeljust = \"l\"\n        labelloc = \"b\"\n    }\n  }\n  ","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 
 .right[*Source:* &lt;a name=cite-r4ds&gt;&lt;/a&gt;[Wickham and Grolemund (2016)](https://r4ds.had.co.nz/)]
 
@@ -139,7 +140,7 @@ Load the package to use it:
 ]
 
 
-```r
+``` r
 #install.packages("readxl")
 library(readxl)
 ```
@@ -151,7 +152,7 @@ layout: true
 ## `read_excel()`
 
 
-```r
+``` r
 ?read_excel
 ```
 
@@ -165,7 +166,7 @@ Function call and arguments:
 
 .pull-left[
 
-```r
+``` r
 read_excel(
 * path,
   sheet = NULL,
@@ -192,7 +193,7 @@ Function call and arguments:
 
 .pull-left[
 
-```r
+``` r
 read_excel(
   path,
 * sheet = NULL,
@@ -221,7 +222,7 @@ Function call and arguments:
 
 .pull-left[
 
-```r
+``` r
 read_excel(
   path,
   sheet = NULL, 
@@ -248,7 +249,7 @@ Function call and arguments:
 
 .pull-left[
 
-```r
+``` r
 read_excel(
   path,
   sheet = NULL, 
@@ -277,7 +278,7 @@ Function call and arguments:
 
 .pull-left[
 
-```r
+``` r
 read_excel(
   path,
   sheet = NULL, 
@@ -302,7 +303,7 @@ Function call and arguments:
 
 .pull-left[
 
-```r
+``` r
 read_excel(
   path,
   sheet = NULL, 
@@ -329,7 +330,7 @@ Function call and arguments:
 
 .pull-left[
 
-```r
+``` r
 read_excel(
   path,
   sheet = NULL, 
@@ -358,7 +359,7 @@ Function call and arguments:
 
 .pull-left[
 
-```r
+``` r
 read_excel(
   path,
   sheet = NULL, 
@@ -397,7 +398,7 @@ layout: false
 ]
 .pull-right[
 
-```r
+``` r
 read_excel("data/raw/enoe/enoe.xlsx")
 ```
 ]
@@ -469,7 +470,7 @@ The first few rows contain some information about the spreadsheet itself. This i
 We can use the `skip` argument to start reading after the third line:
 
 
-```r
+``` r
 read_excel("data/raw/enoe/enoe.xlsx",
            skip = 3)
 ```
@@ -487,7 +488,7 @@ There seems to be some inconsistencies with the naming of missing values...
 Use the `na` argument to treat empty cells and `N/A` as missing values (`NA`):
 
 
-```r
+``` r
 read_excel("data/raw/enoe/enoe.xlsx",
            skip = 3,
            na = c("", "N/A"))
@@ -503,7 +504,7 @@ layout: false
 .panelset[
 .panel[.panel-name[Code]
 
-```r
+``` r
 read_excel("data/raw/enoe/enoe.xlsx",
 *          skip = 3, # Skip the first three lines
 *          na = c("", "N/A")) # Interpret empty cells and cells containing "N/A" as missing
@@ -554,7 +555,7 @@ layout: true
 ## `read_csv()`
 
 
-```r
+``` r
 ?read_csv
 ```
 
@@ -573,7 +574,7 @@ Function call and arguments:
 
 .pull-left[
 
-```r
+``` r
 read_csv(
 * file,
   col_names = TRUE,
@@ -599,7 +600,7 @@ Function call and arguments:
 
 .pull-left[
 
-```r
+``` r
 read_csv(
   file,
 * col_names = TRUE,
@@ -627,7 +628,7 @@ Function call and arguments:
 
 .pull-left[
 
-```r
+``` r
 read_csv(
   file,
   col_names = TRUE, 
@@ -653,7 +654,7 @@ Function call and arguments:
 
 .pull-left[
 
-```r
+``` r
 read_csv(
   file,
   col_names = TRUE, 
@@ -679,7 +680,7 @@ Function call and arguments:
 
 .pull-left[
 
-```r
+``` r
 read_csv(
   file,
   col_names = TRUE, 
@@ -705,7 +706,7 @@ Function call and arguments:
 
 .pull-left[
 
-```r
+``` r
 read_csv(
   file,
   col_names = TRUE, 
@@ -731,7 +732,7 @@ Function call and arguments:
 
 .pull-left[
 
-```r
+``` r
 read_csv(
   file,
   col_names = TRUE, 
@@ -760,7 +761,7 @@ layout: false
 .panelset[
 .panel[.panel-name[Code]
 
-```r
+``` r
 read_csv("data/raw/enoe/enoe.csv")
 ```
 ]
@@ -857,7 +858,7 @@ class: middle
 .panelset[
 .panel[.panel-name[Code]
 
-```r
+``` r
 read_csv("data/raw/enoe/enoe.csv",
 *        skip = 3,
 *        col_names = TRUE, # The default
@@ -922,7 +923,7 @@ class: middle
 --
 
 
-```r
+``` r
 1:10
 ```
 
@@ -930,7 +931,7 @@ class: middle
 ##  [1]  1  2  3  4  5  6  7  8  9 10
 ```
 
-```r
+``` r
 typeof(1:10) # Check the type of the integer vector 1:10
 ```
 
@@ -975,7 +976,7 @@ layout: true
 - Integer vector with attributes `class` ("factor") and `levels` (set of values)
   
 
-```r
+``` r
 # Create a factor vector with two levels c("Employed", "Unemployed")
 fct &lt;- factor(c("Employed", "Employed", "Unemployed", "Employed"))
 
@@ -990,7 +991,7 @@ fct
 --
 
 
-```r
+``` r
 # Take a look at the vector
 str(fct)
 ```
@@ -1002,7 +1003,7 @@ str(fct)
 ---
 
 
-```r
+``` r
 # Check the vector type
 typeof(fct)
 ```
@@ -1011,7 +1012,7 @@ typeof(fct)
 ## [1] "integer"
 ```
 
-```r
+``` r
 # Get the vector attributes
 attributes(fct)
 ```
@@ -1024,7 +1025,7 @@ attributes(fct)
 ## [1] "factor"
 ```
 
-```r
+``` r
 # To get the levels of a vector, use the short-hand levels() function instead
 levels(fct)
 ```
@@ -1042,7 +1043,7 @@ layout: true
 ---
 
 
-```r
+``` r
 # Construct a list
 our_list &lt;- list(1:10, # Integer sequence
                  seq(0, 1, by = 0.25), # Double sequence
@@ -1053,7 +1054,7 @@ our_list &lt;- list(1:10, # Integer sequence
 --
 
 
-```r
+``` r
 typeof(our_list)
 ```
 
@@ -1064,7 +1065,7 @@ typeof(our_list)
 --
 
 
-```r
+``` r
 # Take a look at the list structure
 str(our_list)
 ```
@@ -1088,7 +1089,7 @@ str(our_list)
 ]
 
 
-```r
+``` r
 list(1:10, 
      seq(0, 1, by = 0.25), 
      list("a", 1:2))
@@ -1122,7 +1123,7 @@ layout: true
 - A `data.frame` is essentially a named list of vectors with equal length
 
 
-```r
+``` r
 # Construct a data frame
 df &lt;- data.frame(income = c(0, 500, 3000),
                  empl_status = factor(c("Unemployed", "Employed", "Employed")))
@@ -1131,7 +1132,7 @@ df &lt;- data.frame(income = c(0, 500, 3000),
 ---
 
 
-```r
+``` r
 # Check the type
 typeof(df)
 ```
@@ -1140,7 +1141,7 @@ typeof(df)
 ## [1] "list"
 ```
 
-```r
+``` r
 # Get the attributes
 attributes(df)
 ```
@@ -1182,7 +1183,7 @@ Tibbles' enhanced `print()` function shows only the first 10 rows and displays i
 
 .pull-left[
 
-```r
+``` r
 # Construct a data frame
 df &lt;- data.frame(
   income = c(0, 500, 3000),
@@ -1204,7 +1205,7 @@ df
 ]
 .pull-right[
 
-```r
+``` r
 # Construct a tibble
 tbl &lt;- tibble(
   income = c(0, 500, 3000),
@@ -1233,7 +1234,7 @@ When subsetting, `tibble` gives a warning if the column does not exist:
 
 .pull-left[
 
-```r
+``` r
 df$gender
 ```
 
@@ -1244,7 +1245,7 @@ df$gender
 
 .pull-right[
 
-```r
+``` r
 tbl$gender
 ```
 
@@ -1266,7 +1267,7 @@ layout: false
 `read_excel()` and `read_csv()` automatically create a `tibble` object:
 
 
-```r
+``` r
 data &lt;- read_csv("data/raw/enoe/enoe.csv", skip = 3, col_names = TRUE, na = c("", "N/A"))
 
 typeof(data)
@@ -1320,7 +1321,7 @@ layout: true
 ## `write_csv()`
 
 
-```r
+``` r
 ?write_csv
 ```
 
@@ -1338,7 +1339,7 @@ Function call and arguments:
 
 .pull-left[
 
-```r
+``` r
 write_csv(
 * x,
   file,
@@ -1362,7 +1363,7 @@ Function call and arguments:
 
 .pull-left[
 
-```r
+``` r
 write_csv(
   x, 
 * file,
@@ -1386,7 +1387,7 @@ Function call and arguments:
 
 .pull-left[
 
-```r
+``` r
 write_csv(
   x, 
   file, 
@@ -1410,7 +1411,7 @@ Function call and arguments:
 
 .pull-left[
 
-```r
+``` r
 write_csv(
   x, 
   file, 
@@ -1435,7 +1436,7 @@ Function call and arguments:
 
 .pull-left[
 
-```r
+``` r
 write_csv(
   x, 
   file, 
@@ -1464,7 +1465,7 @@ layout: false
 .panelset[
 .panel[.panel-name[Code]
 
-```r
+``` r
 data &lt;- read_csv("data/raw/enoe/enoe.csv", skip = 3, col_names = TRUE, na = c("", "N/A"))
 
 write_csv(data, "data/raw/enoe.csv")
@@ -1475,7 +1476,7 @@ write_csv(data, "data/raw/enoe.csv")
 The exported data is stored in csv format in the raw folder of the data folder:
 
 
-```r
+``` r
 list.files("data/raw/")
 ```
 
@@ -1527,9 +1528,9 @@ https://readr.tidyverse.org, https://github.com/tidyverse/readr.
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
-"ratio": "16:9",
-"highlightLines": true,
-"countIncrementalSlides": false
+  "ratio": "16:9",
+  "highlightLines": true,
+  "countIncrementalSlides": false
 });
 if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
   window.dispatchEvent(new Event('resize'));

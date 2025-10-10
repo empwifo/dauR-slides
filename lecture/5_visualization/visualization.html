@@ -4,13 +4,14 @@
     <title>Data Analysis using R</title>
     <meta charset="utf-8" />
     <meta name="author" content="Sven Werenbeck-Ueding" />
-    <script src="visualization_files/header-attrs-2.25/header-attrs.js"></script>
+    <script src="visualization_files/header-attrs-2.30/header-attrs.js"></script>
     <link href="visualization_files/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link href="visualization_files/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
     <link href="visualization_files/panelset-0.3.0/panelset.css" rel="stylesheet" />
     <script src="visualization_files/panelset-0.3.0/panelset.js"></script>
     <link href="visualization_files/tile-view-0.2.6/tile-view.css" rel="stylesheet" />
     <script src="visualization_files/tile-view-0.2.6/tile-view.js"></script>
+    <link href="visualization_files/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet" />
     <script src="visualization_files/htmlwidgets-1.6.4/htmlwidgets.js"></script>
     <script src="visualization_files/viz-1.8.2/viz.js"></script>
     <link href="visualization_files/DiagrammeR-styles-0.2/styles.css" rel="stylesheet" />
@@ -31,7 +32,7 @@ class: center, middle, inverse, title-slide
 ### Sven Werenbeck-Ueding
 ]
 .date[
-### 18.11.2024
+### 10.10.2025
 ]
 
 ---
@@ -45,8 +46,8 @@ class: center, middle, inverse, title-slide
 
 
 
-<div class="grViz html-widget html-fill-item" id="htmlwidget-c79235bae3463fd701c9" style="width:100%;height:504px;"></div>
-<script type="application/json" data-for="htmlwidget-c79235bae3463fd701c9">{"x":{"diagram":"\n  digraph {\n  graph [fontname=\"Helvetica,Arial,sans-serif\", compound = true]\n\tnode [fontname=\"Helvetica,Arial,sans-serif\"]\n\tedge [fontname=\"Helvetica,Arial,sans-serif\"]\n    \n    rankdir=LR\n    \n    subgraph cluster_0 {\n        style = rounded\n        color = black\n    \n        {\n            node [style = rounded, shape = box]\n            Import -> Tidy\n        }\n    \n        subgraph cluster_1 {\n            style = rounded\n            color = black\n            \n            node [style = rounded, shape = box]\n            Transform Visualize Model\n            \n            edge []\n            Transform -> Visualize\n            Visualize -> Model\n            Model -> Transform\n            \n            label = \"Exploration\"\n            labeljust = \"l\"\n            labelloc = \"b\"\n        }\n    \n        {\n            node [style = rounded, shape = box]\n            Communicate\n        }\n    \n        Tidy -> Transform [lhead = cluster_1]\n        Model -> Communicate [ltail = cluster_1]\n        \n        label = \"Programming\"\n        labeljust = \"l\"\n        labelloc = \"b\"\n    }\n  }\n  ","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div class="grViz html-widget html-fill-item" id="htmlwidget-ca703b33df05de84e864" style="width:100%;height:504px;"></div>
+<script type="application/json" data-for="htmlwidget-ca703b33df05de84e864">{"x":{"diagram":"\n  digraph {\n  graph [fontname=\"Helvetica,Arial,sans-serif\", compound = true]\n\tnode [fontname=\"Helvetica,Arial,sans-serif\"]\n\tedge [fontname=\"Helvetica,Arial,sans-serif\"]\n    \n    rankdir=LR\n    \n    subgraph cluster_0 {\n        style = rounded\n        color = black\n    \n        {\n            node [style = rounded, shape = box]\n            Import -> Tidy\n        }\n    \n        subgraph cluster_1 {\n            style = rounded\n            color = black\n            \n            node [style = rounded, shape = box]\n            Transform Visualize Model\n            \n            edge []\n            Transform -> Visualize\n            Visualize -> Model\n            Model -> Transform\n            \n            label = \"Exploration\"\n            labeljust = \"l\"\n            labelloc = \"b\"\n        }\n    \n        {\n            node [style = rounded, shape = box]\n            Communicate\n        }\n    \n        Tidy -> Transform [lhead = cluster_1]\n        Model -> Communicate [ltail = cluster_1]\n        \n        label = \"Programming\"\n        labeljust = \"l\"\n        labelloc = \"b\"\n    }\n  }\n  ","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 
 .right[*Source:* &lt;a name=cite-r4ds&gt;&lt;/a&gt;[Wickham and Grolemund (2016)](https://r4ds.had.co.nz/)]
 
@@ -55,7 +56,7 @@ class: center, middle, inverse, title-slide
 ## Prerequisites
 
 
-```r
+``` r
 # Load required packages
 # install.packages("wooldridge")
 library(tidyverse)
@@ -94,7 +95,7 @@ layout: true
 
 .pull-right[
 
-```r
+``` r
 hist(df_cpr$wage)
 ```
 
@@ -187,7 +188,7 @@ layout: true
 
 .pull-right[
 
-```r
+``` r
 ggplot(data = &lt;DATA&gt;) + 
   &lt;GEOM_FUNCTION&gt;(
      mapping = aes(&lt;MAPPINGS&gt;),
@@ -208,7 +209,7 @@ layout: false
 ## Initialize a Plot
 
 
-```r
+``` r
 ?ggplot
 ```
 
@@ -224,7 +225,7 @@ layout: true
 
 .pull-left[
 
-```r
+``` r
 ggplot(
   data = NULL, 
   mapping = aes(),
@@ -237,7 +238,7 @@ ggplot(
 
 .pull-left[
 
-```r
+``` r
 ggplot(
 * data = NULL,
   mapping = aes(),
@@ -260,7 +261,7 @@ ggplot(
 
 .pull-left[
 
-```r
+``` r
 ggplot(
   data = NULL,
 * mapping = aes(),
@@ -289,7 +290,7 @@ layout: false
 
 
 
-```r
+``` r
 ggplot(data = df_cpr,
        mapping = aes(x = exper, 
                      y = wage)) 
@@ -310,7 +311,7 @@ ggplot(data = df_cpr,
 &gt; Create a scatterplot of `wage` vs. `educ` by adding points as geoms.
 
 
-```r
+``` r
 ggplot(df_cpr, 
        aes(x = exper, 
            y = wage)) +
@@ -332,7 +333,7 @@ ggplot(df_cpr,
 &gt; Map `sector` to the `color` aesthetics and change the transparency of points to handle overlapping of points.
 
 
-```r
+``` r
 ggplot(data = df_cpr,
        mapping = aes(x = exper,
                      y = wage,
@@ -355,7 +356,7 @@ ggplot(data = df_cpr,
 &gt; Add a title to the plot and modify axis labels and legend title.
 
 
-```r
+``` r
 ggplot(df_cpr, 
        aes(x = exper, 
            y = wage,
@@ -382,7 +383,7 @@ ggplot(df_cpr,
 &gt; Change the theme to `theme_bw()` and adjust the position of the legend.
 
 
-```r
+``` r
 ggplot(df_cpr,
        aes(x = exper, 
            y = wage,
@@ -411,7 +412,7 @@ ggplot(df_cpr,
 &gt; Create facets to display subplots for `region`.
 
 
-```r
+``` r
 ggplot(df_cpr,
        aes(x = exper, 
            y = wage,
@@ -445,7 +446,7 @@ class: middle
 For brevity, we will use the same `ggplot` object (short-hand `gg`) over the next slides. This way, we need not specify every time which data to use for plotting and only have to add geoms.
 
 
-```r
+``` r
 gg &lt;- df_cpr %&gt;% 
   ggplot()
 ```
@@ -481,7 +482,7 @@ class: middle
 #### Bar Plot
 
 
-```r
+``` r
 bar_plot &lt;- gg +
   geom_bar(aes(x = region)) +
   labs(x = "US Region of Residence",
@@ -500,7 +501,7 @@ bar_plot &lt;- gg +
 By mapping `..count../sum(..count..)` to the y-axis, the scale of the y-axis is changed to display frequencies:
 
 
-```r
+``` r
 freq_bar_plot &lt;- gg +
   geom_bar(
     aes(x = region,
@@ -527,7 +528,7 @@ freq_bar_plot &lt;- gg +
 #### Histogram
 
 
-```r
+``` r
 hist &lt;- gg +
   geom_histogram(aes(x = wage)) +
   labs(x = "Wage [USD/hour]",
@@ -543,7 +544,7 @@ hist &lt;- gg +
 #### Kernel Density Plot
 
 
-```r
+``` r
 density_plot &lt;- gg +
   geom_density(aes(x = wage)) +
   labs(x = "Wage [USD/hour]",
@@ -588,7 +589,7 @@ class: middle
 #### Stacked Bar Plot
 
 
-```r
+``` r
 stack_bar_plot &lt;- gg +
   geom_bar(aes(x = sex, fill = region)) +
   labs(x = "Sex",
@@ -606,7 +607,7 @@ stack_bar_plot &lt;- gg +
 #### Grouped Bar Plot
 
 
-```r
+``` r
 group_bar_plot &lt;- gg +
   geom_bar(aes(x = sex, fill = region),
            position = "dodge") +
@@ -625,7 +626,7 @@ group_bar_plot &lt;- gg +
 #### Segmented Bar Plot
 
 
-```r
+``` r
 seg_bar_plot &lt;- gg +
   geom_bar(aes(x = sex, fill = region),
            position = "fill") +
@@ -651,7 +652,7 @@ seg_bar_plot &lt;- gg +
 #### Scatterplot
 
 
-```r
+``` r
 scatter_plot &lt;- gg +
   geom_point(aes(x = exper, y = wage)) +
   labs(x = "Years of Work Experience",
@@ -668,7 +669,7 @@ scatter_plot &lt;- gg +
 #### Line Plot
 
 
-```r
+``` r
 line_plot &lt;- wooldridge::approval %&gt;% 
   mutate(period = year + 1/12*month) %&gt;% 
   ggplot() +
@@ -694,7 +695,7 @@ line_plot &lt;- wooldridge::approval %&gt;%
 #### Grouped Kernel Density Plot
 
 
-```r
+``` r
 grouped_density_plot &lt;- gg +
   geom_density(aes(x = wage, fill = sex),
                alpha = .4) +
@@ -711,7 +712,7 @@ grouped_density_plot &lt;- gg +
 #### Mean with Standard Error Bars
 
 
-```r
+``` r
 error_bars &lt;- group_by(df_cpr, sex) %&gt;% 
   summarize(mean_wage = mean(wage),
             sd_wage = sd(wage)) %&gt;% 
@@ -738,7 +739,7 @@ error_bars &lt;- group_by(df_cpr, sex) %&gt;%
 #### Boxplot
 
 
-```r
+``` r
 boxplot &lt;- gg +
   geom_boxplot(aes(x = sex, y = wage)) +
   labs(x = "Sex", y = "Wage [USD/hour]")
@@ -796,7 +797,7 @@ layout: false
 ]
 .panel[.panel-name[Code]
 
-```r
+``` r
 library(ggcorrplot)
 
 corr_plot &lt;- df_cpr %&gt;%
@@ -865,7 +866,7 @@ class: middle
 # `RColorBrewer`
 
 
-```r
+``` r
 ?RColorBrewer
 ```
 
@@ -915,7 +916,7 @@ Qualitative color palettes are used, when there is no difference in magnitude be
 
 .pull-right[
 
-```r
+``` r
 ggplot(
   data = df_cpr,
   mapping = aes(
@@ -950,7 +951,7 @@ For continuous color palettes, it is best to use `ggplot2`'s built-in functions:
 
 .pull-right[
 
-```r
+``` r
 ggplot(
   data = df_cpr,
   mapping = aes(
@@ -975,7 +976,7 @@ ggplot(
 ## Themes
 
 
-```r
+``` r
 ?theme
 ```
 
@@ -1036,7 +1037,7 @@ layout: true
 ]
 .panel[.panel-name[Code]
 
-```r
+``` r
 grouped_density_plot &lt;- df_cpr %&gt;% 
   ggplot() +
   geom_density(aes(x = wage, fill = sex),
@@ -1077,7 +1078,7 @@ grouped_density_plot
 ]
 .panel[.panel-name[Code]
 
-```r
+``` r
 theme_custom &lt;- function() {
   theme_bw()
 }
@@ -1111,7 +1112,7 @@ grouped_density_plot +
 ]
 .panel[.panel-name[Code]
 
-```r
+``` r
 theme_custom &lt;- function(base_family = "Helvetica",
                          base_size = 14,
                          padding = base_size*.75,
@@ -1147,7 +1148,7 @@ theme_custom &lt;- function(base_family = "Helvetica",
 ]
 .panel[.panel-name[Code]
 
-```r
+``` r
 theme_custom &lt;- function(base_family = "Helvetica",
                          base_size = 12,
                          padding = base_size*.75,
@@ -1187,7 +1188,7 @@ theme_custom &lt;- function(base_family = "Helvetica",
 ]
 .panel[.panel-name[Code]
 
-```r
+``` r
 theme_custom &lt;- function(base_family = "Helvetica",
                          base_size = 12,
                          padding = base_size*.75,
@@ -1221,7 +1222,7 @@ class: middle
 ## `ggsave()`
 
 
-```r
+``` r
 ?ggplot2::ggsave
 ```
 
@@ -1237,7 +1238,7 @@ class: middle
 ]
 .pull-right[
 
-```r
+``` r
 save_plot &lt;- grouped_density_plot +
   theme_custom(base_size = 6)
 
@@ -1287,9 +1288,9 @@ ed. Springer New York, NY. ISBN: 978-0-387-28695-2. DOI:
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
-"ratio": "16:9",
-"highlightLines": true,
-"countIncrementalSlides": false
+  "ratio": "16:9",
+  "highlightLines": true,
+  "countIncrementalSlides": false
 });
 if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
   window.dispatchEvent(new Event('resize'));

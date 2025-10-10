@@ -4,13 +4,14 @@
     <title>Data Analysis using R</title>
     <meta charset="utf-8" />
     <meta name="author" content="Sven Werenbeck-Ueding" />
-    <script src="modeling_files/header-attrs-2.25/header-attrs.js"></script>
+    <script src="modeling_files/header-attrs-2.30/header-attrs.js"></script>
     <link href="modeling_files/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link href="modeling_files/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
     <link href="modeling_files/panelset-0.3.0/panelset.css" rel="stylesheet" />
     <script src="modeling_files/panelset-0.3.0/panelset.js"></script>
     <link href="modeling_files/tile-view-0.2.6/tile-view.css" rel="stylesheet" />
     <script src="modeling_files/tile-view-0.2.6/tile-view.js"></script>
+    <link href="modeling_files/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet" />
     <script src="modeling_files/htmlwidgets-1.6.4/htmlwidgets.js"></script>
     <script src="modeling_files/viz-1.8.2/viz.js"></script>
     <link href="modeling_files/DiagrammeR-styles-0.2/styles.css" rel="stylesheet" />
@@ -33,7 +34,7 @@ class: center, middle, inverse, title-slide
 ### Sven Werenbeck-Ueding
 ]
 .date[
-### 09.12.2024
+### 10.10.2025
 ]
 
 ---
@@ -47,8 +48,8 @@ class: center, middle, inverse, title-slide
 
 
 
-<div class="grViz html-widget html-fill-item" id="htmlwidget-73b2b932f5740915b998" style="width:100%;height:504px;"></div>
-<script type="application/json" data-for="htmlwidget-73b2b932f5740915b998">{"x":{"diagram":"\n  digraph {\n  graph [fontname=\"Helvetica,Arial,sans-serif\", compound = true]\n\tnode [fontname=\"Helvetica,Arial,sans-serif\"]\n\tedge [fontname=\"Helvetica,Arial,sans-serif\"]\n    \n    rankdir=LR\n    \n    subgraph cluster_0 {\n        style = rounded\n        color = black\n    \n        {\n            node [style = rounded, shape = box]\n            Import -> Tidy\n        }\n    \n        subgraph cluster_1 {\n            style = rounded\n            color = black\n            \n            node [style = rounded, shape = box]\n            Transform Visualize Model\n            \n            edge []\n            Transform -> Visualize\n            Visualize -> Model\n            Model -> Transform\n            \n            label = \"Exploration\"\n            labeljust = \"l\"\n            labelloc = \"b\"\n        }\n    \n        {\n            node [style = rounded, shape = box]\n            Communicate\n        }\n    \n        Tidy -> Transform [lhead = cluster_1]\n        Model -> Communicate [ltail = cluster_1]\n        \n        label = \"Programming\"\n        labeljust = \"l\"\n        labelloc = \"b\"\n    }\n  }\n  ","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div class="grViz html-widget html-fill-item" id="htmlwidget-3639e6120d3f94e3d890" style="width:100%;height:504px;"></div>
+<script type="application/json" data-for="htmlwidget-3639e6120d3f94e3d890">{"x":{"diagram":"\n  digraph {\n  graph [fontname=\"Helvetica,Arial,sans-serif\", compound = true]\n\tnode [fontname=\"Helvetica,Arial,sans-serif\"]\n\tedge [fontname=\"Helvetica,Arial,sans-serif\"]\n    \n    rankdir=LR\n    \n    subgraph cluster_0 {\n        style = rounded\n        color = black\n    \n        {\n            node [style = rounded, shape = box]\n            Import -> Tidy\n        }\n    \n        subgraph cluster_1 {\n            style = rounded\n            color = black\n            \n            node [style = rounded, shape = box]\n            Transform Visualize Model\n            \n            edge []\n            Transform -> Visualize\n            Visualize -> Model\n            Model -> Transform\n            \n            label = \"Exploration\"\n            labeljust = \"l\"\n            labelloc = \"b\"\n        }\n    \n        {\n            node [style = rounded, shape = box]\n            Communicate\n        }\n    \n        Tidy -> Transform [lhead = cluster_1]\n        Model -> Communicate [ltail = cluster_1]\n        \n        label = \"Programming\"\n        labeljust = \"l\"\n        labelloc = \"b\"\n    }\n  }\n  ","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 
 .right[*Source:* &lt;a name=cite-r4ds&gt;&lt;/a&gt;[Wickham and Grolemund (2016)](https://r4ds.had.co.nz/)]
 
@@ -156,7 +157,7 @@ name: logit-model
 ## Prerequisites
 
 
-```r
+``` r
 library(tidyverse)
 
 # Import the data set and convert municipality and period identifiers to
@@ -196,7 +197,7 @@ class: middle
 ## Fit Linear Regressions in R
 
 
-```r
+``` r
 ?lm
 ```
 
@@ -256,7 +257,7 @@ Estimate the impact of border fence construction on Mexican-US migration using a
 .panel[.panel-name[Code]
 
 
-```r
+``` r
 # Define the regression formula
 full_formula &lt;- formula(
   migrate ~ fence + female + age + educ + married + 
@@ -272,7 +273,7 @@ lp_model &lt;- lm(full_formula, data = df_mig)
 .panel[.panel-name[Summary]
 .scroll-box-20[
 
-```r
+``` r
 summary(lp_model)
 ```
 
@@ -367,7 +368,7 @@ summary(lp_model)
 .panel[.panel-name[Summary (`tidy`)]
 .scroll-box-20[
 
-```r
+``` r
 # Print a tidy model summary to the console (remove FE and model fit from the table)
 broom::tidy(lp_model) %&gt;% 
   filter(term %in% c("fence", "female", "age", "educ", "married"))
@@ -405,7 +406,7 @@ broom::tidy(lp_model) %&gt;%
 .pull-right[
 
 
-```r
+``` r
 class(lp_model)
 ```
 
@@ -413,7 +414,7 @@ class(lp_model)
 ## [1] "lm"
 ```
 
-```r
+``` r
 # Alternatively, use the `coef()` function
 lp_model$coefficients[1:3]
 ```
@@ -449,7 +450,7 @@ lp_model$coefficients[1:3]
 .panelset[
 .panel[.panel-name[Code]
 
-```r
+``` r
 library(lmtest)
 library(sandwich)
 
@@ -523,7 +524,7 @@ broom::tidy(lp_coeftest)
 .panelset[
 .panel[.panel-name[Code]
 
-```r
+``` r
 library(lmtest)
 library(sandwich)
 
@@ -585,7 +586,7 @@ Replicate the results of [Feigenberg (2020a)](https://www.aeaweb.org/articles?id
 .panel[.panel-name[Code]
 
 
-```r
+``` r
 # Fit a logit model as given by formula on the df_mig data set
 logit_model &lt;- glm(full_formula, data = df_mig, family = "binomial")
 ```
@@ -594,7 +595,7 @@ logit_model &lt;- glm(full_formula, data = df_mig, family = "binomial")
 .panel[.panel-name[Summary]
 .scroll-box-20[
 
-```r
+``` r
 summary(logit_model)
 ```
 
@@ -689,7 +690,7 @@ summary(logit_model)
 .panel[.panel-name[Summary (`tidy`)]
 .scroll-box-20[
 
-```r
+``` r
 # Print a tidy model summary to the console
 broom::tidy(logit_model) %&gt;% 
   filter(term %in% c("fence", "female", "age", "educ", "married"))
@@ -741,7 +742,7 @@ layout: true
 .panelset[
 .panel[.panel-name[Code]
 
-```r
+``` r
 library(marginaleffects)
 
 # avg_slopes returns the AME
@@ -840,7 +841,7 @@ class: middle
 ]
 .pull-right[
 
-```r
+``` r
 library(fixest)
 
 fe_lp_model &lt;- feols(
@@ -860,7 +861,7 @@ summary(fe_lp_model)
 
 ```
 ## OLS estimation, Dep. Var.: migrate
-## Observations: 156,113 
+## Observations: 156,113
 ## Fixed-effects: municipality: 23,  period: 41
 ## Standard-errors: Clustered (municipality) 
 ##          Estimate Std. Error   t value   Pr(&gt;|t|)    
@@ -892,7 +893,7 @@ summary(fe_lp_model)
 ]
 .pull-right[
 
-```r
+``` r
 fe_logit_model &lt;- feglm(
   migrate ~ 
     fence + female + age + educ + married | 
@@ -911,7 +912,7 @@ summary(fe_logit_model)
 
 ```
 ## GLM estimation, family = binomial, Dep. Var.: migrate
-## Observations: 156,028 
+## Observations: 156,028
 ## Fixed-effects: municipality: 20,  period: 41
 ## Standard-errors: Clustered (municipality) 
 ##          Estimate Std. Error   z value   Pr(&gt;|z|)    
@@ -947,7 +948,7 @@ summary(fe_logit_model)
 ]
 .pull-right[
 
-```r
+``` r
 library(fixest)
 
 fe_lp_models &lt;- feols(
@@ -1001,7 +1002,7 @@ layout: true
 
 .pull-left[
 
-```r
+``` r
 msummary(
   models,
   output = "default",
@@ -1020,7 +1021,7 @@ msummary(
 
 .pull-left[
 
-```r
+``` r
 msummary(
 * models,
   output = "default",
@@ -1045,7 +1046,7 @@ A model object, such as `lm`, or a (named) list of models.
 
 .pull-left[
 
-```r
+``` r
 msummary(
   models,
 * output = "default",
@@ -1070,7 +1071,7 @@ If the table should be saved directly, the filename can be specified here. If th
 
 .pull-left[
 
-```r
+``` r
 msummary(
   models,
   output = "default",
@@ -1095,7 +1096,7 @@ Replace model standard errors with robust standard errors by setting this argume
 
 .pull-left[
 
-```r
+``` r
 msummary(
   models,
   output = "default",
@@ -1122,7 +1123,7 @@ Show stars to indicate statistical significance by passing a named numeric vecto
 
 .pull-left[
 
-```r
+``` r
 msummary(
   models,
   output = "default",
@@ -1147,7 +1148,7 @@ Title for the table given as a string.
 
 .pull-left[
 
-```r
+``` r
 msummary(
   models,
   output = "default",
@@ -1172,7 +1173,7 @@ Pass a list or vector of strings to this arguments to show notes below the table
 
 .pull-left[
 
-```r
+``` r
 msummary(
   models,
   output = "default",
@@ -1197,7 +1198,7 @@ Use a named character vector to map model variable names to coefficient names, e
 
 .pull-left[
 
-```r
+``` r
 msummary(
   models,
   output = "default",
@@ -1234,7 +1235,7 @@ Show only coefficients for your variable of interest and additional controls. Cl
 ]
 .panel[.panel-name[Code (models)]
 
-```r
+``` r
 library(modelsummary)
 
 formula &lt;- migrate ~ 
@@ -1251,7 +1252,7 @@ logit &lt;- feglm(formula, family = "binomial", vcov = "cluster", data = df_mig)
 ]
 .panel[.panel-name[Code (table)]
 
-```r
+``` r
 msummary(
   list(lpm, logit),
   output = "kableExtra",
@@ -1278,7 +1279,7 @@ msummary(
 
 class: middle
 
-&lt;table style="NAborder-bottom: 0; width: auto !important; margin-left: auto; margin-right: auto;" class="table"&gt;
+&lt;table style="NAborder-bottom: 0; color: black; width: auto !important; margin-left: auto; margin-right: auto;" class="table"&gt;
 &lt;caption&gt;Impact of Fence Construction on Mexico-US Migration&lt;/caption&gt;
  &lt;thead&gt;
   &lt;tr&gt;
@@ -1307,7 +1308,7 @@ class: middle
   &lt;tr&gt;
    &lt;td style="text-align:left;"&gt; Age &lt;/td&gt;
    &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; 0.000*** &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; -0.000*** &lt;/td&gt;
    &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
    &lt;td style="text-align:center;"&gt; -0.017*** &lt;/td&gt;
   &lt;/tr&gt;
@@ -1426,9 +1427,9 @@ Version 2024-06-03. URL:
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
-"ratio": "16:9",
-"highlightLines": true,
-"countIncrementalSlides": false
+  "ratio": "16:9",
+  "highlightLines": true,
+  "countIncrementalSlides": false
 });
 if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
   window.dispatchEvent(new Event('resize'));

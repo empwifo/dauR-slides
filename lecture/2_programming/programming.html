@@ -4,13 +4,14 @@
     <title>Data Analysis using R</title>
     <meta charset="utf-8" />
     <meta name="author" content="Sven Werenbeck-Ueding" />
-    <script src="programming_files/header-attrs-2.25/header-attrs.js"></script>
+    <script src="programming_files/header-attrs-2.30/header-attrs.js"></script>
     <link href="programming_files/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link href="programming_files/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
     <link href="programming_files/panelset-0.3.0/panelset.css" rel="stylesheet" />
     <script src="programming_files/panelset-0.3.0/panelset.js"></script>
     <link href="programming_files/tile-view-0.2.6/tile-view.css" rel="stylesheet" />
     <script src="programming_files/tile-view-0.2.6/tile-view.js"></script>
+    <link href="programming_files/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet" />
     <script src="programming_files/htmlwidgets-1.6.4/htmlwidgets.js"></script>
     <script src="programming_files/viz-1.8.2/viz.js"></script>
     <link href="programming_files/DiagrammeR-styles-0.2/styles.css" rel="stylesheet" />
@@ -31,7 +32,7 @@ class: center, middle, inverse, title-slide
 ### Sven Werenbeck-Ueding
 ]
 .date[
-### 18.11.2024
+### 10.10.2025
 ]
 
 ---
@@ -45,8 +46,8 @@ class: center, middle, inverse, title-slide
 
 
 
-<div class="grViz html-widget html-fill-item" id="htmlwidget-dae38ffc97e67c8def70" style="width:100%;height:504px;"></div>
-<script type="application/json" data-for="htmlwidget-dae38ffc97e67c8def70">{"x":{"diagram":"\n  digraph {\n    fontname=\"Helvetica,Arial,sans-serif\"\n\tnode [fontname=\"Helvetica,Arial,sans-serif\"]\n\tedge [fontname=\"Helvetica,Arial,sans-serif\"]\n    \n    rankdir=LR\n    \n    subgraph cluster_0 {\n        style = rounded\n        color = black\n    \n        {\n            node [style = rounded, shape = box]\n            Import -> Tidy\n        }\n    \n        subgraph cluster_1 {\n            style = rounded\n            color = black\n            \n            node [style = rounded, shape = box]\n            Transform Visualize Model\n            \n            edge []\n            Transform -> Visualize\n            Visualize -> Model\n            Model -> Transform\n            \n            label = \"Exploration\"\n            labeljust = \"l\"\n            labelloc = \"b\"\n        }\n    \n        {\n            node [style = rounded, shape = box]\n            Communicate\n        }\n    \n        Tidy -> Transform\n        Model -> Communicate [ltail = cluster_1]\n        \n        label = \"Programming\"\n        labeljust = \"l\"\n        labelloc = \"b\"\n    }\n  }\n  ","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div class="grViz html-widget html-fill-item" id="htmlwidget-b63f5b3cf08b861174f3" style="width:100%;height:504px;"></div>
+<script type="application/json" data-for="htmlwidget-b63f5b3cf08b861174f3">{"x":{"diagram":"\n  digraph {\n    fontname=\"Helvetica,Arial,sans-serif\"\n\tnode [fontname=\"Helvetica,Arial,sans-serif\"]\n\tedge [fontname=\"Helvetica,Arial,sans-serif\"]\n    \n    rankdir=LR\n    \n    subgraph cluster_0 {\n        style = rounded\n        color = black\n    \n        {\n            node [style = rounded, shape = box]\n            Import -> Tidy\n        }\n    \n        subgraph cluster_1 {\n            style = rounded\n            color = black\n            \n            node [style = rounded, shape = box]\n            Transform Visualize Model\n            \n            edge []\n            Transform -> Visualize\n            Visualize -> Model\n            Model -> Transform\n            \n            label = \"Exploration\"\n            labeljust = \"l\"\n            labelloc = \"b\"\n        }\n    \n        {\n            node [style = rounded, shape = box]\n            Communicate\n        }\n    \n        Tidy -> Transform\n        Model -> Communicate [ltail = cluster_1]\n        \n        label = \"Programming\"\n        labeljust = \"l\"\n        labelloc = \"b\"\n    }\n  }\n  ","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 
 .right[*Source:* &lt;a name=cite-r4ds&gt;&lt;/a&gt;[Wickham and Grolemund (2016)](https://r4ds.had.co.nz/)]
 
@@ -125,7 +126,7 @@ layout: true
 ]
 .pull-right[
 
-```r
+``` r
 # Create a data frame with 50 observations
 # and 3 normal distributed variables with 
 # mean 5 and standard deviation 10
@@ -135,7 +136,7 @@ df &lt;- data.frame(x = rnorm(50, 5, 10),
 ```
 
 
-```r
+``` r
 # Standardize each variable
 df$x &lt;- (df$x - mean(df$x)) / sd(df$x)
 df$y &lt;- (df$y - mean(df$y)) / sd(df$y)
@@ -171,7 +172,7 @@ df$z &lt;- (df$z - mean(df$z)) / sd(df$z)
 ]
 .pull-right[
 
-```r
+``` r
 standardize &lt;- function(x) {
   mean_x &lt;- mean(x)
   
@@ -183,7 +184,7 @@ standardize &lt;- function(x) {
 
 
 
-```r
+``` r
 df$x &lt;- standardize(df$x)
 ```
 
@@ -209,7 +210,7 @@ layout: false
 
 .pull-right[
 
-```r
+``` r
 &lt;NAME&gt; &lt;- function(&lt;ARGUMENTS&gt;) {
   &lt;BODY&gt;
 }
@@ -237,7 +238,7 @@ layout: true
 ]
 .pull-right[
 
-```r
+``` r
 log
 ```
 
@@ -286,7 +287,7 @@ layout: false
 .panelset[
 .panel[.panel-name[Function]
 
-```r
+``` r
 standardize &lt;- function(x) {
   if(!is.numeric(x))
     stop("x has to be numeric")
@@ -302,7 +303,7 @@ standardize &lt;- function(x) {
 .panel[.panel-name[Error]
 .scroll-box-14[
 
-```r
+``` r
 not_numeric &lt;- c("This",
                  "is",
                  "not", 
@@ -361,7 +362,7 @@ Lexical scoping means that R follows these rules:
 ]
 .pull-right[
 
-```r
+``` r
 y &lt;- 5
 
 some_function &lt;- function() {
@@ -385,7 +386,7 @@ some_function()
 ]
 .pull-right[
 
-```r
+``` r
 y_1 &lt;- function(x) x + 5
 
 y_2 &lt;- function() {
@@ -412,7 +413,7 @@ y_2()
 ]
 .pull-right[
 
-```r
+``` r
 some_function &lt;- function(x) {
   x + 5
 }
@@ -424,7 +425,7 @@ some_function(5)
 ## [1] 10
 ```
 
-```r
+``` r
 some_function(5)
 ```
 
@@ -441,7 +442,7 @@ some_function(5)
 ]
 .pull-right[
 
-```r
+``` r
 some_function &lt;- function() {
   x + 5
 }
@@ -455,7 +456,7 @@ some_function()
 ## [1] 15
 ```
 
-```r
+``` r
 x &lt;- 15
 
 some_function()
@@ -483,7 +484,7 @@ layout: false
 ]
 .pull-right[
 
-```r
+``` r
 some_function &lt;- function(x = 5,
                           y = 1,
                           z = x + y) {
@@ -518,7 +519,7 @@ some_function()
 .panelset[
 .panel[.panel-name[Code]
 
-```r
+``` r
 standardize &lt;- function(x, ...) {
   if(!is.numeric(x))
     stop("x has to be numeric")
@@ -540,7 +541,7 @@ standardize(vec_na, na.rm = TRUE)
 .panel[.panel-name[Output]
 
 ```
-## [1]         NA  0.7071068 -0.7071068
+## [1]         NA -0.7071068  0.7071068
 ```
 ]
 ]
@@ -564,7 +565,7 @@ layout: true
 ]
 .pull-right[
 
-```r
+``` r
 # Number of columns in df
 df_ncol &lt;- ncols(df)
 
@@ -588,7 +589,7 @@ A better approach is to use `apply()` on `df`!
 ---
 
 
-```r
+``` r
 ?apply
 ```
 .pull-left[
@@ -606,7 +607,7 @@ A better approach is to use `apply()` on `df`!
 .panelset[
 .panel[.panel-name[Code]
 
-```r
+``` r
 apply(X = df, MARGIN = 2, FUN = standardize)
 ```
 ]
@@ -614,57 +615,57 @@ apply(X = df, MARGIN = 2, FUN = standardize)
 .scroll-box-16[
 
 ```
-##                 x            y           z
-##  [1,]  0.44256402  1.640938695 -2.72808473
-##  [2,] -0.62264490  0.248625753  1.10097121
-##  [3,]  0.29906951  2.075092720  0.28141519
-##  [4,] -1.23326420 -0.396807079 -0.89695400
-##  [5,] -0.01404143  1.063531899  0.22787081
-##  [6,]  0.52814928 -0.167140317 -0.54189652
-##  [7,] -0.92716431 -0.431619414  0.14797617
-##  [8,] -0.89092283  1.011836442 -0.61477680
-##  [9,]  1.60261174 -1.217483374 -0.26484077
-## [10,] -0.81083675 -0.802685917  0.24800894
-## [11,]  0.92945691 -0.920471798  0.77028714
-## [12,] -0.81387906 -0.456830955 -1.04183146
-## [13,] -1.05434540 -1.057653373 -0.67449914
-## [14,]  0.14415287 -0.586163186 -1.76013191
-## [15,]  0.91370822  1.599450535  0.56319298
-## [16,]  0.34235135 -0.549958074  0.72890555
-## [17,]  0.33269072 -1.516953669  0.54212677
-## [18,]  1.36462541 -0.744255276  2.03007333
-## [19,]  0.52926845  0.324642322 -0.07412066
-## [20,]  0.44014054 -0.428269225  0.60535064
-## [21,] -0.75621349  1.099310697  0.80376210
-## [22,] -0.90802499  1.380728531 -1.19966019
-## [23,]  0.24961736  1.587013997  0.57059466
-## [24,] -0.63461744 -1.293582893  1.74462766
-## [25,] -0.52133899 -2.103724132 -1.73279017
-## [26,]  1.33166350 -1.137289922  1.75756984
-## [27,] -0.21307573 -0.464404712 -0.32786817
-## [28,] -1.64094958 -1.000348388  0.28327992
-## [29,] -1.51102137 -0.758982428  0.50609226
-## [30,]  0.48314122  1.137235770 -0.23297403
-## [31,] -0.24808245 -0.033188964  0.08439041
-## [32,]  0.69950545  1.202375528 -0.10048367
-## [33,] -0.78136085 -0.226772536  0.11870037
-## [34,]  1.15967518  0.448972628  0.51249321
-## [35,] -0.53729955  0.689848735 -0.16231163
-## [36,]  1.39389076  0.006731338 -0.72713791
-## [37,]  0.50441090 -1.386077501  0.40704417
-## [38,]  2.31726694 -0.711069997 -1.12969994
-## [39,]  1.65124396 -0.358329295 -0.38094238
-## [40,] -0.01438066 -0.605719896  0.22923515
-## [41,] -1.99267888 -0.819576484 -1.08025596
-## [42,] -1.01464220  1.180519572  2.01727690
-## [43,] -0.56500795 -0.467695684 -0.48993766
-## [44,] -0.03813438  1.247612876 -0.01567161
-## [45,]  0.37186499 -0.126927312  0.43644232
-## [46,]  0.65840057 -0.382690725  1.03152276
-## [47,] -1.07202645  1.604275079  1.57413846
-## [48,]  0.18196296  0.803135326 -0.93489159
-## [49,]  1.74193732  0.476200089 -0.53318180
-## [50,] -1.79741628  0.324593996 -1.67840621
+##                  x           y           z
+##  [1,] -0.532808993  1.28168937  0.60732572
+##  [2,] -1.373291630 -0.80960849  0.50074306
+##  [3,]  0.674433853 -1.80228747  1.15805944
+##  [4,]  0.755878852  1.71917006  0.66258163
+##  [5,] -0.513789149 -1.50574621  0.94236539
+##  [6,] -2.466693022  0.69596439 -0.50302429
+##  [7,] -0.813313197  0.21950271 -0.43524641
+##  [8,]  0.290040286  1.39622712 -0.43575711
+##  [9,] -0.648140862 -0.38576984  0.15549560
+## [10,]  1.695354357 -0.72791681  0.14261541
+## [11,]  0.605668068 -0.93573106 -0.28442384
+## [12,]  0.551763243 -0.71143436  0.37575887
+## [13,] -2.139951566  0.74963606 -1.59382525
+## [14,]  1.856562606  2.53878389 -0.12793874
+## [15,] -0.372943395  0.16317918 -1.33289413
+## [16,] -1.278888380 -0.72660855 -2.03667672
+## [17,]  0.599988144  0.13208358  0.08910632
+## [18,]  1.118798442  1.24042315 -0.76638912
+## [19,] -0.517885657 -0.69519711  1.46683872
+## [20,] -1.030650442  0.09040398  0.13869746
+## [21,] -0.445094893 -2.91332441 -0.93358588
+## [22,]  0.818213027  0.75382765 -1.27861171
+## [23,]  0.558483764  0.21689401 -0.77707475
+## [24,] -0.673328631 -0.50633592  1.28083876
+## [25,]  0.538035708 -0.89336586  0.57000904
+## [26,] -1.278241127  0.06800413 -0.24302700
+## [27,]  1.645732780  1.14669635  1.37756972
+## [28,] -0.859001438  0.43262277  0.30175372
+## [29,]  0.442534821  0.15474482  1.16289927
+## [30,]  0.851879320  0.11028062  1.15406398
+## [31,]  2.005462446  0.12687056 -0.44108174
+## [32,]  1.003791945  0.70070557  1.47017400
+## [33,] -0.071865301  0.71348971 -0.22709712
+## [34,] -1.149448110  0.46158229 -2.09092739
+## [35,] -0.539494043  0.05523314 -0.13175025
+## [36,] -0.915336022 -0.83498534  1.41919244
+## [37,] -0.334014010 -0.40582241 -0.49823663
+## [38,] -0.198131885  0.91453921 -0.60658328
+## [39,]  0.227800601 -1.31956162 -1.73173307
+## [40,] -0.468857361  0.02064766  2.00795386
+## [41,] -1.266360103 -1.05408030  0.83887316
+## [42,]  0.006999305  0.65068288  0.48722403
+## [43,]  0.749482489 -0.68847841  0.52078031
+## [44,]  1.195605758  1.54224894  0.34197397
+## [45,]  0.543242780  0.78631456  0.84709598
+## [46,]  0.401083497 -0.11200713 -1.31810145
+## [47,]  0.592707126 -1.35572061 -1.55759214
+## [48,] -0.753009278 -0.48197911 -0.75998157
+## [49,]  1.082252777 -0.65367796  0.54979933
+## [50,] -0.171257502  0.43719062 -0.45822958
 ```
 ]
 ]
@@ -696,7 +697,7 @@ Instead of applying our `standardize()` function, we could have defined an anony
 .panelset[
 .panel[.panel-name[Code]
 
-```r
+``` r
 apply(df, 2, function(x) (x - mean(x)) / sd(x))
 ```
 ]
@@ -704,57 +705,57 @@ apply(df, 2, function(x) (x - mean(x)) / sd(x))
 .scroll-box-16[
 
 ```
-##                 x            y           z
-##  [1,]  0.44256402  1.640938695 -2.72808473
-##  [2,] -0.62264490  0.248625753  1.10097121
-##  [3,]  0.29906951  2.075092720  0.28141519
-##  [4,] -1.23326420 -0.396807079 -0.89695400
-##  [5,] -0.01404143  1.063531899  0.22787081
-##  [6,]  0.52814928 -0.167140317 -0.54189652
-##  [7,] -0.92716431 -0.431619414  0.14797617
-##  [8,] -0.89092283  1.011836442 -0.61477680
-##  [9,]  1.60261174 -1.217483374 -0.26484077
-## [10,] -0.81083675 -0.802685917  0.24800894
-## [11,]  0.92945691 -0.920471798  0.77028714
-## [12,] -0.81387906 -0.456830955 -1.04183146
-## [13,] -1.05434540 -1.057653373 -0.67449914
-## [14,]  0.14415287 -0.586163186 -1.76013191
-## [15,]  0.91370822  1.599450535  0.56319298
-## [16,]  0.34235135 -0.549958074  0.72890555
-## [17,]  0.33269072 -1.516953669  0.54212677
-## [18,]  1.36462541 -0.744255276  2.03007333
-## [19,]  0.52926845  0.324642322 -0.07412066
-## [20,]  0.44014054 -0.428269225  0.60535064
-## [21,] -0.75621349  1.099310697  0.80376210
-## [22,] -0.90802499  1.380728531 -1.19966019
-## [23,]  0.24961736  1.587013997  0.57059466
-## [24,] -0.63461744 -1.293582893  1.74462766
-## [25,] -0.52133899 -2.103724132 -1.73279017
-## [26,]  1.33166350 -1.137289922  1.75756984
-## [27,] -0.21307573 -0.464404712 -0.32786817
-## [28,] -1.64094958 -1.000348388  0.28327992
-## [29,] -1.51102137 -0.758982428  0.50609226
-## [30,]  0.48314122  1.137235770 -0.23297403
-## [31,] -0.24808245 -0.033188964  0.08439041
-## [32,]  0.69950545  1.202375528 -0.10048367
-## [33,] -0.78136085 -0.226772536  0.11870037
-## [34,]  1.15967518  0.448972628  0.51249321
-## [35,] -0.53729955  0.689848735 -0.16231163
-## [36,]  1.39389076  0.006731338 -0.72713791
-## [37,]  0.50441090 -1.386077501  0.40704417
-## [38,]  2.31726694 -0.711069997 -1.12969994
-## [39,]  1.65124396 -0.358329295 -0.38094238
-## [40,] -0.01438066 -0.605719896  0.22923515
-## [41,] -1.99267888 -0.819576484 -1.08025596
-## [42,] -1.01464220  1.180519572  2.01727690
-## [43,] -0.56500795 -0.467695684 -0.48993766
-## [44,] -0.03813438  1.247612876 -0.01567161
-## [45,]  0.37186499 -0.126927312  0.43644232
-## [46,]  0.65840057 -0.382690725  1.03152276
-## [47,] -1.07202645  1.604275079  1.57413846
-## [48,]  0.18196296  0.803135326 -0.93489159
-## [49,]  1.74193732  0.476200089 -0.53318180
-## [50,] -1.79741628  0.324593996 -1.67840621
+##                  x           y           z
+##  [1,] -0.532808993  1.28168937  0.60732572
+##  [2,] -1.373291630 -0.80960849  0.50074306
+##  [3,]  0.674433853 -1.80228747  1.15805944
+##  [4,]  0.755878852  1.71917006  0.66258163
+##  [5,] -0.513789149 -1.50574621  0.94236539
+##  [6,] -2.466693022  0.69596439 -0.50302429
+##  [7,] -0.813313197  0.21950271 -0.43524641
+##  [8,]  0.290040286  1.39622712 -0.43575711
+##  [9,] -0.648140862 -0.38576984  0.15549560
+## [10,]  1.695354357 -0.72791681  0.14261541
+## [11,]  0.605668068 -0.93573106 -0.28442384
+## [12,]  0.551763243 -0.71143436  0.37575887
+## [13,] -2.139951566  0.74963606 -1.59382525
+## [14,]  1.856562606  2.53878389 -0.12793874
+## [15,] -0.372943395  0.16317918 -1.33289413
+## [16,] -1.278888380 -0.72660855 -2.03667672
+## [17,]  0.599988144  0.13208358  0.08910632
+## [18,]  1.118798442  1.24042315 -0.76638912
+## [19,] -0.517885657 -0.69519711  1.46683872
+## [20,] -1.030650442  0.09040398  0.13869746
+## [21,] -0.445094893 -2.91332441 -0.93358588
+## [22,]  0.818213027  0.75382765 -1.27861171
+## [23,]  0.558483764  0.21689401 -0.77707475
+## [24,] -0.673328631 -0.50633592  1.28083876
+## [25,]  0.538035708 -0.89336586  0.57000904
+## [26,] -1.278241127  0.06800413 -0.24302700
+## [27,]  1.645732780  1.14669635  1.37756972
+## [28,] -0.859001438  0.43262277  0.30175372
+## [29,]  0.442534821  0.15474482  1.16289927
+## [30,]  0.851879320  0.11028062  1.15406398
+## [31,]  2.005462446  0.12687056 -0.44108174
+## [32,]  1.003791945  0.70070557  1.47017400
+## [33,] -0.071865301  0.71348971 -0.22709712
+## [34,] -1.149448110  0.46158229 -2.09092739
+## [35,] -0.539494043  0.05523314 -0.13175025
+## [36,] -0.915336022 -0.83498534  1.41919244
+## [37,] -0.334014010 -0.40582241 -0.49823663
+## [38,] -0.198131885  0.91453921 -0.60658328
+## [39,]  0.227800601 -1.31956162 -1.73173307
+## [40,] -0.468857361  0.02064766  2.00795386
+## [41,] -1.266360103 -1.05408030  0.83887316
+## [42,]  0.006999305  0.65068288  0.48722403
+## [43,]  0.749482489 -0.68847841  0.52078031
+## [44,]  1.195605758  1.54224894  0.34197397
+## [45,]  0.543242780  0.78631456  0.84709598
+## [46,]  0.401083497 -0.11200713 -1.31810145
+## [47,]  0.592707126 -1.35572061 -1.55759214
+## [48,] -0.753009278 -0.48197911 -0.75998157
+## [49,]  1.082252777 -0.65367796  0.54979933
+## [50,] -0.171257502  0.43719062 -0.45822958
 ```
 ]
 ]
@@ -789,7 +790,7 @@ class: middle
 .panelset[
 .panel[.panel-name[Intermediate Results]
 
-```r
+``` r
 df_std &lt;- apply(df, 2, standardize)
 df_std &lt;- as.data.frame(df_std)
 ```
@@ -797,7 +798,7 @@ df_std &lt;- as.data.frame(df_std)
 ]
 .panel[.panel-name[Nested Functions]
 
-```r
+``` r
 as.data.frame(
   apply(
     df,
@@ -847,7 +848,7 @@ making it easy to add steps anywhere in the sequence of operations.
 - Content from loaded packages is only available in your current session &amp;rarr; if you close and reopen R, you have to run `library(magrittr)` again but **not** have to re-install it
 
 
-```r
+``` r
 install.packages("magrittr")
 library(magrittr)
 ```
@@ -871,7 +872,7 @@ library(magrittr)
 ]
 .pull-right[
 
-```r
+``` r
 df %&gt;% 
   apply(2, standardize) %&gt;% 
   as.data.frame
@@ -909,7 +910,7 @@ df %&gt;%
 
 .pull-right[
 
-```r
+``` r
 set.seed(21903)
 
 x &lt;- rnorm(1000, mean = 0, sd = 1)
@@ -923,7 +924,7 @@ x |&gt;
 ## [1] 0.007922553
 ```
 
-```r
+``` r
 # Using the LHS placeholder `_`
 TRUE |&gt;
   mean(c(x, NA), na.rm = _)
@@ -953,7 +954,7 @@ background-position: 90% 10%
 ## `map()`
 
 
-```r
+``` r
 ?purrr::map
 ```
 
@@ -989,7 +990,7 @@ Similar to `apply()`, `map()` applies a function over each element of an input l
 .panelset[
 .panel[.panel-name[Named Function]
 
-```r
+``` r
 df %&gt;% 
   map_df(standardize) %&gt;% 
   head(n = 5) # Print top 5 rows 
@@ -997,18 +998,18 @@ df %&gt;%
 
 ```
 ## # A tibble: 5 × 3
-##         x      y      z
-##     &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
-## 1  0.443   1.64  -2.73 
-## 2 -0.623   0.249  1.10 
-## 3  0.299   2.08   0.281
-## 4 -1.23   -0.397 -0.897
-## 5 -0.0140  1.06   0.228
+##        x      y     z
+##    &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
+## 1 -0.533  1.28  0.607
+## 2 -1.37  -0.810 0.501
+## 3  0.674 -1.80  1.16 
+## 4  0.756  1.72  0.663
+## 5 -0.514 -1.51  0.942
 ```
 ]
 .panel[.panel-name[Anonymous]
 
-```r
+``` r
 df %&gt;% 
   map_df(function(x) {
     (x - mean(x)) / sd(x)
@@ -1018,18 +1019,18 @@ df %&gt;%
 
 ```
 ## # A tibble: 5 × 3
-##         x      y      z
-##     &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
-## 1  0.443   1.64  -2.73 
-## 2 -0.623   0.249  1.10 
-## 3  0.299   2.08   0.281
-## 4 -1.23   -0.397 -0.897
-## 5 -0.0140  1.06   0.228
+##        x      y     z
+##    &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
+## 1 -0.533  1.28  0.607
+## 2 -1.37  -0.810 0.501
+## 3  0.674 -1.80  1.16 
+## 4  0.756  1.72  0.663
+## 5 -0.514 -1.51  0.942
 ```
 ]
 .panel[.panel-name[Lambda]
 
-```r
+``` r
 df %&gt;% 
   map_df(~ standardize(x = .)) %&gt;% 
   head(n = 5)
@@ -1037,13 +1038,13 @@ df %&gt;%
 
 ```
 ## # A tibble: 5 × 3
-##         x      y      z
-##     &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
-## 1  0.443   1.64  -2.73 
-## 2 -0.623   0.249  1.10 
-## 3  0.299   2.08   0.281
-## 4 -1.23   -0.397 -0.897
-## 5 -0.0140  1.06   0.228
+##        x      y     z
+##    &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
+## 1 -0.533  1.28  0.607
+## 2 -1.37  -0.810 0.501
+## 3  0.674 -1.80  1.16 
+## 4  0.756  1.72  0.663
+## 5 -0.514 -1.51  0.942
 ```
 
 ]
@@ -1088,7 +1089,7 @@ background-position: 90% 10%
 - Over the course of the semester, you will become familiar with the fundamental packages and concepts of the `tidyverse`
 
 
-```r
+``` r
 # Install and load the tidyverse
 install.packages("tidyverse")
 library(tidyverse)
@@ -1206,7 +1207,7 @@ class: middle
 ]
 .pull-right[
 
-```r
+``` r
 fence_migration
 |-- data
     |-- processed
@@ -1248,7 +1249,7 @@ fence_migration
 ]
 .pull-right[
 
-```r
+``` r
 #_______________________________________####
 #   Data Preparation                    ####
 
@@ -1291,7 +1292,7 @@ layout: true
 ]
 .pull-right[
 
-```r
+``` r
 x &lt;- rnorm(50, 0, 1)
 
 standardize &lt;- function(x, na.rm = TRUE) {
@@ -1333,7 +1334,7 @@ Do not surround `::`, `:::`, `$`, `@`, `?`, `^` and the subsetting operators by 
 ]
 .pull-right[
 
-```r
+``` r
 x &lt;- rnorm(50, 0, 1)
 
 standardize &lt;- function(x, na.rm = TRUE) {
@@ -1372,7 +1373,7 @@ x_std &lt;- standardize(x, na.rm = TRUE)
 ]
 .pull-right[
 
-```r
+``` r
 x &lt;- rnorm(50, 0, 1)
 
 standardize &lt;- function(x, na.rm = TRUE) {
@@ -1408,7 +1409,7 @@ x_std &lt;- standardize(x, na.rm = TRUE)
 ]
 .pull-right[
 
-```r
+``` r
 if (x &gt; 0) {
   x_ln &lt;- log(x)
 } else {
@@ -1435,7 +1436,7 @@ if (x &lt;= 0) "not positive" else "positive"
 ]
 .pull-right[
 
-```r
+``` r
 some_long_function(x,
                    argument_1 = c(1, 2),
                    argument_2 = TRUE)
@@ -1458,7 +1459,7 @@ Use `&lt;-` **not** `=` to assign variables and functions!
 ]
 .pull-right[
 
-```r
+``` r
 # Do this
 x &lt;- rnorm(50, 5, 10)
 
@@ -1478,7 +1479,7 @@ x = rnorm(50, 5, 10)
 ]
 .pull-right[
 
-```r
+``` r
 chr &lt;- "Experiment 'A'"
 ```
 ]
@@ -1533,9 +1534,9 @@ https://github.com/tidyverse/purrr.
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
-"ratio": "16:9",
-"highlightLines": true,
-"countIncrementalSlides": false
+  "ratio": "16:9",
+  "highlightLines": true,
+  "countIncrementalSlides": false
 });
 if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
   window.dispatchEvent(new Event('resize'));

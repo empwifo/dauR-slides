@@ -49,6 +49,8 @@ bib <- ReadBib(params$path_bib, check = FALSE)
 ```{r pdf, include = FALSE}
 source("../../R/xaringan_to_pdf.R")
 
+chromote::local_chrome_version(binary = "chrome-headless-shell")
+
 xaringan_to_pdf(
   input = "version_control.html",
   output_file = "version_control.pdf"

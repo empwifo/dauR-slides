@@ -4,13 +4,14 @@
     <title>Data Analysis using R</title>
     <meta charset="utf-8" />
     <meta name="author" content="Sven Werenbeck-Ueding" />
-    <script src="reporting_files/header-attrs-2.25/header-attrs.js"></script>
+    <script src="reporting_files/header-attrs-2.30/header-attrs.js"></script>
     <link href="reporting_files/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link href="reporting_files/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
     <link href="reporting_files/panelset-0.3.0/panelset.css" rel="stylesheet" />
     <script src="reporting_files/panelset-0.3.0/panelset.js"></script>
     <link href="reporting_files/tile-view-0.2.6/tile-view.css" rel="stylesheet" />
     <script src="reporting_files/tile-view-0.2.6/tile-view.js"></script>
+    <link href="reporting_files/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet" />
     <script src="reporting_files/htmlwidgets-1.6.4/htmlwidgets.js"></script>
     <script src="reporting_files/viz-1.8.2/viz.js"></script>
     <link href="reporting_files/DiagrammeR-styles-0.2/styles.css" rel="stylesheet" />
@@ -33,7 +34,7 @@ class: center, middle, inverse, title-slide
 ### Sven Werenbeck-Ueding
 ]
 .date[
-### 18.11.2024
+### 10.10.2025
 ]
 
 ---
@@ -47,8 +48,8 @@ class: center, middle, inverse, title-slide
 
 
 
-<div class="grViz html-widget html-fill-item" id="htmlwidget-098bc7c0779042b9c496" style="width:100%;height:504px;"></div>
-<script type="application/json" data-for="htmlwidget-098bc7c0779042b9c496">{"x":{"diagram":"\n  digraph {\n    fontname=\"Helvetica,Arial,sans-serif\"\n\tnode [fontname=\"Helvetica,Arial,sans-serif\"]\n\tedge [fontname=\"Helvetica,Arial,sans-serif\"]\n    \n    rankdir=LR\n    \n    subgraph cluster_0 {\n        style = rounded\n        color = black\n    \n        {\n            node [style = rounded, shape = box]\n            Import -> Tidy\n        }\n    \n        subgraph cluster_1 {\n            style = rounded\n            color = black\n            \n            node [style = rounded, shape = box]\n            Transform Visualize Model\n            \n            edge []\n            Transform -> Visualize\n            Visualize -> Model\n            Model -> Transform\n            \n            label = \"Exploration\"\n            labeljust = \"l\"\n            labelloc = \"b\"\n        }\n    \n        {\n            node [style = rounded, shape = box]\n            Communicate\n        }\n    \n        Tidy -> Transform\n        Model -> Communicate [ltail = cluster_1]\n        \n        label = \"Programming\"\n        labeljust = \"l\"\n        labelloc = \"b\"\n    }\n  }\n  ","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div class="grViz html-widget html-fill-item" id="htmlwidget-c8a38e447659e405b524" style="width:100%;height:504px;"></div>
+<script type="application/json" data-for="htmlwidget-c8a38e447659e405b524">{"x":{"diagram":"\n  digraph {\n    fontname=\"Helvetica,Arial,sans-serif\"\n\tnode [fontname=\"Helvetica,Arial,sans-serif\"]\n\tedge [fontname=\"Helvetica,Arial,sans-serif\"]\n    \n    rankdir=LR\n    \n    subgraph cluster_0 {\n        style = rounded\n        color = black\n    \n        {\n            node [style = rounded, shape = box]\n            Import -> Tidy\n        }\n    \n        subgraph cluster_1 {\n            style = rounded\n            color = black\n            \n            node [style = rounded, shape = box]\n            Transform Visualize Model\n            \n            edge []\n            Transform -> Visualize\n            Visualize -> Model\n            Model -> Transform\n            \n            label = \"Exploration\"\n            labeljust = \"l\"\n            labelloc = \"b\"\n        }\n    \n        {\n            node [style = rounded, shape = box]\n            Communicate\n        }\n    \n        Tidy -> Transform\n        Model -> Communicate [ltail = cluster_1]\n        \n        label = \"Programming\"\n        labeljust = \"l\"\n        labelloc = \"b\"\n    }\n  }\n  ","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 
 .right[*Source:* &lt;a name=cite-r4ds&gt;&lt;/a&gt;[Wickham and Grolemund (2016)](https://r4ds.had.co.nz/)]
 
@@ -112,7 +113,7 @@ To get started, download the newest Quarto version [here](https://quarto.org/doc
 - Type the following command in the RStudio terminal:
 
 
-```r
+``` r
 quarto install tinytex
 ```
 
@@ -143,7 +144,7 @@ A Quarto document consists of...
 ... a YAML header
 
 
-```r
+``` r
 ---
 title: "Border Fences and Migration"
 subtitle: "Replication of Feigenberg (2020)"
@@ -213,7 +214,7 @@ Pandoc then processes the markdown file to the format defined in the YAML header
 ]
 .pull-right[
 
-```default
+``` default
 ---
 title: "Border Fences and Migration"
 subtitle: "Replication of Feigenberg (2020)"
@@ -244,7 +245,7 @@ editor: source
 .panel[.panel-name[Markdown]
 
 
-````default
+```` default
 
 ```{r}
 #| label: mpg_summary
@@ -261,7 +262,7 @@ mtcars %&gt;%
 ]
 .panel[.panel-name[Output]
 
-```r
+``` r
 library(tidyverse)
 
 mtcars %&gt;% 
@@ -327,7 +328,7 @@ mtcars %&gt;%
 
 .pull-right[
 
-````default
+```` default
 ---
 title: "Some Title for a Research Project"
 format: beamer
@@ -383,7 +384,7 @@ plot(mtcars$hp ~ mtcars$mpg)
 
 .pull-right[
 
-```default
+``` default
 ---
 title: "Some Title for a Research Project"
 format: beamer
@@ -418,7 +419,7 @@ This is ***bold and italic***
 
 .pull-right[
 
-```default
+``` default
 ---
 title: "Some Title for a Research Project"
 format: beamer
@@ -486,7 +487,7 @@ layout: true
 .panelset[
 .panel[.panel-name[Code]
 
-```default
+``` default
 ![](../../resources/assets/example.jpg)
 ```
 ]
@@ -502,7 +503,7 @@ layout: true
 .panelset[
 .panel[.panel-name[Code]
 
-```default
+``` default
 ![A not at all staged photo...](../../resources/assets/example.jpg)
 ```
 ]
@@ -521,7 +522,7 @@ layout: true
 .panelset[
 .panel[.panel-name[Code]
 
-```default
+``` default
 ![A not at all staged photo...](../../resources/assets/example.jpg){width=50%}
 ```
 ]
@@ -557,7 +558,7 @@ We can also include a figure from an URL by giving the link to the figure in the
 .pull-left[
 
 
-```default
+``` default
 ![](https://media.giphy.com/media/CuMiNoTRz2bYc/giphy.gif)
 ```
 
@@ -577,7 +578,7 @@ To link figures, simply enclose the figure within a link, i. e. `[![](&lt;figure
 .pull-left[
 
 
-```default
+``` default
 [![](https://media.giphy.com/media/CuMiNoTRz2bYc/giphy.gif)](https://media.giphy.com/media/CuMiNoTRz2bYc/giphy.gif)
 ```
 
@@ -609,7 +610,7 @@ layout: false
 .panelset[
 .panel[.panel-name[Code]
 
-````default
+```` default
 ```{r}
 #| echo: false
 #| label: mtcars
@@ -657,7 +658,7 @@ mtcars %&gt;%
 
 .pull-right[
 
-```r
+``` r
 kable(
   x,              # matrix or data.frame
   format,         # e. g. "latex" or "html"
@@ -697,7 +698,7 @@ for each category of cylinders (`cyl`).
 ]
 .panel[.panel-name[Code]
 
-```r
+``` r
 df_sum_stats &lt;- mtcars %&gt;% 
   group_by(cyl) %&gt;% 
   summarise(
@@ -759,7 +760,7 @@ Choose an appropriate formatting for the values.
 ]
 .panel[.panel-name[Code]
 
-```r
+``` r
 df_sum_stats %&gt;% 
   mutate(
     metric = case_when(
@@ -822,7 +823,7 @@ background-position: 90% 10%
 ## Package Features
 
 
-```r
+``` r
 # install.packages("kableExtra")
 library(kableExtra)
 ```
@@ -861,7 +862,7 @@ Add further customization to the table created before using the `kableExtra` pac
 ]
 .panel[.panel-name[Code]
 
-```r
+``` r
 df_sum_stats %&gt;% 
   mutate(
     metric = case_when(
@@ -978,7 +979,7 @@ Quarto uses Pandoc to automatically generate citations and a bibliography from c
 ]
 .pull-right[
 
-```default
+``` default
 ---
 title: "Border Fences and Migration"
 subtitle: "Replication of Feigenberg (2020)"
@@ -994,7 +995,7 @@ editor: source
 ]
 .panel[.panel-name[BibLaTex]
 
-```default
+``` default
 @article{f20,
   Author = {Feigenberg, Benjamin},
   Title = {Fenced Out: The Impact of Border Construction on US-Mexico Migration},
@@ -1047,7 +1048,7 @@ editor: source
 ]
 .pull-right[
 
-```default
+``` default
 ### References {.allowframebreaks}
 
 ::: {#refs}
@@ -1062,7 +1063,7 @@ editor: source
 .panelset[
 .panel[.panel-name[Code]
 
-````default
+```` default
 ::::  {.columns}
 ::: {.column width="50%"}
 - Data was taken from the mtcars data set that comes with R
@@ -1114,7 +1115,7 @@ plot(mtcars$hp ~ mtcars$mpg)
 ]
 .pull-right[
 
-```default
+``` default
 ---
 title: "Border Fences and Migration"
 subtitle: "Replication of Feigenberg (2020)"
@@ -1148,7 +1149,7 @@ editor: source
 ]
 .pull-right[
 
-```default
+``` default
 ---
 title: "Border Fences and Migration"
 subtitle: "Replication of Feigenberg (2020)"
@@ -1206,9 +1207,9 @@ _kableExtra_. URL:
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
-"ratio": "16:9",
-"highlightLines": true,
-"countIncrementalSlides": false
+  "ratio": "16:9",
+  "highlightLines": true,
+  "countIncrementalSlides": false
 });
 if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
   window.dispatchEvent(new Event('resize'));

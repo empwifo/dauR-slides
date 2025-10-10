@@ -4,13 +4,14 @@
     <title>Data Analysis using R</title>
     <meta charset="utf-8" />
     <meta name="author" content="Sven Werenbeck-Ueding" />
-    <script src="wrangling_files/header-attrs-2.25/header-attrs.js"></script>
+    <script src="wrangling_files/header-attrs-2.30/header-attrs.js"></script>
     <link href="wrangling_files/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link href="wrangling_files/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
     <link href="wrangling_files/panelset-0.3.0/panelset.css" rel="stylesheet" />
     <script src="wrangling_files/panelset-0.3.0/panelset.js"></script>
     <link href="wrangling_files/tile-view-0.2.6/tile-view.css" rel="stylesheet" />
     <script src="wrangling_files/tile-view-0.2.6/tile-view.js"></script>
+    <link href="wrangling_files/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet" />
     <script src="wrangling_files/htmlwidgets-1.6.4/htmlwidgets.js"></script>
     <script src="wrangling_files/viz-1.8.2/viz.js"></script>
     <link href="wrangling_files/DiagrammeR-styles-0.2/styles.css" rel="stylesheet" />
@@ -31,7 +32,7 @@ class: center, middle, inverse, title-slide
 ### Sven Werenbeck-Ueding
 ]
 .date[
-### 18.11.2024
+### 10.10.2025
 ]
 
 ---
@@ -43,8 +44,8 @@ class: center, middle, inverse, title-slide
 
 
 
-<div class="grViz html-widget html-fill-item" id="htmlwidget-ae7c3799989575b9a803" style="width:100%;height:504px;"></div>
-<script type="application/json" data-for="htmlwidget-ae7c3799989575b9a803">{"x":{"diagram":"\n  digraph {\n    fontname=\"Helvetica,Arial,sans-serif\"\n\tnode [fontname=\"Helvetica,Arial,sans-serif\"]\n\tedge [fontname=\"Helvetica,Arial,sans-serif\"]\n    \n    rankdir=LR\n    \n    subgraph cluster_0 {\n        style = rounded\n        color = black\n    \n        {\n            node [style = rounded, shape = box]\n            Import -> Tidy\n        }\n    \n        subgraph cluster_1 {\n            style = rounded\n            color = black\n            \n            node [style = rounded, shape = box]\n            Transform Visualize Model\n            \n            edge []\n            Transform -> Visualize\n            Visualize -> Model\n            Model -> Transform\n            \n            label = \"Exploration\"\n            labeljust = \"l\"\n            labelloc = \"b\"\n        }\n    \n        {\n            node [style = rounded, shape = box]\n            Communicate\n        }\n    \n        Tidy -> Transform\n        Model -> Communicate [ltail = cluster_1]\n        \n        label = \"Programming\"\n        labeljust = \"l\"\n        labelloc = \"b\"\n    }\n  }\n  ","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div class="grViz html-widget html-fill-item" id="htmlwidget-ae6f5251416be38e288d" style="width:100%;height:504px;"></div>
+<script type="application/json" data-for="htmlwidget-ae6f5251416be38e288d">{"x":{"diagram":"\n  digraph {\n    fontname=\"Helvetica,Arial,sans-serif\"\n\tnode [fontname=\"Helvetica,Arial,sans-serif\"]\n\tedge [fontname=\"Helvetica,Arial,sans-serif\"]\n    \n    rankdir=LR\n    \n    subgraph cluster_0 {\n        style = rounded\n        color = black\n    \n        {\n            node [style = rounded, shape = box]\n            Import -> Tidy\n        }\n    \n        subgraph cluster_1 {\n            style = rounded\n            color = black\n            \n            node [style = rounded, shape = box]\n            Transform Visualize Model\n            \n            edge []\n            Transform -> Visualize\n            Visualize -> Model\n            Model -> Transform\n            \n            label = \"Exploration\"\n            labeljust = \"l\"\n            labelloc = \"b\"\n        }\n    \n        {\n            node [style = rounded, shape = box]\n            Communicate\n        }\n    \n        Tidy -> Transform\n        Model -> Communicate [ltail = cluster_1]\n        \n        label = \"Programming\"\n        labeljust = \"l\"\n        labelloc = \"b\"\n    }\n  }\n  ","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 
 .right[*Source:* &lt;a name=cite-r4ds&gt;&lt;/a&gt;[Wickham and Grolemund (2016)](https://r4ds.had.co.nz/)]
 
@@ -55,7 +56,7 @@ class: center, middle, inverse, title-slide
 .panelset[
 .panel[.panel-name[Code]
 
-```r
+``` r
 # Load the ENE/ENOE data set
 tbl_enoe &lt;- read_csv("data/raw/enoe/enoe.csv", skip = 3, na = c("", "N/A"))
 
@@ -117,7 +118,7 @@ layout: true
 ## `mutate()`
 
 
-```r
+``` r
 ?dplyr::mutate
 ```
 
@@ -131,7 +132,7 @@ Function call and arguments:
 
 .pull-left[
 
-```r
+``` r
 *mutate(.data,
        ...,
        .keep = c("all", "used", 
@@ -152,7 +153,7 @@ Function call and arguments:
 
 .pull-left[
 
-```r
+``` r
 mutate(.data, 
 *      ...,
        .keep = c("all", "used",
@@ -175,7 +176,7 @@ Function call and arguments:
 
 .pull-left[
 
-```r
+``` r
 mutate(.data, 
        ..., 
 *      .keep = c("all", "used",
@@ -199,7 +200,7 @@ Function call and arguments:
 
 .pull-left[
 
-```r
+``` r
 mutate(.data, 
        ..., 
        .keep = c("all", "used",
@@ -243,7 +244,7 @@ Makes creating new variables (and other operations) more easy and intuitive:
 `base` R
 
 
-```r
+``` r
 tbl_enoe$female &lt;- ifelse(
   tbl_enoe$sex == "Female",
   "Yes",
@@ -256,7 +257,7 @@ tbl_enoe$female &lt;- ifelse(
 `dplyr`
 
 
-```r
+``` r
 mutate(
   tbl_enoe,
   female = ifelse(
@@ -277,7 +278,7 @@ layout: false
 .panelset[
 .panel[.panel-name[Code]
 
-```r
+``` r
 # Recode sex to a "Yes"/"No" dummy
 tbl_enoe %&gt;% 
   mutate(female = ifelse(sex == "Female", "Yes", "No"),
@@ -314,7 +315,7 @@ tbl_enoe %&gt;%
 .panelset[
 .panel[.panel-name[Code]
 
-```r
+``` r
 # Recode marital status to a two-category variable
 tbl_enoe %&gt;% 
   mutate(female = ifelse(sex == "Female", "Yes", "No"),
@@ -394,7 +395,7 @@ Modify the ENE/ENOE data set for use in our analysis:
 ]
 .panel[.panel-name[Code]
 
-```r
+``` r
 tbl_enoe &lt;- tbl_enoe %&gt;% 
   mutate(female = ifelse(sex == "Female", "Yes", "No"), # Recode to 0/1 dummies
          married = ifelse(marital_status == "Married", "Yes", "No"),
@@ -452,7 +453,7 @@ layout: true
 ## `select()`
 
 
-```r
+``` r
 ?dplyr::select
 ```
 
@@ -466,7 +467,7 @@ Function call and arguments:
 
 .pull-left[
 
-```r
+``` r
 *select(.data,
        ...)
 ```
@@ -485,7 +486,7 @@ layout: false
 ## Selecting Variables by Names
 
 
-```r
+``` r
 tbl_enoe %&gt;% 
   select(id, migrate, marital_status, empl_status, educ, income, female)
 ```
@@ -512,7 +513,7 @@ tbl_enoe %&gt;%
 ## Selecting Variables by Index
 
 
-```r
+``` r
 tbl_enoe %&gt;% 
   select(1, 2, 8:12)
 ```
@@ -539,7 +540,7 @@ tbl_enoe %&gt;%
 ## Selecting Variables using Tidy Selection
 
 
-```r
+``` r
 tbl_enoe %&gt;% 
   select(all_of(c("female", "employed")), ends_with("income"), where(is.factor))
 ```
@@ -566,7 +567,7 @@ tbl_enoe %&gt;%
 ## Selecting and Renaming Variables
 
 
-```r
+``` r
 tbl_enoe %&gt;% 
   select(ID = id, empl = employed)
 ```
@@ -602,7 +603,7 @@ layout: true
 ## `filter()`
 
 
-```r
+``` r
 ?dplyr::filter
 ```
 
@@ -616,7 +617,7 @@ Function call and arguments:
 
 .pull-left[
 
-```r
+``` r
 *filter(.data,
        ...)
 ```
@@ -633,7 +634,7 @@ Function call and arguments:
 
 .pull-left[
 
-```r
+``` r
 filter(.data,
 *      ...,)
 ```
@@ -652,7 +653,7 @@ layout: false
 ## Filter by a Single Variable
 
 
-```r
+``` r
 tbl_enoe %&gt;% 
   filter(married == 1)
 ```
@@ -681,7 +682,7 @@ tbl_enoe %&gt;%
 ## Filter by Multiple Variables
 
 
-```r
+``` r
 tbl_enoe %&gt;% 
   filter(married == 1, income &gt; 0 &amp; income &lt;= 50000)
 ```
@@ -714,7 +715,7 @@ tbl_enoe %&gt;%
 Filter if **any** variable satisfies the condition:
 
 
-```r
+``` r
 tbl_enoe %&gt;% 
   filter(if_any(all_of(c("income", "employed")), ~ !is.na(.)))
 ```
@@ -746,7 +747,7 @@ tbl_enoe %&gt;%
 Filter if **all** variables satisfy the condition:
 
 
-```r
+``` r
 tbl_enoe %&gt;% 
   filter(if_all(all_of(c("income", "employed")), ~ !is.na(.)))
 ```
@@ -787,7 +788,7 @@ tbl_enoe %&gt;%
 ]
 .panel[.panel-name[Code]
 
-```r
+``` r
 tbl_enoe &lt;- tbl_enoe %&gt;% 
   select(!where(is.character), -year, -quarter) %&gt;% 
   filter(if_all(!ends_with("income"), ~ !is.na(.)))
@@ -829,7 +830,7 @@ class: middle
 ## `arrange()`
 
 
-```r
+``` r
 ?dplyr::arrange
 ```
 
@@ -850,7 +851,7 @@ Useful if observations should be sorted, e. g. in a descriptive summary table!
 ## Arranging Observations by Income
 
 
-```r
+``` r
 tbl_enoe %&gt;% 
   arrange(income)
 ```
@@ -878,7 +879,7 @@ tbl_enoe %&gt;%
 ## Arranging Observations by Sex and Income in Descending Order
 
 
-```r
+``` r
 tbl_enoe %&gt;% 
   arrange(female, desc(income))
 ```
@@ -912,7 +913,7 @@ class: middle
 ## `group_by()`
 
 
-```r
+``` r
 ?dplyr::group_by
 ```
 
@@ -925,7 +926,7 @@ class: middle
 ## `summarize()`
 
 
-```r
+``` r
 ?dplyr::summarize
 ```
 
@@ -964,7 +965,7 @@ Be sure to specify `na.rm = TRUE` if the vector has missing values, otherwise `N
 ## Count Observations in Each Municipality
 
 
-```r
+``` r
 tbl_enoe %&gt;% 
   group_by(municipality) %&gt;% 
   summarise(n = n())
@@ -992,7 +993,7 @@ tbl_enoe %&gt;%
 ## Check for Missings in Income for Each Pair of Municipality and Period
 
 
-```r
+``` r
 tbl_enoe %&gt;%
   group_by(municipality, period) %&gt;% 
   summarise(na_income = sum(is.na(income)))
@@ -1029,7 +1030,7 @@ tbl_enoe %&gt;%
 ## Create Summary Statistics for Dummy Variables
 
 
-```r
+``` r
 tbl_enoe %&gt;% 
   summarise(across(c("female", "married", "employed"), ~ mean(.)))
 ```
@@ -1046,7 +1047,7 @@ tbl_enoe %&gt;%
 ## Create Summary Statistics for Continous Variables
 
 
-```r
+``` r
 tbl_enoe %&gt;% 
   summarise(
     across(
@@ -1096,7 +1097,7 @@ class: middle
 ## Example for Messy Data
 
 
-```r
+``` r
 tbl_enoe %&gt;% 
   summarise(
     across(
@@ -1178,7 +1179,7 @@ layout: true
 ## `pivot_longer`
 
 
-```r
+``` r
 ?tidyr::pivot_longer
 ```
 
@@ -1190,7 +1191,7 @@ Function call and arguments:
 
 .pull-left[
 
-```r
+``` r
 pivot_longer(data,
 *            cols,
              names_to = "name",
@@ -1211,7 +1212,7 @@ Function call and arguments:
 
 .pull-left[
 
-```r
+``` r
 pivot_longer(data,
              cols, 
 *            names_to = "name",
@@ -1233,7 +1234,7 @@ Function call and arguments:
 
 .pull-left[
 
-```r
+``` r
 pivot_longer(data,
              cols, 
              names_to = "name",
@@ -1254,7 +1255,7 @@ Function call and arguments:
 
 .pull-left[
 
-```r
+``` r
 pivot_longer(data,
              cols, 
              names_to = "name",
@@ -1278,7 +1279,7 @@ layout: false
 .panelset[
 .panel[.panel-name[Code]
 
-```r
+``` r
 tbl_enoe %&gt;% 
   summarise(across(c("income", "age", "educ"),
                    .fns = list(mean = ~ mean(., na.rm = T), sd = ~ sd(., na.rm = T)))) %&gt;% 
@@ -1321,7 +1322,7 @@ layout: true
 ## `pivot_wider`
 
 
-```r
+``` r
 ?tidyr::pivot_wider
 ```
 
@@ -1333,7 +1334,7 @@ Function call and arguments:
 
 .pull-left[
 
-```r
+``` r
 pivot_wider(data,
 *            names_from = name,
              values_from = value)
@@ -1353,7 +1354,7 @@ Function call and arguments:
 
 .pull-left[
 
-```r
+``` r
 pivot_wider(data,
              names_from = name, 
 *            values_from = value)
@@ -1375,7 +1376,7 @@ layout: false
 .panelset[
 .panel[.panel-name[Code]
 
-```r
+``` r
 tbl_enoe %&gt;% 
   summarise(across(c("income", "age", "educ"),
                    .fns = list(mean = ~ mean(., na.rm = T), sd = ~ sd(., na.rm = T)))) %&gt;% 
@@ -1414,7 +1415,7 @@ class: middle
 #### Row-wise
 
 
-```r
+``` r
 ?dplyr::bind_rows
 ```
 
@@ -1430,7 +1431,7 @@ class: middle
 #### Column-wise
 
 
-```r
+``` r
 ?dplyr::bind_cols
 ```
 
@@ -1447,7 +1448,7 @@ class: middle
 .panelset[
 .panel[.panel-name[Code]
 
-```r
+``` r
 # Variables to summarize
 sum_stat_vars &lt;- c("income", "age", "educ")
 
@@ -1498,7 +1499,7 @@ Import all data sets at once, making use of the `purrr` packages. Then, bring th
 ]
 .panel[.panel-name[Code]
 
-```r
+``` r
 library(purrr)
 
 # List all files in the directory
@@ -1606,7 +1607,7 @@ Join the ENE/ENOE data frame with the fence construction data frame using approp
 ]
 .panel[.panel-name[Code]
 
-```r
+``` r
 # Ensure consistent data type of key variables
 tbl_fence &lt;- tbl_fence %&gt;% 
   mutate(municipality = forcats::as_factor(municipality))
@@ -1669,9 +1670,9 @@ data_. O'Reilly. URL:
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
-"ratio": "16:9",
-"highlightLines": true,
-"countIncrementalSlides": false
+  "ratio": "16:9",
+  "highlightLines": true,
+  "countIncrementalSlides": false
 });
 if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
   window.dispatchEvent(new Event('resize'));

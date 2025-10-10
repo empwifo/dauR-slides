@@ -43,8 +43,10 @@ BibOptions(
 bib <- ReadBib(params$path_bib, check = FALSE)
 ```
 
-```{r pdf, include = FALSE}
+```{r pdf, include = FALSE, eval=TRUE}
 source("../../R/xaringan_to_pdf.R")
+
+chromote::local_chrome_version(binary = "chrome-headless-shell")
 
 xaringan_to_pdf(
   input = "wrangling.html",

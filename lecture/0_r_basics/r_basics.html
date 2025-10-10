@@ -4,7 +4,7 @@
     <title>Data Analysis using R</title>
     <meta charset="utf-8" />
     <meta name="author" content="Sven Werenbeck-Ueding" />
-    <script src="r_basics_files/header-attrs-2.25/header-attrs.js"></script>
+    <script src="r_basics_files/header-attrs-2.30/header-attrs.js"></script>
     <link href="r_basics_files/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link href="r_basics_files/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
     <link href="r_basics_files/panelset-0.3.0/panelset.css" rel="stylesheet" />
@@ -27,7 +27,7 @@ class: center, middle, inverse, title-slide
 ### Sven Werenbeck-Ueding
 ]
 .date[
-### 16.09.2024
+### 10.10.2025
 ]
 
 ---
@@ -187,7 +187,7 @@ layout: true
 --
 
 .pull-left.short-width[
-.big-emoji[👨‍💻]
+.big-emoji[👩‍💻]
 ]
 
 .pull-right.long-width[
@@ -208,7 +208,7 @@ layout: true
 ---
 
 
-```r
+``` r
 3 + 5 * 2
 ```
 
@@ -217,7 +217,7 @@ layout: true
 ```
 
 
-```r
+``` r
 (3 + 5) * 2
 ```
 
@@ -226,7 +226,7 @@ layout: true
 ```
 
 
-```r
+``` r
 sqrt(8.33)
 ```
 
@@ -235,7 +235,7 @@ sqrt(8.33)
 ```
 
 
-```r
+``` r
 round(sqrt(8.33), 2)
 ```
 
@@ -273,7 +273,7 @@ layout: false
 
 .pull-left[
 
-```r
+``` r
 # Multiply two by five
 2 * 5
 ```
@@ -287,7 +287,7 @@ layout: false
 
 .pull-right[
 
-```r
+``` r
 10 / 4 # Divide ten by four
 ```
 
@@ -320,7 +320,7 @@ layout: true
 - Each package has to be installed **only once**
 
 
-```r
+``` r
 # Installing the package rio
 install.packages("rio")
 ```
@@ -336,7 +336,7 @@ install.packages("rio")
 - Packages need only to be activated **once per session**
 
 
-```r
+``` r
 library(rio)
 ```
 ]
@@ -361,7 +361,7 @@ layout: false
 
 .pull-right[
 
-```r
+``` r
 # Assign value 4 to variable x
 x &lt;- 4
 
@@ -374,7 +374,7 @@ x
 ```
 
 
-```r
+``` r
 # Do some calculations with x
 x * 2
 ```
@@ -384,7 +384,7 @@ x * 2
 ```
 
 
-```r
+``` r
 # Overwrite x
 x &lt;- 1
 x
@@ -444,14 +444,14 @@ layout: true
 #### Operations
 
 
-```r
+``` r
 # Generate x and z
 x &lt;- c(5, 1, 9, 3)
 z &lt;- c(4, 9, 0, 4)
 ```
 
 
-```r
+``` r
 # Multiplication with scalar
 2 * x
 ```
@@ -461,7 +461,7 @@ z &lt;- c(4, 9, 0, 4)
 ```
 
 
-```r
+``` r
 # Elementwise multiplication
 x * z
 ```
@@ -477,7 +477,7 @@ x * z
 #### Special Commands
 
 
-```r
+``` r
 # vector with 5 ones
 rep(1, 5)
 ```
@@ -487,7 +487,7 @@ rep(1, 5)
 ```
 
 
-```r
+``` r
 # sequence from 1 to 5
 seq(1, 5)
 ```
@@ -497,7 +497,7 @@ seq(1, 5)
 ```
 
 
-```r
+``` r
 1:5
 ```
 
@@ -538,7 +538,7 @@ layout: true
 
 .pull-right[
 
-```r
+``` r
 # Elements 2
 x[2]
 ```
@@ -548,7 +548,7 @@ x[2]
 ```
 
 
-```r
+``` r
 # Elements 1 to 3
 x[1:3]
 ```
@@ -558,7 +558,7 @@ x[1:3]
 ```
 
 
-```r
+``` r
 # All elements except the last one
 x[-4]
 ```
@@ -582,7 +582,7 @@ x[-4]
 
 .pull-right[
 
-```r
+``` r
 # Subset with TRUE/FALSE
 x[c(TRUE, FALSE, FALSE, TRUE)]
 ```
@@ -618,7 +618,7 @@ layout: false
 
 .pull-right[
 
-```r
+``` r
 x &lt;- factor(c("b", "a", "a", "b", "a"),
             levels = c("a", "b"))
 
@@ -629,7 +629,7 @@ class(x)
 ## [1] "factor"
 ```
 
-```r
+``` r
 levels(x)
 ```
 
@@ -651,7 +651,7 @@ layout: false
 ]
 .pull-right[
 
-```r
+``` r
 NA * 10
 ```
 
@@ -665,7 +665,7 @@ NA * 10
 ]
 .pull-right[
 
-```r
+``` r
 NA^0
 ```
 
@@ -679,7 +679,7 @@ NA^0
 ]
 .pull-right[
 
-```r
+``` r
 x &lt;- c(1, NA, 2, 3)
 
 is.na(x)
@@ -711,7 +711,7 @@ layout: true
 
 .pull-right[
 
-```r
+``` r
 # Add dim attribute to atomic vector
 x &lt;- 1:6
 
@@ -732,7 +732,7 @@ x
 
 .pull-right[
 
-```r
+``` r
 # Use the matrix command to create a
 # matrix from a vector
 matrix(x, nrow = 3)
@@ -745,7 +745,7 @@ matrix(x, nrow = 3)
 ## [3,]    3    6
 ```
 
-```r
+``` r
 # Specify ncol instead of nrow
 matrix(x, ncol = 2)
 ```
@@ -762,7 +762,7 @@ matrix(x, ncol = 2)
 
 .pull-right[
 
-```r
+``` r
 # Fill matrix column-wise instead of
 # row-wise
 matrix(x, ncol = 2, byrow = T)
@@ -780,7 +780,7 @@ matrix(x, ncol = 2, byrow = T)
 
 .pull-right[
 
-```r
+``` r
 # Bind atomic vectors column-wise
 cbind(1:3, 4:6)
 ```
@@ -813,7 +813,7 @@ layout: true
 
 .pull-right[
 
-```r
+``` r
 A &lt;- matrix(c(1, 2, 0, 3), ncol = 2)
 
 A
@@ -825,7 +825,7 @@ A
 ## [2,]    2    3
 ```
 
-```r
+``` r
 t(A)
 ```
 
@@ -835,7 +835,7 @@ t(A)
 ## [2,]    0    3
 ```
 
-```r
+``` r
 solve(A)
 ```
 
@@ -850,7 +850,7 @@ solve(A)
 
 .pull-right[
 
-```r
+``` r
 B &lt;- matrix(c(4, 7, 2, 6), ncol = 2)
 
 B
@@ -862,7 +862,7 @@ B
 ## [2,]    7    6
 ```
 
-```r
+``` r
 A %*% B
 ```
 
@@ -889,7 +889,7 @@ layout: true
 
 .pull-right[
 
-```r
+``` r
 C &lt;- matrix(-5:6, ncol = 4)
 
 C
@@ -907,7 +907,7 @@ C
 
 .pull-right[
 
-```r
+``` r
 C[1, ]
 ```
 
@@ -916,7 +916,7 @@ C[1, ]
 ```
 
 
-```r
+``` r
 C[, 1:3]
 ```
 
@@ -928,7 +928,7 @@ C[, 1:3]
 ```
 
 
-```r
+``` r
 C[1:2, 2]
 ```
 
@@ -986,7 +986,7 @@ layout: true
 
 .pull-right[
 
-```r
+``` r
 x &lt;- list(1:5, "a", c(TRUE, FALSE),
           seq(0.2, 0.6, by = 0.2))
 
@@ -997,7 +997,7 @@ typeof(x)
 ## [1] "list"
 ```
 
-```r
+``` r
 x
 ```
 
@@ -1020,7 +1020,7 @@ x
 
 .pull-right[
 
-```r
+``` r
 x &lt;- list(
   integer_vector = 1:5,
   character_vector = "a"
@@ -1042,7 +1042,7 @@ x
 
 .pull-right[
 
-```r
+``` r
 x$integer_vector
 ```
 
@@ -1050,7 +1050,7 @@ x$integer_vector
 ## [1] 1 2 3 4 5
 ```
 
-```r
+``` r
 x[[1]]
 ```
 
@@ -1084,7 +1084,7 @@ layout: false
 
 .pull-right[
 
-```r
+``` r
 df &lt;- data.frame(x = 1:10, y = letters[1:10])
 
 df
@@ -1135,7 +1135,7 @@ layout: true
 
 .pull-right[
 
-```r
+``` r
 summary(df)
 ```
 
@@ -1154,7 +1154,7 @@ summary(df)
 
 .pull-right[
 
-```r
+``` r
 df$x
 ```
 
@@ -1167,7 +1167,7 @@ df$x
 
 .pull-right[
 
-```r
+``` r
 nrow(df)
 ```
 
@@ -1180,7 +1180,7 @@ nrow(df)
 
 .pull-right[
 
-```r
+``` r
 names(df)
 ```
 
@@ -1203,7 +1203,7 @@ Create a new column:
 
 .pull-right[
 
-```r
+``` r
 df$z &lt;- seq(0.1, 1, by = 0.1)
 
 df
@@ -1232,7 +1232,7 @@ Select multiple columns by name:
 
 .pull-right[
 
-```r
+``` r
 df[, c("x", "z")]
 ```
 
@@ -1265,7 +1265,7 @@ Select a subset of observations based on a condition:
 
 .pull-right[
 
-```r
+``` r
 df[df$x &lt;= 5,]
 ```
 
@@ -1297,7 +1297,7 @@ layout: false
 
 .pull-right[
 
-```r
+``` r
 df &lt;- read.csv("data/processed/happiness.csv")
 ```
 
@@ -1351,7 +1351,7 @@ where
 ## Inspect the Data
 
 
-```r
+``` r
 summary(df[,c("vhappy", "educ", "income", "owngun")])
 ```
 
@@ -1385,7 +1385,7 @@ layout: true
 Remove missing values using `na.omit()`:
 
 
-```r
+``` r
 # Create a new data frame in the environment with a subset of columns used for the analysis
 df_clean &lt;- df[,c("vhappy", "educ", "income", "owngun")]
 
@@ -1410,7 +1410,7 @@ summary(df_clean)
 Recode `owngun` to a dummy variable using `ifelse()`:
 
 
-```r
+``` r
 # Recode owngun to a dummy variable
 df_clean$owngun &lt;- ifelse(df_clean$owngun == "yes", 1, 0)
 
@@ -1432,7 +1432,7 @@ summary(df_clean)
 The `income` is given in the form of income brackets and stored as a character vector:
 
 
-```r
+``` r
 # Take a look at unique values of the income
 unique(df_clean$income)
 ```
@@ -1452,7 +1452,7 @@ unique(df_clean$income)
 Convert `income` to an ordered factor:
 
 
-```r
+``` r
 df_clean$income &lt;- factor(df_clean$income,
                           levels = c(
                             "lt $1000", "$1000 to 2999", "$3000 to 3999", "$4000 to 4999",
@@ -1495,7 +1495,7 @@ layout: true
 
 .pull-right[
 
-```r
+``` r
 model &lt;- lm(vhappy ~ educ + income + owngun,
             df_clean)
 ```
@@ -1505,7 +1505,7 @@ model &lt;- lm(vhappy ~ educ + income + owngun,
 ---
 
 
-```r
+``` r
 model
 ```
 
@@ -1531,7 +1531,7 @@ layout: false
 
 .scroll-box-18[
 
-```r
+``` r
 summary(model)
 ```
 
@@ -1574,7 +1574,7 @@ summary(model)
 ## Extract Coefficients: `coef()`
 
 
-```r
+``` r
 coef(model)
 ```
 
@@ -1658,9 +1658,9 @@ _Introductory Econometrics: A Modern Approach_. 5th. Cengage Learning.
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
-"ratio": "16:9",
-"highlightLines": true,
-"countIncrementalSlides": false
+  "ratio": "16:9",
+  "highlightLines": true,
+  "countIncrementalSlides": false
 });
 if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
   window.dispatchEvent(new Event('resize'));
