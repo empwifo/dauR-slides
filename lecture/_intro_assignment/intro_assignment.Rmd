@@ -51,6 +51,8 @@ bib <- ReadBib(params$path_bib, check = FALSE)
 ```{r pdf, include = FALSE, eval=TRUE}
 source("../../R/xaringan_to_pdf.R")
 
+chromote::local_chrome_version(binary = "chrome-headless-shell")
+
 xaringan_to_pdf(
   input = "intro_assignment.html",
   output_file = "intro_assignment.pdf"
@@ -132,11 +134,11 @@ By the end of the semester, you will...
   
   - In groups of 2 or 3 students
   
-  - Presentation of outlines on **04.12.2024**
+  - Presentation of outlines on **03.12.2024**
   
-  - Submission of course work on **28.01.2025**
+  - Submission of course work on **03.02.2025**
   
-  - Presentation of results on **29.01.2025**
+  - Presentation of results on **04.02.2025**
   
 - Code repository and presentation count equally towards the final grade
 ]
@@ -474,12 +476,12 @@ sf %>%
 
 | Date                          |   |
 |-------------------------------|---|
-| 16.10.2024 &ndash; 30.10.2024 | Register via Flexnow<br/><br/>Form groups of 2 to 3 students (use the Moodle forum) |
-| today &ndash; 31.10.2024      | Register on sciebo: https://hochschulcloud.nrw/<br/><br/>Send an email to [sven.werenbeck-ueding@rub.de](mailto:sven.werenbeck-ueding@ruhr-uni-bochum.de) containing the members of your group with name, student ID and the email with which they registered on sciebo |
-| 04.11.2024                    | Copy the data from the shared sciebo folder to your own folder in sciebo and start working on your project by creating a GitHub repository dedicated to your project<br/><br/>Add the GitHub user "Solaire-patch" (that's me) as a collaborator to your GitHub repository |
-| 04.12.2025                    | Present an outline of your project |
-| 28.01.2025                    | Create a feature branch labelled "submission" to submit your repository and also submit your repository as a ZIP archive via email to [sven.werenbeck-ueding@rub.de](mailto:sven.werenbeck-ueding@ruhr-uni-bochum.de) |
-| 29.01.2025                    | Present your results in class |
+| 22.10.2025 &ndash; 05.11.2025 | Register via Flexnow<br/><br/>Form groups of 2 to 3 students (use the Moodle forum) |
+| today &ndash; 06.11.2025      | Register on sciebo: https://hochschulcloud.nrw/<br/><br/>Send an email to [sven.werenbeck-ueding@rub.de](mailto:sven.werenbeck-ueding@ruhr-uni-bochum.de) containing the members of your group with name, student ID and the email with which they registered on sciebo |
+| 06.11.2025                    | Copy the data from the shared sciebo folder to your own folder in sciebo and start working on your project by creating a GitHub repository dedicated to your project<br/><br/>Add the GitHub user "werenbeck-ueding" (that's me) as a collaborator to your GitHub repository |
+| 03.12.2025                    | Present an outline of your project |
+| 03.02.2026                    | Create a feature branch labelled "submission" to submit your repository and also submit your repository as a ZIP archive via email to [sven.werenbeck-ueding@rub.de](mailto:sven.werenbeck-ueding@ruhr-uni-bochum.de) |
+| 04.02.2026                    | Present your results in class |
 
 ---
 
@@ -497,7 +499,7 @@ sf %>%
   - What is your empirical model?
   - Are there issues with your empirical strategy?
   
-- Presentation on **04.12.2024**
+- Presentation on **03.12.2024**
 
 ---
 
@@ -586,7 +588,7 @@ sf %>%
 
 ## Submission
 
-**Deadline: 28.01.2025**
+**Deadline: 03.02.2025**
 
 .pull-left[
 #### Code Repository

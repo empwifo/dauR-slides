@@ -4,13 +4,14 @@
     <title>Data Analysis using R</title>
     <meta charset="utf-8" />
     <meta name="author" content="Sven Werenbeck-Ueding" />
-    <script src="intro_assignment_files/header-attrs-2.25/header-attrs.js"></script>
+    <script src="intro_assignment_files/header-attrs-2.30/header-attrs.js"></script>
     <link href="intro_assignment_files/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link href="intro_assignment_files/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
     <link href="intro_assignment_files/panelset-0.3.0/panelset.css" rel="stylesheet" />
     <script src="intro_assignment_files/panelset-0.3.0/panelset.js"></script>
     <link href="intro_assignment_files/tile-view-0.2.6/tile-view.css" rel="stylesheet" />
     <script src="intro_assignment_files/tile-view-0.2.6/tile-view.js"></script>
+    <link href="intro_assignment_files/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet" />
     <script src="intro_assignment_files/htmlwidgets-1.6.4/htmlwidgets.js"></script>
     <script src="intro_assignment_files/viz-1.8.2/viz.js"></script>
     <link href="intro_assignment_files/DiagrammeR-styles-0.2/styles.css" rel="stylesheet" />
@@ -33,7 +34,7 @@ class: center, middle, inverse, title-slide
 ### Sven Werenbeck-Ueding
 ]
 .date[
-### 18.11.2024
+### 10.10.2025
 ]
 
 ---
@@ -122,11 +123,11 @@ By the end of the semester, you will...
   
   - In groups of 2 or 3 students
   
-  - Presentation of outlines on **04.12.2024**
+  - Presentation of outlines on **03.12.2024**
   
-  - Submission of course work on **28.01.2025**
+  - Submission of course work on **03.02.2025**
   
-  - Presentation of results on **29.01.2025**
+  - Presentation of results on **04.02.2025**
   
 - Code repository and presentation count equally towards the final grade
 ]
@@ -152,8 +153,8 @@ By the end of the semester, you will...
 
 .pull-right[
 
-<div class="grViz html-widget html-fill-item" id="htmlwidget-04326b9e22cac16f46a1" style="width:504px;height:50%;"></div>
-<script type="application/json" data-for="htmlwidget-04326b9e22cac16f46a1">{"x":{"diagram":"\n  digraph {\n    fontname=\"Helvetica,Arial,sans-serif\"\n\tnode [fontname=\"Helvetica,Arial,sans-serif\"]\n\tedge [fontname=\"Helvetica,Arial,sans-serif\"]\n    \n    rankdir=LR\n    \n    subgraph cluster_0 {\n        style = rounded\n        color = black\n    \n        {\n            node [style = rounded, shape = box]\n            Import -> Tidy\n        }\n    \n        subgraph cluster_1 {\n            style = rounded\n            color = black\n            \n            node [style = rounded, shape = box]\n            Transform Visualize Model\n            \n            edge []\n            Transform -> Visualize\n            Visualize -> Model\n            Model -> Transform\n            \n            label = \"Exploration\"\n            labeljust = \"l\"\n            labelloc = \"b\"\n        }\n    \n        {\n            node [style = rounded, shape = box]\n            Communicate\n        }\n    \n        Tidy -> Transform\n        Model -> Communicate [ltail = cluster_1]\n        \n        label = \"Programming\"\n        labeljust = \"l\"\n        labelloc = \"b\"\n    }\n  }\n  ","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div class="grViz html-widget html-fill-item" id="htmlwidget-ded9bb92c4449931127c" style="width:504px;height:50%;"></div>
+<script type="application/json" data-for="htmlwidget-ded9bb92c4449931127c">{"x":{"diagram":"\n  digraph {\n    fontname=\"Helvetica,Arial,sans-serif\"\n\tnode [fontname=\"Helvetica,Arial,sans-serif\"]\n\tedge [fontname=\"Helvetica,Arial,sans-serif\"]\n    \n    rankdir=LR\n    \n    subgraph cluster_0 {\n        style = rounded\n        color = black\n    \n        {\n            node [style = rounded, shape = box]\n            Import -> Tidy\n        }\n    \n        subgraph cluster_1 {\n            style = rounded\n            color = black\n            \n            node [style = rounded, shape = box]\n            Transform Visualize Model\n            \n            edge []\n            Transform -> Visualize\n            Visualize -> Model\n            Model -> Transform\n            \n            label = \"Exploration\"\n            labeljust = \"l\"\n            labelloc = \"b\"\n        }\n    \n        {\n            node [style = rounded, shape = box]\n            Communicate\n        }\n    \n        Tidy -> Transform\n        Model -> Communicate [ltail = cluster_1]\n        \n        label = \"Programming\"\n        labeljust = \"l\"\n        labelloc = \"b\"\n    }\n  }\n  ","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 
 .right[*Source:* &lt;a name=cite-r4ds&gt;&lt;/a&gt;[Wickham and Grolemund (2016)](https://r4ds.had.co.nz/)]
 
@@ -488,12 +489,12 @@ Neighborhoods with "better" schools may attract more parents, resulting in highe
 
 | Date                          |   |
 |-------------------------------|---|
-| 16.10.2024 &amp;ndash; 30.10.2024 | Register via Flexnow&lt;br/&gt;&lt;br/&gt;Form groups of 2 to 3 students (use the Moodle forum) |
-| today &amp;ndash; 31.10.2024      | Register on sciebo: https://hochschulcloud.nrw/&lt;br/&gt;&lt;br/&gt;Send an email to [sven.werenbeck-ueding@rub.de](mailto:sven.werenbeck-ueding@ruhr-uni-bochum.de) containing the members of your group with name, student ID and the email with which they registered on sciebo |
-| 04.11.2024                    | Copy the data from the shared sciebo folder to your own folder in sciebo and start working on your project by creating a GitHub repository dedicated to your project&lt;br/&gt;&lt;br/&gt;Add the GitHub user "Solaire-patch" (that's me) as a collaborator to your GitHub repository |
-| 04.12.2025                    | Present an outline of your project |
-| 28.01.2025                    | Create a feature branch labelled "submission" to submit your repository and also submit your repository as a ZIP archive via email to [sven.werenbeck-ueding@rub.de](mailto:sven.werenbeck-ueding@ruhr-uni-bochum.de) |
-| 29.01.2025                    | Present your results in class |
+| 22.10.2025 &amp;ndash; 05.11.2025 | Register via Flexnow&lt;br/&gt;&lt;br/&gt;Form groups of 2 to 3 students (use the Moodle forum) |
+| today &amp;ndash; 06.11.2025      | Register on sciebo: https://hochschulcloud.nrw/&lt;br/&gt;&lt;br/&gt;Send an email to [sven.werenbeck-ueding@rub.de](mailto:sven.werenbeck-ueding@ruhr-uni-bochum.de) containing the members of your group with name, student ID and the email with which they registered on sciebo |
+| 06.11.2025                    | Copy the data from the shared sciebo folder to your own folder in sciebo and start working on your project by creating a GitHub repository dedicated to your project&lt;br/&gt;&lt;br/&gt;Add the GitHub user "werenbeck-ueding" (that's me) as a collaborator to your GitHub repository |
+| 03.12.2025                    | Present an outline of your project |
+| 03.02.2026                    | Create a feature branch labelled "submission" to submit your repository and also submit your repository as a ZIP archive via email to [sven.werenbeck-ueding@rub.de](mailto:sven.werenbeck-ueding@ruhr-uni-bochum.de) |
+| 04.02.2026                    | Present your results in class |
 
 ---
 
@@ -511,7 +512,7 @@ Neighborhoods with "better" schools may attract more parents, resulting in highe
   - What is your empirical model?
   - Are there issues with your empirical strategy?
   
-- Presentation on **04.12.2024**
+- Presentation on **03.12.2024**
 
 ---
 
@@ -600,7 +601,7 @@ Neighborhoods with "better" schools may attract more parents, resulting in highe
 
 ## Submission
 
-**Deadline: 28.01.2025**
+**Deadline: 03.02.2025**
 
 .pull-left[
 #### Code Repository
@@ -749,9 +750,9 @@ data_. O'Reilly. URL:
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
-"ratio": "16:9",
-"highlightLines": true,
-"countIncrementalSlides": false
+  "ratio": "16:9",
+  "highlightLines": true,
+  "countIncrementalSlides": false
 });
 if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
   window.dispatchEvent(new Event('resize'));

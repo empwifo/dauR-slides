@@ -24,6 +24,7 @@ xaringan_to_pdf <- function(
   if (!requireNamespace("chromote", quietly = TRUE)) {
     stop("`chromote` is required: devtools::install_github('rstudio/chromote')")
   }
+  
   required_packages <- c("progress", "jsonlite", "pdftools", "digest", "fs")
   for (pkg in required_packages) {
     if (!requireNamespace(pkg, quietly = TRUE)) {
