@@ -114,7 +114,7 @@ By the end of the semester, you will...
 .pull-left[
 #### Lecture
 
-- Class times: Wednesday, 14:00 &ndash; 18:00, GD 03/354
+- Class times: Tuesday, 14:00 &ndash; 18:00, GD 03/354
 
 - First half of the semester
 
@@ -134,11 +134,11 @@ By the end of the semester, you will...
   
   - In groups of 2 or 3 students
   
-  - Presentation of outlines on **03.12.2024**
+  - Presentation of outlines on **01.12.2026**
   
-  - Submission of course work on **03.02.2025**
+  - Submission of course work on **01.02.2027**
   
-  - Presentation of results on **04.02.2025**
+  - Presentation of results on **02.02.2027**
   
 - Code repository and presentation count equally towards the final grade
 ]
@@ -261,7 +261,7 @@ class: middle
   
   - (Elementary) schools in the neighborhood are a deciding factor for parents when buying a home
   
-- Parents pay a mark-up to live near "better" schools with a good learning environment for their child
+- Parents pay a mark-up to live near "better" schools with a good learning environment for their child `r Citep(bib, "hs25")`
 
 - Having good schools nearby can be understood as a local amenity
 
@@ -321,7 +321,7 @@ $$\ln p_{itr}=S_{it}\beta+N_{it}\gamma+\tau_t+\rho_r+\varepsilon_{it}$$
 
 - $N_{it}$: Vector of neighborhood characteristics of dwelling $i$ at time $t$
 
-- $\tau_t$: Time fixed effects for time $t$
+- $\tau_t$: Time fixed effects for time $t$ (if time dimension available)
 
 - $\rho_r$: Region fixed effects for region $r$
 
@@ -452,7 +452,7 @@ sf %>%
 
 ## Your Task
 
-- Develop a specific and narrow research question revolving around housing prices and school quality in groups of 2 to 3 students
+- Develop a specific and narrow research question revolving around housing prices and school quality or accessibility in groups of 2 to 3 students
 
 - Prepare the provided data to your needs
 
@@ -476,12 +476,12 @@ sf %>%
 
 | Date                          |   |
 |-------------------------------|---|
-| 22.10.2025 &ndash; 05.11.2025 | Register via Flexnow<br/><br/>Form groups of 2 to 3 students (use the Moodle forum) |
-| today &ndash; 06.11.2025      | Register on sciebo: https://hochschulcloud.nrw/<br/><br/>Send an email to [sven.werenbeck-ueding@rub.de](mailto:sven.werenbeck-ueding@ruhr-uni-bochum.de) containing the members of your group with name, student ID and the email with which they registered on sciebo |
-| 06.11.2025                    | Copy the data from the shared sciebo folder to your own folder in sciebo and start working on your project by creating a GitHub repository dedicated to your project<br/><br/>Add the GitHub user "werenbeck-ueding" (that's me) as a collaborator to your GitHub repository |
-| 03.12.2025                    | Present an outline of your project |
-| 03.02.2026                    | Create a feature branch labelled "submission" to submit your repository and also submit your repository as a ZIP archive via email to [sven.werenbeck-ueding@rub.de](mailto:sven.werenbeck-ueding@ruhr-uni-bochum.de) |
-| 04.02.2026                    | Present your results in class |
+| 20.10.2026 &ndash; 03.11.2026 | Register via Flexnow<br/><br/>Form groups of 2 to 3 students (use the Moodle forum) |
+| today &ndash; 04.11.2026      | Register on sciebo: https://hochschulcloud.nrw/<br/><br/>Send an email to [sven.werenbeck-ueding@rub.de](mailto:sven.werenbeck-ueding@ruhr-uni-bochum.de) containing the members of your group with name, student ID and the email with which they registered on sciebo |
+| 04.11.2026                    | Copy the data from the shared sciebo folder to your own folder in sciebo and start working on your project by creating a GitHub repository dedicated to your project<br/><br/>Add the GitHub user "werenbeck-ueding" (that's me) as a collaborator to your GitHub repository |
+| 01.12.2026                    | Present an outline of your project |
+| 01.02.2027                    | Create a feature branch labelled "submission" to submit your repository and also submit your repository as a ZIP archive via email to [sven.werenbeck-ueding@rub.de](mailto:sven.werenbeck-ueding@ruhr-uni-bochum.de) |
+| 02.02.2027                    | Present your results in class |
 
 ---
 
@@ -711,7 +711,7 @@ Not controlling for socio-economic indicators will confound your estimates for t
 
 layout: false
 
-# References
+## References
 
 ```{r, results='asis', echo=FALSE}
 PrintBibliography(bib)

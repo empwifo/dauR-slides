@@ -34,7 +34,7 @@ class: center, middle, inverse, title-slide
 ### Sven Werenbeck-Ueding
 ]
 .date[
-### 10.10.2025
+### 09.10.2026
 ]
 
 ---
@@ -103,7 +103,7 @@ By the end of the semester, you will...
 .pull-left[
 #### Lecture
 
-- Class times: Wednesday, 14:00 &amp;ndash; 18:00, GD 03/354
+- Class times: Tuesday, 14:00 &amp;ndash; 18:00, GD 03/354
 
 - First half of the semester
 
@@ -123,11 +123,11 @@ By the end of the semester, you will...
   
   - In groups of 2 or 3 students
   
-  - Presentation of outlines on **03.12.2024**
+  - Presentation of outlines on **01.12.2026**
   
-  - Submission of course work on **03.02.2025**
+  - Submission of course work on **01.02.2027**
   
-  - Presentation of results on **04.02.2025**
+  - Presentation of results on **02.02.2027**
   
 - Code repository and presentation count equally towards the final grade
 ]
@@ -153,8 +153,8 @@ By the end of the semester, you will...
 
 .pull-right[
 
-<div class="grViz html-widget html-fill-item" id="htmlwidget-ded9bb92c4449931127c" style="width:504px;height:50%;"></div>
-<script type="application/json" data-for="htmlwidget-ded9bb92c4449931127c">{"x":{"diagram":"\n  digraph {\n    fontname=\"Helvetica,Arial,sans-serif\"\n\tnode [fontname=\"Helvetica,Arial,sans-serif\"]\n\tedge [fontname=\"Helvetica,Arial,sans-serif\"]\n    \n    rankdir=LR\n    \n    subgraph cluster_0 {\n        style = rounded\n        color = black\n    \n        {\n            node [style = rounded, shape = box]\n            Import -> Tidy\n        }\n    \n        subgraph cluster_1 {\n            style = rounded\n            color = black\n            \n            node [style = rounded, shape = box]\n            Transform Visualize Model\n            \n            edge []\n            Transform -> Visualize\n            Visualize -> Model\n            Model -> Transform\n            \n            label = \"Exploration\"\n            labeljust = \"l\"\n            labelloc = \"b\"\n        }\n    \n        {\n            node [style = rounded, shape = box]\n            Communicate\n        }\n    \n        Tidy -> Transform\n        Model -> Communicate [ltail = cluster_1]\n        \n        label = \"Programming\"\n        labeljust = \"l\"\n        labelloc = \"b\"\n    }\n  }\n  ","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div class="grViz html-widget html-fill-item" id="htmlwidget-91edb573ca033b5b7a94" style="width:504px;height:50%;"></div>
+<script type="application/json" data-for="htmlwidget-91edb573ca033b5b7a94">{"x":{"diagram":"\n  digraph {\n    fontname=\"Helvetica,Arial,sans-serif\"\n\tnode [fontname=\"Helvetica,Arial,sans-serif\"]\n\tedge [fontname=\"Helvetica,Arial,sans-serif\"]\n    \n    rankdir=LR\n    \n    subgraph cluster_0 {\n        style = rounded\n        color = black\n    \n        {\n            node [style = rounded, shape = box]\n            Import -> Tidy\n        }\n    \n        subgraph cluster_1 {\n            style = rounded\n            color = black\n            \n            node [style = rounded, shape = box]\n            Transform Visualize Model\n            \n            edge []\n            Transform -> Visualize\n            Visualize -> Model\n            Model -> Transform\n            \n            label = \"Exploration\"\n            labeljust = \"l\"\n            labelloc = \"b\"\n        }\n    \n        {\n            node [style = rounded, shape = box]\n            Communicate\n        }\n    \n        Tidy -> Transform\n        Model -> Communicate [ltail = cluster_1]\n        \n        label = \"Programming\"\n        labeljust = \"l\"\n        labelloc = \"b\"\n    }\n  }\n  ","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 
 .right[*Source:* &lt;a name=cite-r4ds&gt;&lt;/a&gt;[Wickham and Grolemund (2016)](https://r4ds.had.co.nz/)]
 
@@ -203,7 +203,7 @@ class: middle
   
   - (Elementary) schools in the neighborhood are a deciding factor for parents when buying a home
   
-- Parents pay a mark-up to live near "better" schools with a good learning environment for their child
+- Parents pay a mark-up to live near "better" schools with a good learning environment for their child &lt;a name=cite-hs25&gt;&lt;/a&gt;([Hörnig and Schäfer, 2025](https://www.sciencedirect.com/science/article/pii/S0927537125000661))
 
 - Having good schools nearby can be understood as a local amenity
 
@@ -263,7 +263,7 @@ Hedonic price functions are usually estimated using a log-linear functional form
 
 - `\(N_{it}\)`: Vector of neighborhood characteristics of dwelling `\(i\)` at time `\(t\)`
 
-- `\(\tau_t\)`: Time fixed effects for time `\(t\)`
+- `\(\tau_t\)`: Time fixed effects for time `\(t\)` (if time dimension available)
 
 - `\(\rho_r\)`: Region fixed effects for region `\(r\)`
 
@@ -465,7 +465,7 @@ Neighborhoods with "better" schools may attract more parents, resulting in highe
 
 ## Your Task
 
-- Develop a specific and narrow research question revolving around housing prices and school quality in groups of 2 to 3 students
+- Develop a specific and narrow research question revolving around housing prices and school quality or accessibility in groups of 2 to 3 students
 
 - Prepare the provided data to your needs
 
@@ -489,12 +489,12 @@ Neighborhoods with "better" schools may attract more parents, resulting in highe
 
 | Date                          |   |
 |-------------------------------|---|
-| 22.10.2025 &amp;ndash; 05.11.2025 | Register via Flexnow&lt;br/&gt;&lt;br/&gt;Form groups of 2 to 3 students (use the Moodle forum) |
-| today &amp;ndash; 06.11.2025      | Register on sciebo: https://hochschulcloud.nrw/&lt;br/&gt;&lt;br/&gt;Send an email to [sven.werenbeck-ueding@rub.de](mailto:sven.werenbeck-ueding@ruhr-uni-bochum.de) containing the members of your group with name, student ID and the email with which they registered on sciebo |
-| 06.11.2025                    | Copy the data from the shared sciebo folder to your own folder in sciebo and start working on your project by creating a GitHub repository dedicated to your project&lt;br/&gt;&lt;br/&gt;Add the GitHub user "werenbeck-ueding" (that's me) as a collaborator to your GitHub repository |
-| 03.12.2025                    | Present an outline of your project |
-| 03.02.2026                    | Create a feature branch labelled "submission" to submit your repository and also submit your repository as a ZIP archive via email to [sven.werenbeck-ueding@rub.de](mailto:sven.werenbeck-ueding@ruhr-uni-bochum.de) |
-| 04.02.2026                    | Present your results in class |
+| 20.10.2026 &amp;ndash; 03.11.2026 | Register via Flexnow&lt;br/&gt;&lt;br/&gt;Form groups of 2 to 3 students (use the Moodle forum) |
+| today &amp;ndash; 04.11.2026      | Register on sciebo: https://hochschulcloud.nrw/&lt;br/&gt;&lt;br/&gt;Send an email to [sven.werenbeck-ueding@rub.de](mailto:sven.werenbeck-ueding@ruhr-uni-bochum.de) containing the members of your group with name, student ID and the email with which they registered on sciebo |
+| 04.11.2026                    | Copy the data from the shared sciebo folder to your own folder in sciebo and start working on your project by creating a GitHub repository dedicated to your project&lt;br/&gt;&lt;br/&gt;Add the GitHub user "werenbeck-ueding" (that's me) as a collaborator to your GitHub repository |
+| 01.12.2026                    | Present an outline of your project |
+| 01.02.2027                    | Create a feature branch labelled "submission" to submit your repository and also submit your repository as a ZIP archive via email to [sven.werenbeck-ueding@rub.de](mailto:sven.werenbeck-ueding@ruhr-uni-bochum.de) |
+| 02.02.2027                    | Present your results in class |
 
 ---
 
@@ -724,7 +724,14 @@ Not controlling for socio-economic indicators will confound your estimates for t
 
 layout: false
 
-# References
+## References
+
+&lt;a name=bib-hs25&gt;&lt;/a&gt;[Hörnig, L. and M. Schäfer](#cite-hs25) (2025).
+"The value of school choice opportunities". In: _Labour Economics_ 95,
+p. 102742. DOI:
+[https://doi.org/10.1016/j.labeco.2025.102742](https://doi.org/https%3A%2F%2Fdoi.org%2F10.1016%2Fj.labeco.2025.102742).
+URL:
+[https://www.sciencedirect.com/science/article/pii/S0927537125000661](https://www.sciencedirect.com/science/article/pii/S0927537125000661).
 
 &lt;a name=bib-m11&gt;&lt;/a&gt;[Machin, S.](#cite-m11) (2011). "Houses and
 schools: Valuation of school quality through the housing market". In:
