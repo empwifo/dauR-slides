@@ -595,7 +595,7 @@ sf %>%
 
 - GitHub repository for collaboration with your group members and containing **all** code and results of your group work (including the presentation as PDF)
 
-- Add "swerenbeck" (that's me) as a collaborator
+- Add "werenbeck-ueding" (that's me) as a collaborator
 
 - Create a feature branch labelled "submission" which will be graded
 ]
